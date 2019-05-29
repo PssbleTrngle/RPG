@@ -245,7 +245,7 @@
 			return $total;
 		}
 		
-		public function save() {}
+		public function save(array $options = []) {}
   
 		public function add($other) {
 			$stats = new Stats;			
