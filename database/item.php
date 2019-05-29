@@ -57,7 +57,7 @@
 		}
 		
 		public static $functions = array();
-		public function register($request, $function) {
+		public static function register($request, $function) {
 			
 			if(!Slot::find($request['id'])) {
 			
@@ -68,11 +68,11 @@
 			
 			}
 			
-			$functions[$id] = $function;
+			$functions[$request['id']] = $function;
 		
 		}
 	
-		public function registerAll() {
+		public static function registerAll() {
 			
 			Slot::register(['id' => 1, 'name' => "Inventory"], function($item) { return true; });			
 			Slot::register(['id' => 2, 'name' => "Left Hand"], function($item) { return false; });

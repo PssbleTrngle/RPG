@@ -64,6 +64,7 @@
 				
 				$img = "/assets/img/$img";
 				if($color) $style = "mask-image: url($img); -webkit-mask-image: url($img); mask-size: 100%; -webkit-mask-size: 100%; display: block; background-color: $color; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;";
+				else $style = '';
 				
 	        	$html .= 	"<div class='icon'>
 								<img class='icon' src='$img'></img>
@@ -401,7 +402,8 @@
 
 	    public function __construct(\Slim\Views\Twig $view, $accessLevel) {
 	        $this->view = $view;
-	        $this->accessLevel = Status::where('name', '=', $accessLevel)->first()->id;
+	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
+	        $this->accessLevel = $status->id;
 	    }
 	    public function __invoke($request, $response, $next) {
 			

@@ -23,24 +23,6 @@
     	protected $primaryKey = 'id';
    		public $timestamps = false;
 		
-		public function __get($varName) {
-			$this->isPrivate($varName);
-
-			return parent::__get($varName);
-		}
-
-		public function __set($varName, $value) {
-			$this->isPrivate($varName);
-
-			return parent::__set($varName, $value);
-		}
-
-		protected function isPrivate($varName) {
-			if (in_array($varName, $this->privateProperties)) {
-				throw new \Exception('The ' . $varName. ' property is private');
-			}
-		}
-		
 	}
 
 	function registerAll() {
