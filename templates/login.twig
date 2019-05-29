@@ -1,0 +1,32 @@
+{% extends 'base.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	{% if failed %}
+		<h2>Login failed</h2>
+	{% endif %}
+
+	<div>
+		<form method='post'>
+
+			<input type='text' placeholder='Username' name='username'></input>
+			<input type='password' placeholder='Password' name='password'></input>
+			<input type='submit' value='Login'></input>
+
+		</form>
+	</div>
+
+	<div>
+		<form method='post' action='signup'>
+
+			<input type='text' placeholder='Username' name='username'></input>
+			<input type='password' placeholder='Password' name='password'></input>
+			<input type='password' placeholder='Repeat password'></input>
+			<input type='submit' value='Create'></input>
+
+		</form>
+	</div>
+
+{% endblock %}

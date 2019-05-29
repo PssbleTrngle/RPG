@@ -1,0 +1,93 @@
+{% extends 'base.twig' %}
+
+{% block title %}Classes{% endblock %}
+
+{% block content %}
+
+	<div style='height: 600px;'>
+	<div class='classes mr-3' style='float: left;'></div>
+
+	<div class='character-row'>
+	{% for class in classes %}
+		<div class='character-panel' id='{{ class.id }}' style='float: left;'>
+			<h5>{{ class.name }}</h5>
+			{{ icon('class/' ~ class.name|lower, ['#ffffff'])|raw }}
+		</div>
+	{% endfor %}
+	</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+$(window).ready(function() {
+	
+    var nodes = new vis.DataSet([
+		{% for class in classes %}
+       		{id: {{ class.id }}, label: '{{ class.name }}'},
+		{% endfor %}
+    ]);
+	
+    var edges = new vis.DataSet([
+		{% for class in classes %}
+			{% for to in class.evolvesTo().get() %}
+       			{from: {{ class.id }}, to: {{ to.id }}},
+			{% endfor %}
+		{% endfor %}
+    ]);
+	
+	var options = {
+		autoResize: true,
+		height: '100%',
+		width: '100%',
+		locale: 'en',
+		clickToUse: false,
+		interaction:{
+			keyboard: false,
+			dragNodes: false
+		},
+		nodes: {
+			color: '#e2b11d',
+			fixed: false,
+			font: {
+				color: '#ffffff',
+			},
+			scaling: {
+				label: true
+			},
+			shadow: true
+		},
+		edges: {
+    		arrows: 'to',
+		},
+		layout: {
+			hierarchical: {
+				enabled: false,
+				parentCentralization: true,
+				direction: 'UP',
+				sortMethod: 'hubsize'
+			}
+		}
+	}
+	
+    $('.classes').each(function() {
+	
+		let network = new vis.Network($(this)[0], { nodes: nodes, edges: edges }, options);
+		network.on('click', function(e) {
+			
+			let id = e.nodes[0];
+			
+			if(id) $('.character-panel').css({'display': 'none', '--size': '1'});
+			else $('.character-panel').css({'display': 'block', '--size': '0.4'});
+			
+			$('#' + id).css({'display': 'block'});
+		});
+		
+	});
+	
+});
+
+</script>
+{% endblock %}

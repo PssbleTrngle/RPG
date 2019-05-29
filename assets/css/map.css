@@ -1,0 +1,52 @@
+.map {
+
+	height: 500px;
+	width: 100%;
+	max-width: 800px;
+	
+	border: 3px solid var(--gold);
+	border-radius: 20px;
+	
+	box-shadow: 0 0 20px 0 rgba(0,0,0,0.5) inset;
+	
+}
+
+.map-part {
+
+	text-align: center;
+	padding-top: 30px;
+	
+	position: absolute;
+	border-radius: 100%;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+	
+	cursor: pointer;
+	
+	transform: translate(-50%, -50%);
+	display: none;
+	
+}
+
+.map-part.selected {
+	background-color: var(--gold-light);	
+	border-color: var(--gold);	
+	box-shadow: 0 0 15px 0 var(--gold-light);
+}
+
+.map > .back {
+
+	border-radius: 100%;
+	width: 40px;
+	height: 40px;
+	margin: 5px;
+	
+	background-color: var(--gold-light);
+	border: 2px var(--gold) solid;
+	color: #ffffff;
+	font-size: 22px;
+	opacity: 0;
+}
+
+.map > .back:hover {
+	background-color: var(--gold);
+}

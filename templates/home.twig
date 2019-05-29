@@ -1,0 +1,74 @@
+{% extends 'base.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% set character = account().selected() %}
+
+{% block content %}
+
+	{% set battle = character.battle() %}
+	{% if battle %}
+
+		{% include 'home/battle.twig' with {'battle': battle, 'character': character} %}
+	
+	{% else %}
+	
+		<div class='col-66'>
+		
+			{% set evolutions = character.canEvolveTo() %}	
+			{% if evolutions.count() %}
+
+				<div class='character-row'>
+				<p class='center'>You're experience has brought you far, but this is where your paths part</p>
+				<h3 class='center mb-4'>Choose an specialization</h3>
+					{% for evolution in evolutions %}
+
+						<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
+							<h5>{{ evolution.name }}</h5>
+							{{ icon("class/" ~ evolution.name|lower, [])|raw }}
+						</div>
+
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{% set pos = character.position() %}
+			{% if pos.dungeon() %}
+			<div class='dungeon my-5'>
+				
+				<h2>{{ pos.dungeon().name }}</h2>
+
+				<div class='options'>
+					<div class='option' data-action='dungeon/leave'>Exit</div>
+					<div class='option' data-action='dungeon/search'>Search</div>
+					{% if pos.foundStairs %}<div class='option' data-action='dungeon/down'>Down</div>{% endif %}
+				</div>				
+
+			</div>
+			{% endif %}
+
+		</div>
+		<div class='col'>
+
+			{% include 'home/inventory.twig' with {'character': character} %}
+
+		</div>
+
+	{% endif %}
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+$(window).ready(function() {
+	
+	$('.evolve').each(function() {
+		let panel = $(this);
+		panel.sendAction('character/evolve', { to: panel.attr('data-class') });
+	});
+	
+});
+
+</script>
+{% endblock %}

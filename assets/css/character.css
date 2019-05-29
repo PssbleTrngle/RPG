@@ -1,0 +1,93 @@
+.character-row {
+	display: table-row;
+	width: 100%;
+}
+
+.character-panel {
+	display: table-cell;
+
+	--size: 1;
+	
+	width: calc(200px * var(--size));
+	height: calc(300px * var(--size));
+	
+	cursor: pointer;
+	
+	border-radius: calc(10px * var(--size));	
+	box-shadow: 0 0 calc(10px * var(--size)) 0 inset rgba(0, 0, 0, 0.4);
+	
+	float: left;
+	margin-right: calc(20px * var(--size));
+	margin-bottom: calc(10px * var(--size));
+	
+}
+
+.character-panel.small {
+	--size: 0.5;
+}
+
+.character-panel.medium {
+	--size: 0.75;
+}
+
+@keyframes bounce {
+	
+	from { transform: scale(1, 1); }
+	to { transform: scale(0.98, 0.98); }
+	
+}
+
+.character-panel > div > div {
+	animation: bounce infinite linear 0.5s alternate;
+}
+
+.character-panel > div {
+	transition: transform 0.1s linear;	
+}
+
+.character-panel > div:hover {
+	transform: scale(1.1, 1.1);
+}
+
+.character-panel.selected {
+
+	background-color: var(--gold-light);
+	box-shadow: 0 0 15px 0 var(--gold-light);
+	
+}
+
+.character-panel:last-child {
+	margin-right: 0;
+}
+
+.character-panel > h5 {
+	font-size: calc(25px * var(--size));
+}
+
+.character-panel > * {
+	text-align: center;
+}
+
+.classes {
+
+	height: 100%;
+	width: 600px;
+	
+	border: 3px solid var(--gold);
+	border-radius: 20px;
+	
+	box-shadow: 0 0 15px 0 rgba(0,0,0,0.3) inset;
+	
+}
+
+.classes > .info-class {
+	position: absolute;
+	background-color: var(--gold);
+	text-align: center;
+}
+
+.stat:first-child {
+
+	width: 120px;
+	
+}

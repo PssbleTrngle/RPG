@@ -1,0 +1,44 @@
+{% extends 'base.twig' %}
+
+{% block title %}Level{% endblock %}
+
+{% block content %}
+
+  <div id="chart"></div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+$(window).ready(function() {
+	
+	google.charts.load('current', {packages: ['corechart', 'line']});
+	google.charts.setOnLoadCallback(draw);
+
+	function draw() {
+
+		  var data = new google.visualization.DataTable();
+		  data.addColumn('number', 'level');
+		  data.addColumn('number', 'total');
+		  data.addColumn('number', 'required');
+
+		  data.addRows([
+			{% for level, point in points %}
+				[{{ level }}, {{ point['total'] }}, {{ point['required'] }}],
+			{% endfor %}
+		  ]);
+
+		  var options = {
+		  		height: 600
+		  };
+
+		  var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+		  chart.draw(data, options);
+		}
+
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.twig' %}
+
+{% block title %}Post Test{% endblock %}
+
+{% set character = account().selected() %}
+
+{% block content %}
+
+	{% if response %}
+
+		<p>{{ response }}</p>
+
+	{% endif %}
+
+	<form method='post'>
+		<input type='text' name='action' placeholder='action'></input>
+		<input type='text' name='args' placeholder='args'></input>
+		<input type='submit'></input>
+	</post>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+</script>
+{% endblock %}

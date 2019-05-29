@@ -1,0 +1,46 @@
+.options {
+
+	padding: 5px;
+	display: table-row;
+	
+}
+
+.option {
+
+	user-select: none;
+	width: 100px;
+	text-align: center;
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 5px;
+	margin-right: 8px;
+	float: left;
+	border: var(--gold) 2px solid;
+	
+}
+
+.option.disabled {
+	border-color: #444;	
+}
+
+.option.disabled:hover {
+	background-color: transparent;
+	cursor: default;
+}
+
+.option[data-parent] {
+	display: none;
+}
+
+.option.back {
+	display:none;
+	width: 60px;
+}
+
+.option:last-child {
+	margin-right: 0;
+}
+
+.option:hover {
+	background-color: var(--gold-light);
+}

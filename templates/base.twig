@@ -1,0 +1,50 @@
+{% macro nav(to) %}
+	<a href='/{{ to|lower }}'><div class="navbar-link {% if to|lower in uri() %}active{% endif %}">{{ to|capitalize }}</div></a>
+{% endmacro %}
+
+{% import _self as base %}
+
+<html>
+	<head>
+		<title>RPG - {% block title %}{% endblock %}</title>
+		<link href='/assets/vis/vis.min.css' rel='stylesheet' />
+		
+		<link href='/assets/css/general.css' rel='stylesheet' />
+		<link href='/assets/css/inventory.css' rel='stylesheet' />
+		<link href='/assets/css/character.css' rel='stylesheet' />
+		<link href='/assets/css/options.css' rel='stylesheet' />
+		<link href='/assets/css/map.css' rel='stylesheet' />
+		<link href='/assets/css/battle.css' rel='stylesheet' />
+		
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+		<script src='/assets/vis/vis.min.js'></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+		<script src='/assets/scripts/ajax.js'></script>
+		<script src='/assets/scripts/elements.js'></script>
+		
+	</head>
+	<body>
+	
+		<div class='navbar'>
+			<a href='/'><div class="navbar-link {% if uri() == '/' %}active{% endif %}">Home</div></a>
+			{% if account() %}
+				{{ base.nav('map') }}
+				{{ base.nav('profile') }}
+			{% else %}
+				{{ base.nav('login') }}
+			{% endif %}
+		</div>
+
+		<div class='container'>
+		{% block content %}{% endblock %}
+		</div>
+
+	</body>
+	<footer>
+		{% block script %}{% endblock %}
+		<small>Der Druidenstab ist von Gero</small>
+	</footer>
+</html>

@@ -1,0 +1,28 @@
+<div class='inventory'>
+{% for i in 2..3 %}
+
+	{% set stack = character.itemIn(i).first() %}
+	{% if stack %}
+
+	<div class='slot'>
+		<div>{{ icon('item/' ~ stack.item().name)|raw }}</div>
+		<p>{{ stack.amount }}x</p>
+		<p>{{ stack.item().name }}</p>
+	</div>
+
+	{% endif %}
+
+{% endfor %}
+</div>
+
+<div class='inventory'>
+{% for stack in character.itemIn(1).get() %}
+
+	<div class='slot'>
+		<div>{{ icon('item/' ~ stack.item().name)|raw }}</div>
+		<p>{{ stack.amount }}x</p>
+		<p>{{ stack.item().name }}</p>
+	</div>
+
+{% endfor %}
+</div>

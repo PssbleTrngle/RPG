@@ -1,0 +1,126 @@
+{% extends 'base.twig' %}
+
+{% block title %}Map{% endblock %}
+
+{% set character = account().selected() %}
+
+{% block content %}
+
+	<div class='map'>
+		
+	<button class='back'><i class="fas fa-search-minus"></i></button>
+		
+	{% for area in areas %}
+
+		<div class='map-part area {% if character.position().location().area == area.id %}selected{% endif %}' id='{{ area.id }}' data-mapX='{{ area.mapX }}' data-mapY='{{ area.mapY }}'>
+			{{ area.name }}
+		</div>
+
+		{% for location in area.locations() %}
+			<div class='map-part location {% if character.position().location == location.id %}selected{% endif %}' data-loc='{{ location.id }}' data-area='{{ area.id }}' data-mapX='{{ location.mapX }}' data-mapY='{{ location.mapY }}'>
+				{{ location.name }}
+			</div>
+		{% endfor %}
+
+	{% endfor %}
+	</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+	
+let maxX = 0, maxY = 0;
+
+$(window).ready(function() {
+	
+	$('.location').each(function() {
+		let loc = $(this);
+		loc.sendAction('character/travel', { id: loc.attr('data-loc') });
+	});
+
+	$.fn.expand = function() {
+		let area = $(this);
+		if(area.hasClass('area')) {
+		
+			area.closest('.map').attr('data-area', area.attr('id'));
+			area.closest('.map').loadMap();
+			
+		}		
+	}
+
+	$.fn.back = function() {
+		let map = $(this);
+		if(map.hasClass('map')) {
+		
+			map.attr('data-area', null);
+			map.loadMap();
+			
+		}		
+	}
+
+	$.fn.loadMap = function() {
+		
+		let map = $(this);
+		let expanded = $('#' + map.attr('data-area'));
+		$('.back').css({'opacity': (expanded.length ? 100 : 0)});
+		
+		map.find('.map-part').each(function() {
+			let area = $(this);
+			
+			if((area.hasClass('area') && !expanded.length) || expanded.length && area.attr('data-area') == expanded.attr('id')) {
+				
+				maxX = Math.max(maxX, Math.abs(area.attr('data-mapX')));
+				maxY = Math.max(maxX, Math.abs(area.attr('data-mapY')));
+				
+			}			
+		});
+		
+		map.find('.map-part').each(function() {
+			let area = $(this);
+		
+			if((area.hasClass('area') && !expanded.length) || expanded.length && area.attr('data-area') == expanded.attr('id')) {
+				let mapX = area.attr('data-mapX');
+				let mapY = area.attr('data-mapY');
+				let mapSize = Math.min(map.innerWidth(), map.innerHeight());
+				let areaSize = mapSize / maxX * 2;
+
+				x = (mapSize - areaSize*2) * (mapX / maxX) * 0.5 + map.outerWidth() / 2;
+				y = (mapSize - areaSize*2) * (mapY / maxY) * -0.5 + map.outerHeight() / 2;
+
+				area.css({
+					'margin-left': x,
+					'margin-top': y,
+					'padding-top': areaSize * 0.4,
+					'font-size': areaSize * 0.1,
+					'width': areaSize,
+					'height': areaSize * 0.6,
+					'display': 'block'
+				});
+			} else area.css({'display': 'none'});
+			
+		});
+			
+	};
+	
+	$('.map').loadMap();
+	$(window).resize(function() {
+		$('.map').loadMap();
+    });
+	
+	{% if expanded %}$('#{{ expanded }}.area').expand();{% endif %}
+	
+	$('.area').click(function() {
+		window.history.replaceState(null, null, document.location.href + '?area=' + $(this).attr('id'));
+		$(this).expand();
+	});
+	
+	$('.back').click(function() {
+		window.history.replaceState(null, null, document.location.origin + document.location.pathname);
+		$(this).closest('.map').back();
+	});
+	
+});
+
+</script>
+{% endblock %}

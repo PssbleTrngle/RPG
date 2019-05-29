@@ -1,0 +1,47 @@
+.battlefield {
+
+	width: calc(100% - 20px);
+	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
+	background-color: #666;
+	background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354');
+	background-size: cover;
+	border-radius: 10px;
+	margin-bottom: 15px;
+	
+	padding: 10px;
+	
+}
+
+.participants {
+	padding: 40px;
+	width: 100%;
+	height: 200px;
+}
+
+.participant > p {
+	text-align: center;	
+}
+
+.participant {
+	cursor: pointer;
+	float: left;
+	width: 200px;
+}
+
+.participant.selected {
+	 filter: drop-shadow(0 0 4px var(--gold-light));
+}
+
+.healthbar {
+	border-radius: 5px;
+	height: 10px;	
+	width: 80%;
+	margin: 4px auto;
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.healthbar > div {
+	border-radius: 5px;
+	height: 100%;
+	background-color: var(--red);
+}
