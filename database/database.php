@@ -9,7 +9,7 @@
 	$capsule->bootEloquent();
 	$capsule->addConnection([
 		'driver'    => 'mysql',
-		'host'      => 'localhost',
+		'host'      =>	$database_url,
 		'database'  =>  $database_name,
 		'username'  =>  $database_user,
 		'password'  =>  $database_pw,
