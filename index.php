@@ -50,7 +50,7 @@
 					
 					$regex = '/(.*?)_([0-9]*?)\.png/';
 					preg_match($regex, $file, $matches);
-					$index = $matches[2] ?? 0;
+					$index = $matches[2] ?? null;
 					$images["$path/$file"] = $colors[$index] ?? false;
 				}
 				

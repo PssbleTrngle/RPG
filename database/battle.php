@@ -9,7 +9,7 @@
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle');
+			return $this->hasMany(Enemy::class, 'battle')->with(['npc']);
 		}
 		
 		public function characters() {
@@ -33,7 +33,7 @@
 		
 		public function participants() {
 		
-			return $this->characters()->get()->toBase()->merge($this->enemies()->get());
+			return $this->relations['characters']->toBase()->merge($this->relations['enemies']);
 			
 		}
 		
@@ -202,7 +202,7 @@
 		}
 		
 		public function npc() {
-			return $this->belongsTo(NPC::class, 'npc')->first();
+			return $this->belongsTo(NPC::class, 'npc');
 		}
 		
 		public function damage($amount) {

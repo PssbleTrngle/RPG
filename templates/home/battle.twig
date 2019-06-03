@@ -24,7 +24,7 @@
 		</div>
 		<div class='participants'>
 			<div class='row'>
-				{% for char in battle.relations.characters.get() %}
+				{% for char in battle.relations.characters %}
 
 					<div class='participant' data-id='{{ char.id }}' data-type='character'>
 						<p>{{char.name }} [lvl: {{char.level() }}]</p>
