@@ -4,7 +4,7 @@
 		<p class='right'>Round {{ battle.round }}</p>
 		<div class='participants'>
 			<div class='row'>
-				{% for enemy in battle.enemies() if enemy.health() > 0 %}
+				{% for enemy in battle.relations.enemies if enemy.health() > 0 %}
 
 					<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
 						<p>{{enemy.npc().name }} [lvl: {{enemy.npc().level }}]</p>
@@ -24,12 +24,12 @@
 		</div>
 		<div class='participants'>
 			<div class='row'>
-				{% for char in battle.characters() %}
+				{% for char in battle.relations.characters.get() %}
 
 					<div class='participant' data-id='{{ char.id }}' data-type='character'>
 						<p>{{char.name }} [lvl: {{char.level() }}]</p>
 						<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
-						{{ icon('class/' ~ char.clazz().name)|raw }}
+						{{ icon('class/' ~ char|get('clazz').name)|raw }}
 					</div>
 
 				{% endfor %}

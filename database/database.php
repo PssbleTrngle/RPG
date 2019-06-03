@@ -22,6 +22,7 @@
    		
     	protected $primaryKey = 'id';
    		public $timestamps = false;
+   		public $relations = [];
 		
 	}
 

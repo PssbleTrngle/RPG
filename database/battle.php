@@ -5,15 +5,15 @@
 		protected $table = 'battle';
 		
 		public function active() {
-			return $this->belongsTo(Character::class, 'active')->first();
+			return $this->belongsTo(Character::class, 'active')->with(['clazz', 'race', 'position', 'canEvolveTo']);
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle')->get();
+			return $this->hasMany(Enemy::class, 'battle');
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'battle')->get();
+			return $this->hasMany(Character::class, 'battle')->with(['clazz', 'race', 'position', 'canEvolveTo']);
 		}
 		
 		public function end() {
@@ -33,7 +33,7 @@
 		
 		public function participants() {
 		
-			return $this->characters()->toBase()->merge($this->enemies());
+			return $this->characters()->get()->toBase()->merge($this->enemies()->get());
 			
 		}
 		
@@ -148,13 +148,14 @@
 	}
 
 	class Participant extends BaseModel {
+
+		protected $hidden = [
+		    'health'
+		];
+
 		
 		public function battle() {
-			$battle = $this->belongsTo(Battle::class, 'battle')->first();
-			if($battle && $battle->valid()) return $battle;
-			$this->battle = null;
-			$this->save();
-			return null;
+			return $this->belongsTo(Battle::class, 'battle')->with(['enemies', 'characters', 'active']);
 		}
 		
 		public function canTakeTurn() {

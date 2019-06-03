@@ -2,7 +2,7 @@
 
 {% block title %}Map{% endblock %}
 
-{% set character = account().selected() %}
+{% set position = account()|get('selected')|get('position') %}
 
 {% block content %}
 
@@ -12,12 +12,12 @@
 		
 	{% for area in areas %}
 
-		<div class='map-part area {% if character.position().location().area == area.id %}selected{% endif %}' id='{{ area.id }}' data-mapX='{{ area.mapX }}' data-mapY='{{ area.mapY }}'>
+		<div class='map-part area {% if position|get('location').area == area.id %}selected{% endif %}' id='{{ area.id }}' data-mapX='{{ area.mapX }}' data-mapY='{{ area.mapY }}'>
 			{{ area.name }}
 		</div>
 
-		{% for location in area.locations() %}
-			<div class='map-part location {% if character.position().location == location.id %}selected{% endif %}' data-loc='{{ location.id }}' data-area='{{ area.id }}' data-mapX='{{ location.mapX }}' data-mapY='{{ location.mapY }}'>
+		{% for location in area|get('locations') %}
+			<div class='map-part location {% if position.location == location.id %}selected{% endif %}' data-loc='{{ location.id }}' data-area='{{ area.id }}' data-mapX='{{ location.mapX }}' data-mapY='{{ location.mapY }}'>
 				{{ location.name }}
 			</div>
 		{% endfor %}

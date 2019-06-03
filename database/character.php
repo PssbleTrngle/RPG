@@ -5,7 +5,7 @@
 		protected $table = 'status';
 		
 		public function accounts() {
-			return $this->hasMany(Account::class, 'status')->get();
+			return $this->hasMany(Account::class, 'status');
 		}
 	
 	}
@@ -15,15 +15,15 @@
 		protected $table = 'account';
 		
 		public function status() {
-			return $this->belongsTo(Status::class, 'status')->first();
+			return $this->belongsTo(Status::class, 'status');
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'account')->get();
+			return $this->hasMany(Character::class, 'account')->with(['clazz', 'race', 'position', 'battle', 'canEvolveTo']);
 		}
 		
 		public function selected() {
-			return $this->belongsTo(Character::class, 'selected')->first();
+			return $this->belongsTo(Character::class, 'selected')->with(['clazz', 'race', 'position', 'battle', 'canEvolveTo']);
 		}
 		
 		public function select($character) {
@@ -32,7 +32,7 @@
 			$do = false;
 			
 			if($character)
-				foreach($this->characters() as $char)
+				foreach($this->relations['characters'] as $char)
 					$do = $do || $char->id == $character->id;
 			
 			if($do) {
@@ -60,11 +60,11 @@
 		protected $table = 'character';
 		
 		public function race() {
-			return $this->belongsTo(Race::class, 'race')->first();
+			return $this->belongsTo(Race::class, 'race');
 		}
 		
 		public function clazz() {
-			return $this->belongsTo(Clazz::class, 'class')->first();
+			return $this->belongsTo(Clazz::class, 'class');
 		}
 		
 		public function account() {
@@ -72,22 +72,15 @@
 		}
 		
 		public function inventory() {
-			return $this->hasMany(Inventory::class, 'character')->get();
+			return $this->hasMany(Inventory::class, 'character');
 		}
 		
 		public function stats() {
-			return $this->clazz()->stats()->add($this->race()->stats());
+			return $this->relations['clazz']->stats()->add($this->relations['race']->stats());
 		}
 		
 		public function position() {
-			$position = $this->belongsTo(Position::class, 'id')->first();
-			if($position) return $position;
-			
-			$position = new Position;
-			$position->id = $this->id;
-			$position->save();
-			$position->refresh();
-			return $position;
+			return $this->belongsTo(Position::class, 'id')->with(['dungeon', 'location']);
 		}
 		
 		public function itemIn($slot) {
@@ -98,7 +91,7 @@
 		}
 		
 		public function isSelected() {
-			$selected = $this->account()->selected()	;
+			$selected = $this->account()->selected()->first();
 			return $selected && $selected->id == $this->id;
 		}
 		
@@ -142,7 +135,7 @@
 			if(is_numeric($to)) $to = Clazz::find($to);
 			
 			if($to) {
-				foreach($this->canEvolveTo() as $can)
+				foreach($this->canEvolveTo()->get() as $can)
 					if($can->id == $to->id) {
 						$this->class = $to->id;
 						$this->save();
@@ -155,7 +148,7 @@
 		}
 		
 		public function canEvolveTo() {		
-			return $this->clazz()->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
+			return $this->clazz()->first()->evolvesTo()->wherePivot('level', '<=', $this->level());
 		}
 		
 		public function skills() {		
