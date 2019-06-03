@@ -180,17 +180,17 @@
 				
 				if(rand(1, 100) < 10) {
 					
-					return $this->npc()->name.' called for help';
+					return $this->relations['npc']->name.' called for help';
 					
 				} else {
 					$target = $characters->random();
 					$damage = 5;
 					
 					$target->damage($damage);
-					return $this->npc()->name.' dealt '.$damage.'K damage';
+					return $this->relations['npc']->name.' dealt '.$damage.'K damage';
 				}
 				
-				return $this->npc()->name.' was too scared to attack';
+				return $this->relations['npc']->name.' was too scared to attack';
 				
 			}
 		
