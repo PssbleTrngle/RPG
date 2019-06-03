@@ -1,5 +1,5 @@
-{% macro nav(to) %}
-	<a href='/{{ to|lower }}'><div class="navbar-link {% if to|lower in uri() %}active{% endif %}">{{ to|capitalize }}</div></a>
+{% macro nav(to, icon) %}
+	<a href='/{{ to|lower }}'><div class="navbar-link {% if to|lower in uri() %}active{% endif %}"><i class="fas fa-{{ icon }}"></i></div></a>
 {% endmacro %}
 
 {% import _self as base %}
@@ -31,8 +31,8 @@
 		<div class='navbar'>
 			<a href='/'><div class="navbar-link {% if uri() == '/' %}active{% endif %}">Home</div></a>
 			{% if account() %}
-				{{ base.nav('map') }}
-				{{ base.nav('profile') }}
+				{{ base.nav('map', 'map-signs') }}
+				{{ base.nav('profile', 'user-alt') }}
 			{% else %}
 				{{ base.nav('login') }}
 			{% endif %}

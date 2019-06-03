@@ -3,17 +3,14 @@
 	class Position extends BaseModel {
    		
 		protected $table = 'position';
-		
-		public function area() {
-			return $this->location()->area();
-		}
+		protected $with = ['location', 'dungeon'];
 		
 		public function location() {
-			return $this->belongsTo(Location::class, 'location')->first();
+			return $this->belongsTo(Location::class, 'location');
 		}
 		
 		public function dungeon() {
-			return $this->belongsTo(Dungeon::class, 'dungeon')->first();
+			return $this->belongsTo(Dungeon::class, 'dungeon');
 		}
 		
 	}
@@ -21,13 +18,14 @@
 	class Location extends BaseModel {
    		
 		protected $table = 'location';
+		protected $with = ['dungeons', 'area'];
 		
 		public function area() {
-			return $this->belongsTo(Area::class, 'area')->first();
+			return $this->belongsTo(Area::class, 'area');
 		}
 		
 		public function dungeons() {
-			return $this->hasMany(Dungeon::class, 'location')->get();
+			return $this->hasMany(Dungeon::class, 'location')->without('location');
 		}
 		
 	}
@@ -35,9 +33,10 @@
 	class Area extends BaseModel {
    		
 		protected $table = 'area';
+		protected $with = ['locations'];
 		
 		public function locations() {
-			return $this->hasMany(Location::class, 'area')->get();
+			return $this->hasMany(Location::class, 'area')->without(['area']);
 		}
 		
 	}
@@ -45,9 +44,10 @@
 	class Dungeon extends BaseModel {
    		
 		protected $table = 'dungeon';
+		protected $with = ['location', 'npcs'];
 		
 		public function location() {
-			return $this->belongsTo(Location::class, 'location')->first();
+			return $this->belongsTo(Location::class, 'location');
 		}
 		
 		public function npcs() {

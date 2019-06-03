@@ -6,16 +6,15 @@
 	<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-id='{{ character.id }}'>
 		<h4>{{ character.name }}</h4>
 		<small>
-			<p>{{ character.race().name}} {{ character.clazz().name }}</p>
+			<p>{{ character.relations.race.name}} {{ character.relations.clazz.name }}</p>
 			<p>Level {{ character.level() }}</p>
 			<p>{{ character.birth|age }} Day{% if character.birth|age != 1 %}s{% endif %}</p>
 		</small>
-		{{ icon("class/" ~ character.clazz().name|lower, [ character.race().skin ])|raw }}
+		{{ icon("class/" ~ character.relations.clazz.name|lower, [ character.relations.race.skin ])|raw }}
 	</div>
 {% endmacro %}
 
 {% set account = account() %}
-{% set characters = account.characters() %}
 
 {% block content %}
 
@@ -25,15 +24,16 @@
 
 	<div class='col'>
 	<div class='row'>
-		{% for character in characters %}
+		{% for character in account.relations.characters %}
 			{{ profile.panel(character) }}
 		{% endfor %}
 	</div>
 	</div>
 	
 	<div class='col'>
-	{% if account.selected() %}
-		{% set stats = account.selected().stats() %}
+
+	{% if account.relations.selected %}
+		{% set stats = account.relations.selected.relations.stats %}
 
 			<div class='stats ml-5'>
 				{% for stat in stats.keys %}

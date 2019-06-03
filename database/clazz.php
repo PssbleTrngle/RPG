@@ -3,17 +3,20 @@
 	class Clazz extends BaseModel {
    		
 		protected $table = 'class';
+		protected $with = ['skills', 'stats'];
 		
 		public function evolvesTo() {
 			return $this->belongsToMany(Clazz::class, 'evolution', 'from', 'to')
                 ->as('evolution')
-    			->withPivot('level');
+    			->withPivot('level')
+    			->without(['evolvesTo', 'evolvesFrom']);
 		}
 		
 		public function evolvesFrom() {
 			return $this->belongsToMany(Clazz::class, 'evolution', 'to', 'from')
                 ->as('evolution')
-    			->withPivot('level');
+    			->withPivot('level')
+    			->without(['evolvesTo', 'evolvesFrom']);
 		}
 		
 		public function rank() {
@@ -29,11 +32,11 @@
 		}
 		
 		public function skills() {
-			return $this->belongsToMany(Skill::class, 'class_skills', 'class', 'skill')->get();
+			return $this->belongsToMany(Skill::class, 'class_skills', 'class', 'skill');
 		}
 		
 		public function stats() {
-			return $this->belongsTo(Stats::class, 'stats')->first();
+			return $this->belongsTo(Stats::class, 'stats');
 		}
 	
 	}
@@ -42,12 +45,8 @@
    		
 		protected $table = 'skill';
 		
-		public function learnedBy() {
-			return $this->belongsToMany(Clazz::class, 'class_skills', 'skill', 'class')->get();
-		}
-		
 		public static $functions = array();		
-		public function register($request, $function) {
+		public static function register($request, $function) {
 			
 			$id = $request['id'];
 			$model = static::find($id) ?? new static;
@@ -82,7 +81,7 @@
 			return $func($target, $user);
 		}
 	
-		public function registerAll() {
+		public static function registerAll() {
 			
 			Skill::register(['id' => 1, 'name' => "Heal", 'timeout' => 5, 'cost' => 2], function($target, $user) {
 				if(method_exists($target, 'heal')) {

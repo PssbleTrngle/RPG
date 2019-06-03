@@ -3,22 +3,23 @@
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
+		protected $with = ['enemies', 'characters', 'active'];
 		
 		public function active() {
-			return $this->belongsTo(Character::class, 'active')->first();
+			return $this->belongsTo(Character::class, 'active')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle')->get();
+			return $this->hasMany(Enemy::class, 'battle')->without(['battle', 'account']);
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'battle')->get();
+			return $this->hasMany(Character::class, 'battle')->without(['battle', 'account']);
 		}
 		
 		public function end() {
 			
-			foreach($this->characters() as $character) {
+			foreach($this->relations['characters'] as $character) {
 				$character->battle = null;
 				$character->save();
 			}
@@ -33,7 +34,7 @@
 		
 		public function participants() {
 		
-			return $this->characters()->toBase()->merge($this->enemies());
+			return $this->relations['characters']->toBase()->merge($this->relations['enemies']);
 			
 		}
 		
@@ -148,13 +149,11 @@
 	}
 
 	class Participant extends BaseModel {
+
+		protected $hidden = ['health'];
 		
 		public function battle() {
-			$battle = $this->belongsTo(Battle::class, 'battle')->first();
-			if($battle && $battle->valid()) return $battle;
-			$this->battle = null;
-			$this->save();
-			return null;
+			return $this->belongsTo(Battle::class, 'battle');
 		}
 		
 		public function canTakeTurn() {
@@ -172,6 +171,7 @@
 	class Enemy extends Participant {
    		
 		protected $table = 'enemy';
+		protected $with = ['npc', 'battle'];
 		
 		public function takeTurn() {
 			
@@ -179,17 +179,17 @@
 				
 				if(rand(1, 100) < 10) {
 					
-					return $this->npc()->name.' called for help';
+					return $this->relations['npc']->name.' called for help';
 					
 				} else {
 					$target = $characters->random();
 					$damage = 5;
 					
 					$target->damage($damage);
-					return $this->npc()->name.' dealt '.$damage.'K damage';
+					return $this->relations['npc']->name.' dealt '.$damage.'K damage';
 				}
 				
-				return $this->npc()->name.' was too scared to attack';
+				return $this->relations['npc']->name.' was too scared to attack';
 				
 			}
 		
@@ -197,11 +197,11 @@
 		}
 		
 		public function maxHealth() {
-			return $this->npc()->maxHealth;
+			return $this->relations['npc']->maxHealth;
 		}
 		
 		public function npc() {
-			return $this->belongsTo(NPC::class, 'npc')->first();
+			return $this->belongsTo(NPC::class, 'npc');
 		}
 		
 		public function damage($amount) {
@@ -245,7 +245,7 @@
 			return $total;
 		}
 		
-		public function save() {}
+		public function save(array $options = []) {}
   
 		public function add($other) {
 			$stats = new Stats;			

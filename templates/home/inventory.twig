@@ -3,9 +3,9 @@
 
 	{% set stack = character.itemIn(i).first() %}
 	{% if stack %}
-
-	<div class='slot'>
-		<div>{{ icon('item/' ~ stack.item().name)|raw }}</div>
+	
+<div class='slot'>
+		<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
 		<p>{{ stack.amount }}x</p>
 		<p>{{ stack.item().name }}</p>
 	</div>
@@ -16,10 +16,10 @@
 </div>
 
 <div class='inventory'>
-{% for stack in character.itemIn(1).get() %}
+{% for stack in character.itemIn(1) %}
 
 	<div class='slot'>
-		<div>{{ icon('item/' ~ stack.item().name)|raw }}</div>
+		<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
 		<p>{{ stack.amount }}x</p>
 		<p>{{ stack.item().name }}</p>
 	</div>

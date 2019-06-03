@@ -50,7 +50,7 @@
 					
 					$regex = '/(.*?)_([0-9]*?)\.png/';
 					preg_match($regex, $file, $matches);
-					$index = $matches[2];
+					$index = $matches[2] ?? null;
 					$images["$path/$file"] = $colors[$index] ?? false;
 				}
 				
@@ -64,6 +64,7 @@
 				
 				$img = "/assets/img/$img";
 				if($color) $style = "mask-image: url($img); -webkit-mask-image: url($img); mask-size: 100%; -webkit-mask-size: 100%; display: block; background-color: $color; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;";
+				else $style = '';
 				
 	        	$html .= 	"<div class='icon'>
 								<img class='icon' src='$img'></img>
@@ -83,23 +84,26 @@
 			return round(abs($time - time()) / 24 / 60 / 60);
 	    }));
 
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('get', function ($model, $relation) {
+	    	if(!$model || !is_a($model, 'BaseModel')) {
+	    		echo 'error accessing '.$relation.': not a model<br>';
+	    		return null;
+	    	} else if(!array_key_exists($relation, $model->relations)) {
+	    		echo 'error accessing '.$relation.': not a relation<br>';
+	    		return null;
+	    	}
+
+			return $model->relations[$relation];
+	    }));
+
 	    return $view;
 	};
 
 	$app->get('/', function (Request $request, Response $response, array $args) {
-		
-		foreach(Clazz::where('stats', null)->get() as $clazz) {
-			$stats = new Stats;
-			foreach(array('wisdom', 'strength', 'resistance', 'luck', 'agility') as $cat)
-				$stats->$cat = $clazz->$cat;
-			
-			$stats->save();
-			$stats->refresh();
-			$clazz->stats = $stats->id;
-			$clazz->save();
-		}
-		
-		if(getAccount()) 
+
+		$account = getAccount();
+
+		if($account) 
 			return $this->view->render($response, 'home.twig', []);
 		
 		return $response->withRedirect('/login');
@@ -245,7 +249,7 @@
 		$account = getAccount();
 		
 		if($to && $account) {
-			$character = $account->selected();
+			$character = $account->selected;
 			if($character)
 				return json_encode(['success' => $character->evolve($to)]);
 		}
@@ -260,7 +264,7 @@
 		$account = getAccount();
 		
 		if($id && $account) {
-			$character = $account->selected();
+			$character = $account->selected;
 			
 			if($character)
 				return json_encode(['success' => $character->travel($id)]);
@@ -277,7 +281,7 @@
 		$account = getAccount();
 		
 		if($id && $account) {
-			$character = $account->selected();
+			$character = $account->selected;
 			
 			if($character && !$character->battle()) {
 				$battle = Battle::start($character);
@@ -295,7 +299,7 @@
 		$account = getAccount();
 		
 		if($account) {
-			$character = $account->selected();
+			$character = $account->selected;
 			
 			if($character && !$character->battle() && $dungeon = $character->position()->dungeon()) {
 				
@@ -316,7 +320,7 @@
 		$selected = $request->getParams()['target'] ?? null;
 			
 		if($account && $selected) {
-			$character = $account->selected();
+			$character = $account->selected;
 
 			if($character && ($battle = $character->battle()) && ($battle->active == $character->id)) {
 
@@ -357,7 +361,7 @@
 		$account = getAccount();
 			
 		if($account) {
-			$character = $account->selected();
+			$character = $account->selected;
 
 			if($character && ($battle = $character->battle()) && ($battle->active == $character->id)) {				
 					
@@ -373,7 +377,7 @@
 
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
-	    	return Account::find($_SESSION['account']);
+	    	return Account::where('id', $_SESSION['account'])->first();
 	    }
 	    return null;
 	}
@@ -401,7 +405,8 @@
 
 	    public function __construct(\Slim\Views\Twig $view, $accessLevel) {
 	        $this->view = $view;
-	        $this->accessLevel = Status::where('name', '=', $accessLevel)->first()->id;
+	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
+	        $this->accessLevel = $status->id;
 	    }
 	    public function __invoke($request, $response, $next) {
 			

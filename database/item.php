@@ -3,21 +3,22 @@
 	class Inventory extends BaseModel {
    		
 		protected $table = 'inventory';
+		protected $with = ['item', 'slot', 'character', 'enchantment'];
 		
 		public function item() {
-			return $this->belongsTo(Item::class, 'item')->first();
+			return $this->belongsTo(Item::class, 'item');
 		}
 		
 		public function slot() {
-			return $this->belongsTo(Slot::class, 'slot')->first();
+			return $this->belongsTo(Slot::class, 'slot');
 		}
 		
 		public function character() {
-			return $this->belongsTo(Character::class, 'character')->first();
+			return $this->belongsTo(Character::class, 'character');
 		}
 		
 		public function enchantment() {
-			return $this->belongsTo(Enchantment::class, 'enchantment')->first();
+			return $this->belongsTo(Enchantment::class, 'enchantment');
 		}
 		
 	}
@@ -25,9 +26,10 @@
 	class ItemType extends BaseModel {
    		
 		protected $table = 'itemtype';
+		protected $with = ['items'];
 		
 		public function items() {
-			return $this->hasMany(Item::class, 'type')->get();
+			return $this->hasMany(Item::class, 'type')->without('type');
 		}
 		
 	}
@@ -41,9 +43,10 @@
 	class Item extends BaseModel {
    		
 		protected $table = 'item';
+		protected $with = ['type'];
 		
 		public function type() {
-			return $this->belongsTo(ItemType::class, 'type')->first();
+			return $this->belongsTo(ItemType::class, 'type');
 		}
 		
 	}
@@ -57,7 +60,7 @@
 		}
 		
 		public static $functions = array();
-		public function register($request, $function) {
+		public static function register($request, $function) {
 			
 			if(!Slot::find($request['id'])) {
 			
@@ -68,11 +71,11 @@
 			
 			}
 			
-			$functions[$id] = $function;
+			$functions[$request['id']] = $function;
 		
 		}
 	
-		public function registerAll() {
+		public static function registerAll() {
 			
 			Slot::register(['id' => 1, 'name' => "Inventory"], function($item) { return true; });			
 			Slot::register(['id' => 2, 'name' => "Left Hand"], function($item) { return false; });

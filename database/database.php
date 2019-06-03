@@ -9,7 +9,7 @@
 	$capsule->bootEloquent();
 	$capsule->addConnection([
 		'driver'    => 'mysql',
-		'host'      => 'localhost',
+		'host'      =>	$database_url,
 		'database'  =>  $database_name,
 		'username'  =>  $database_user,
 		'password'  =>  $database_pw,
@@ -22,24 +22,7 @@
    		
     	protected $primaryKey = 'id';
    		public $timestamps = false;
-		
-		public function __get($varName) {
-			$this->isPrivate($varName);
-
-			return parent::__get($varName);
-		}
-
-		public function __set($varName, $value) {
-			$this->isPrivate($varName);
-
-			return parent::__set($varName, $value);
-		}
-
-		protected function isPrivate($varName) {
-			if (in_array($varName, $this->privateProperties)) {
-				throw new \Exception('The ' . $varName. ' property is private');
-			}
-		}
+   		public $relations = [];
 		
 	}
 

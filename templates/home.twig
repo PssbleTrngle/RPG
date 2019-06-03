@@ -2,11 +2,11 @@
 
 {% block title %}Home{% endblock %}
 
-{% set character = account().selected() %}
+{% set character = account().relations.selected %}
 
 {% block content %}
 
-	{% set battle = character.battle() %}
+	{% set battle = character.relations.battle %}
 	{% if battle %}
 
 		{% include 'home/battle.twig' with {'battle': battle, 'character': character} %}
@@ -15,7 +15,7 @@
 	
 		<div class='col-66'>
 		
-			{% set evolutions = character.canEvolveTo() %}	
+			{% set evolutions = character.relations.canEvolveTo %}	
 			{% if evolutions.count() %}
 
 				<div class='character-row'>
@@ -32,11 +32,11 @@
 				</div>
 			{% endif %}
 
-			{% set pos = character.position() %}
-			{% if pos.dungeon() %}
+			{% set pos = character.relations.position %}
+			{% if pos.relations.dungeon %}
 			<div class='dungeon my-5'>
 				
-				<h2>{{ pos.dungeon().name }}</h2>
+				<h2>{{ pos.relations.dungeon.name }}</h2>
 
 				<div class='options'>
 					<div class='option' data-action='dungeon/leave'>Exit</div>
