@@ -198,7 +198,7 @@
 		}
 		
 		public function maxHealth() {
-			return $this->npc()->maxHealth;
+			return $this->relations['npc']->maxHealth;
 		}
 		
 		public function npc() {
