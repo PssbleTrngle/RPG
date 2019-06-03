@@ -33,7 +33,7 @@
 	<div class='col'>
 
 	{% if account.relations.selected %}
-		{% set stats = account.relations.selected.relations.stats %}
+		{% set stats = account.relations.selected.stats() %}
 
 			<div class='stats ml-5'>
 				{% for stat in stats.keys %}
