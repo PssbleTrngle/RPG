@@ -1,3 +1,5 @@
 vendor/
 
 Thumbs.db
+phpmyadmin/
+*/config.php

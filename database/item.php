@@ -3,21 +3,22 @@
 	class Inventory extends BaseModel {
    		
 		protected $table = 'inventory';
+		protected $with = ['item', 'slot', 'character', 'enchantment'];
 		
 		public function item() {
-			return $this->belongsTo(Item::class, 'item')->first();
+			return $this->belongsTo(Item::class, 'item');
 		}
 		
 		public function slot() {
-			return $this->belongsTo(Slot::class, 'slot')->first();
+			return $this->belongsTo(Slot::class, 'slot');
 		}
 		
 		public function character() {
-			return $this->belongsTo(Character::class, 'character')->first();
+			return $this->belongsTo(Character::class, 'character');
 		}
 		
 		public function enchantment() {
-			return $this->belongsTo(Enchantment::class, 'enchantment')->first();
+			return $this->belongsTo(Enchantment::class, 'enchantment');
 		}
 		
 	}
@@ -25,9 +26,10 @@
 	class ItemType extends BaseModel {
    		
 		protected $table = 'itemtype';
+		protected $with = ['items'];
 		
 		public function items() {
-			return $this->hasMany(Item::class, 'type')->get();
+			return $this->hasMany(Item::class, 'type')->without('type');
 		}
 		
 	}
@@ -41,9 +43,10 @@
 	class Item extends BaseModel {
    		
 		protected $table = 'item';
+		protected $with = ['type'];
 		
 		public function type() {
-			return $this->belongsTo(ItemType::class, 'type')->first();
+			return $this->belongsTo(ItemType::class, 'type');
 		}
 		
 	}

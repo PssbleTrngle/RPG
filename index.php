@@ -113,7 +113,7 @@
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
 		$expanded = $request->getParams()['area'] ?? null;
-		$this->view->render($response, 'map.twig', ['areas' => Area::with(['locations'])->get(), 'expanded' => $expanded]);
+		$this->view->render($response, 'map.twig', ['areas' => Area::all(), 'expanded' => $expanded]);
 		
 	});
 
@@ -377,7 +377,7 @@
 
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
-	    	return Account::with(['status', 'selected', 'characters'])->where('id', $_SESSION['account'])->first();
+	    	return Account::where('id', $_SESSION['account'])->first();
 	    }
 	    return null;
 	}

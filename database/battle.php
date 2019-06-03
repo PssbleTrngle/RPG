@@ -3,22 +3,23 @@
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
+		protected $with = ['enemies', 'characters', 'active'];
 		
 		public function active() {
-			return $this->belongsTo(Character::class, 'active')->with(['clazz', 'race', 'position', 'canEvolveTo']);
+			return $this->belongsTo(Character::class, 'active')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle')->with(['npc']);
+			return $this->hasMany(Enemy::class, 'battle')->without(['battle', 'account']);
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'battle')->with(['clazz', 'race', 'position', 'canEvolveTo']);
+			return $this->hasMany(Character::class, 'battle')->without(['battle', 'account']);
 		}
 		
 		public function end() {
 			
-			foreach($this->characters() as $character) {
+			foreach($this->relations['characters'] as $character) {
 				$character->battle = null;
 				$character->save();
 			}
@@ -149,13 +150,10 @@
 
 	class Participant extends BaseModel {
 
-		protected $hidden = [
-		    'health'
-		];
-
+		protected $hidden = ['health'];
 		
 		public function battle() {
-			return $this->belongsTo(Battle::class, 'battle')->with(['enemies', 'characters', 'active']);
+			return $this->belongsTo(Battle::class, 'battle');
 		}
 		
 		public function canTakeTurn() {
@@ -173,6 +171,7 @@
 	class Enemy extends Participant {
    		
 		protected $table = 'enemy';
+		protected $with = ['npc', 'battle'];
 		
 		public function takeTurn() {
 			
