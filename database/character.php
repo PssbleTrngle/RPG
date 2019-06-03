@@ -94,7 +94,7 @@
 		}
 		
 		public function isSelected() {
-			$selected = $this->account()->selected()->first();
+			$selected = $this->account()->first()->relations['selected'];
 			return $selected && $selected->id == $this->id;
 		}
 		
