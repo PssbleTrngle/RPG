@@ -83,20 +83,20 @@
 	
 		public static function registerAll() {
 			
-			Skill::register(['id' => 1, 'name' => "Heal", 'timeout' => 5, 'cost' => 2], function($target, $user) {
+			Skill::register(['id' => 1, 'name' => "Heal", 'timeout' => 2, 'cost' => 2], function($target, $user) {
 				if(method_exists($target, 'heal')) {
 					$health = 15;
-					return $target->heal($health) ? 'You healt '.$target->name.' by '.$health.'K' : 'The spell failed!';
+					return $target->heal($health) ? 'You healt '.$target->name().' by '.$health.'K' : 'The spell failed!';
 				}
 				return false;
 			});
 			
 			Skill::register(['id' => 2, 'name' => 'Glow', 'timeout' => 5, 'cost' => 1], function($target, $user) {});
 			
-			Skill::register(['id' => 3, 'name' => 'Pulse', 'timeout' => 3, 'cost' => '1'], function($target, $user) {
+			Skill::register(['id' => 3, 'name' => 'Pulse', 'timeout' => 3, 'cost' => 1], function($target, $user) {
 				if(method_exists($target, 'damage')) {
 					$damage = 5;
-					return $target->damage($damage) ? 'The pulse dealt '.$damage.'K damage to '.$target->name : 'The attack had no effect!';
+					return $target->damage($damage) ? 'The pulse dealt '.$damage.'K damage to '.$target->name() : 'The attack had no effect!';
 				}
 				return false;
 			});

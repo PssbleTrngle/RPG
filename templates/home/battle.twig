@@ -7,18 +7,11 @@
 				{% for enemy in battle.relations.enemies if enemy.health() > 0 %}
 
 					<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
-						<p>{{enemy.npc().name }} [lvl: {{enemy.npc().level }}]</p>
-						<div class='healthbar' data-amount='{{ enemy.health() / enemy.npc().maxHealth }}'></div>
+						<p>{{enemy.npc().name }} [lvl: {{enemy.relations.npc.level }}]</p>
+						<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
 						{{ icon('npc/' ~ enemy.npc().name)|raw }}
 					</div>
-
-				{% else %}
-
-					{% set loot = battle.getLoot() %}
-
-					<h1 class='highlight-glow center'>You won!</h1>
-					<p class='center'>+{{ loot.xp }} XP</p>
-
+					
 				{% endfor %}
 			</div>
 		</div>
@@ -29,7 +22,7 @@
 					<div class='participant' data-id='{{ char.id }}' data-type='character'>
 						<p>{{char.name }} [lvl: {{char.level() }}]</p>
 						<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
-						{{ icon('class/' ~ char|get('clazz').name)|raw }}
+						{{ icon('class/' ~ char.relations.clazz.name)|raw }}
 					</div>
 
 				{% endfor %}
@@ -37,32 +30,30 @@
 		</div>
 	</div>	
 	
-	{% if loot is not defined %}
+	<div class='mb-2'>
+		{% for line in battle.message|split('\\n') %}
+		<p>{{ line }}</p>	
+		{% endfor %}
+	</div>
+
+	{% if battle.relations.active.id == character.id %}
 	
-		<div class='mb-2'>
-			{% for line in battle.message|split('\\n') %}
-				<p>{{ line }}</p>	
+		<div class='options'>
+
+			<div class='option' id='attack'>Attack</div>
+			<div class='option' data-action='battle/skip'>Skip</div>
+			<div class='option' id='item'>Item</div>
+			<div class='option' data-action='battle/run'>Run</div>
+
+			{% for skill in character.skills().get() %}
+			<div class='option {% if skill.usage.nextUse %}disabled{% endif %}' data-parent='attack' data-action='battle/skill/{{ skill.id }}'>{{ skill.name }}</div>
 			{% endfor %}
 		</div>
-	
-		{% if battle.active().id == character.id %}
-			<div class='options'>
-			
-				<div class='option' id='attack'>Attack</div>
-				<div class='option' data-action='battle/skip'>Skip</div>
-				<div class='option' id='item'>Item</div>
-				<div class='option' data-action='battle/run'>Run</div>
 
-				{% for skill in character.skills().get() %}
-					<div class='option {% if skill.usage.nextUse %}disabled{% endif %}' data-parent='attack' data-action='battle/skill/{{ skill.id }}'>{{ skill.name }}</div>
-				{% endfor %}
-			</div>
+	{% elseif battle.relations.active %}
 
-		{% else %}
+		<p>{{ battle.relations.active.name }}'s turn</p>
 
-			<p>{{ battle.active().name }}'s turn</p>
-
-		{% endif %}
 	{% endif %}
 	
 </div>

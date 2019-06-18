@@ -75,9 +75,10 @@
 		}
 		
 		public function search($character) {
-			if(is_numeric($character)) $character = Character::find($character);
+			if(is_numeric($character)) $character = Character::find($character);			
 			
-			if($character && ($position = $character->position()) && ($dungeon = $position->dungeon()) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->relations['position'])
+			   && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
 				
 				if(!$position->foundStairs && rand(1, 100) < 5 + 3*$position->attempts) {
 				
@@ -88,7 +89,7 @@
 					
 					$position->attempts++;
 					
-					if($npc = $dungeon->npcs()->get()->random()) {
+					if($npc = $dungeon->relations['npcs']->random()) {
 						$battle = Battle::start($character);
 						if(!$battle) return false;
 						$battle->addNPC(NPC::find(1));

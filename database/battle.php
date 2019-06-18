@@ -17,14 +17,20 @@
 			return $this->hasMany(Character::class, 'battle')->without(['battle', 'account']);
 		}
 		
-		public function end() {
+		public function win() {
+			global $capsule;
 			
 			foreach($this->relations['characters'] as $character) {
+				$character->addLoot($this->getLoot());
 				$character->battle = null;
 				$character->save();
+			
+				$capsule::table('character_skills')
+					->where('character', $character->id)
+					->update(['nextUse' => 0]);
 			}
 			
-			foreach($this->enemies() as $enemy) {
+			foreach($this->relations['enemies'] as $enemy) {
 				$enemy->delete();
 			}
 			
@@ -51,14 +57,14 @@
 		
 		public function next($charMessage = "") {
 		
-			$this->message = $charMessage.'\n';
-			
+			$this->message = $charMessage.'\n';			
 			$count = $this->participants()->count();
 			
 			$index = ($this->activeIndex() + 1);
 			while(!is_a($next = $this->participants()[$index], 'Character')) {
 				
-				if(is_a($next, 'Enemy') && $next->canTakeTurn()) $this->message .= $next->takeTurn().'\n';
+				if(is_a($next, 'Enemy') && $next->canTakeTurn()) $this->message .= $next->takeTurn($this).'\n';
+				$this->refresh();
 				
 				$index = ($index + 1) % $count;
 				if($index == 0) $this->nextRound();
@@ -66,6 +72,7 @@
 				
 			$this->active = $next->id;
 			$this->save();
+			$this->refresh();
 			
 			return $this->message;
 			
@@ -74,7 +81,7 @@
 		private function nextRound() {
 			global $capsule;
 			
-			foreach($this->characters() as $character) {
+			foreach($this->relations['characters'] as $character) {
 			
 				$capsule::table('character_skills')
 					->where('character', $character->id)
@@ -136,9 +143,18 @@
 		
 			$loot = [];
 			$loot['xp'] = 0;
+			$loot['items'] = [];
 			foreach($this->enemies() as $enemy) {
 			
-				$loot['xp'] += pow(1.5, $enemy->npc()->level - 1);
+				$npc = $enemy->relations['npc'];
+				$loot['xp'] += pow(1.5, $npc->level - 1);
+				
+				foreach($npc->relations['loot'] as $item) {
+					$inventory = new Inventory;
+					$inventory->item = $item->id;
+					$inventory->amount = 2;
+					$loot['items'][] = $inventory;
+				}
 				
 			}
 			
@@ -151,6 +167,10 @@
 	class Participant extends BaseModel {
 
 		protected $hidden = ['health'];
+		
+		public function name() {
+			return $this->name;
+		}
 		
 		public function battle() {
 			return $this->belongsTo(Battle::class, 'battle');
@@ -166,6 +186,18 @@
 			return $this->health;
 		}
 		
+		public function heal($amount) {
+			$this->health = min($this->maxHealth(), $this->health + $amount);
+			$this->save();
+			return true;
+		}
+		
+		public function damage($amount) {
+			$this->health = max(0, $this->health - $amount);
+			$this->save();
+			return true;
+		}
+		
 	}
 
 	class Enemy extends Participant {
@@ -173,9 +205,13 @@
 		protected $table = 'enemy';
 		protected $with = ['npc', 'battle'];
 		
-		public function takeTurn() {
+		public function name() {
+			return $this->relations['npc']->name;
+		}
+		
+		public function takeTurn($battle) {
 			
-			if(($battle = $this->battle()) && ($characters = $battle->characters())) {
+			if($battle && ($characters = $battle->relations['characters'])) {
 				
 				if(rand(1, 100) < 10) {
 					
@@ -186,7 +222,7 @@
 					$damage = 5;
 					
 					$target->damage($damage);
-					return $this->relations['npc']->name.' dealt '.$damage.'K damage';
+					return $this->relations['npc']->name.' dealt '.$damage.'K damage to '.$target->name;
 				}
 				
 				return $this->relations['npc']->name.' was too scared to attack';
@@ -203,22 +239,17 @@
 		public function npc() {
 			return $this->belongsTo(NPC::class, 'npc');
 		}
-		
-		public function damage($amount) {
-			$this->health -= $amount;
-			if($this->health <= 0) {
-				$this->health = 0;
-			}
-				
-			$this->save();
-			return true;
-		}
-		
 	}
 
 	class NPC extends BaseModel {
    		
 		protected $table = 'npc';
+		protected $with = ['loot'];
+		
+		public function loot() {
+			return $this->belongsToMany(Item::class, 'npc_loot', 'npc', 'item')
+    			->withPivot('chance');
+		}
 		
 		public function createEnemy() {
 			$enemy = new Enemy;

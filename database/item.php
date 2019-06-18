@@ -80,6 +80,7 @@
 			Slot::register(['id' => 1, 'name' => "Inventory"], function($item) { return true; });			
 			Slot::register(['id' => 2, 'name' => "Left Hand"], function($item) { return false; });
 			Slot::register(['id' => 3, 'name' => "Right Hand"], function($item) { return false; });
+			Slot::register(['id' => 4, 'name' => "Loot"], function($item) { return false; });
 			
 		}
 		

@@ -12,9 +12,7 @@
 	use \Psr\Http\Message\ResponseInterface as Response;
 
 	$configuration = [
-		'settings' => [
-			'displayErrorDetails' => true,
-		],
+		'settings' => [ 'displayErrorDetails' => true ],
 	];
 	$container = new \Slim\Container($configuration);
 	$app = new \Slim\App($container);
@@ -84,6 +82,7 @@
 			return round(abs($time - time()) / 24 / 60 / 60);
 	    }));
 
+		/*
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('get', function ($model, $relation) {
 	    	if(!$model || !is_a($model, 'BaseModel')) {
 	    		echo 'error accessing '.$relation.': not a model<br>';
@@ -95,6 +94,7 @@
 
 			return $model->relations[$relation];
 	    }));
+		*/
 
 	    return $view;
 	};
@@ -103,8 +103,20 @@
 
 		$account = getAccount();
 
-		if($account) 
+		if($account) {
+		
+			if(($selected = $account->relations['selected']) && ($battle = $selected->relations['battle'])) {
+				
+				$won = true;
+				foreach($battle->relations['enemies'] as $enemy)
+					$won &= $enemy->health <= 0;
+				
+				if($won) $battle->win();
+			
+			}
+			
 			return $this->view->render($response, 'home.twig', []);
+		}
 		
 		return $response->withRedirect('/login');
 		
@@ -181,6 +193,33 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
+	$app->get('/admin/loot', function (Request $request, Response $response, array $args) {
+		
+		$log = "";
+		foreach(NPC::all() as $npc) {
+			$log .= '<p>Loot for '.$npc->name.'</p>';
+			
+			foreach($npc->relations['loot'] as $item)
+				$log .= '<li>'.$item->name.'</li>';
+		}
+		
+		$log .= "<br>";
+		
+		foreach(Enemy::all() as $enemy) {
+			$log .= '<p>Test Loot for '.$enemy->name().'</p>';
+			
+			$enemy->getLoot();
+			
+			/*
+			foreach($enemy->getLoot()['items'] as $item)
+				$log .= '<li>'.$item->name.'</li>';
+			*/
+		}
+			
+		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		
+	})->add(new NeedsAuthentication($container['view'], 'admin'));
+
 	$app->get('/admin/post', function (Request $request, Response $response, array $args) {
 		
 		$this->view->render($response, 'admin/post.twig', []);
@@ -249,7 +288,7 @@
 		$account = getAccount();
 		
 		if($to && $account) {
-			$character = $account->selected;
+			$character = $account->relations['selected'];
 			if($character)
 				return json_encode(['success' => $character->evolve($to)]);
 		}
@@ -264,7 +303,7 @@
 		$account = getAccount();
 		
 		if($id && $account) {
-			$character = $account->selected;
+			$character = $account->relations['selected'];
 			
 			if($character)
 				return json_encode(['success' => $character->travel($id)]);
@@ -274,6 +313,7 @@
 		
 	});
 
+	/*
 	$app->post('/battle/start', function (Request $request, Response $response, array $args) {
 		
 		$id = $request->getParams()['id'] ?? null;
@@ -293,15 +333,17 @@
 		return json_encode(['success' => false]);
 		
 	});
+	*/
 
 	$app->post('/dungeon/{action}', function (Request $request, Response $response, array $args) {
 		
 		$account = getAccount();
 		
 		if($account) {
-			$character = $account->selected;
-			
-			if($character && !$character->battle() && $dungeon = $character->position()->dungeon()) {
+			$character = $account->relations['selected'];
+
+			if($character && !$character->relations['battle']
+			   && $dungeon = $character->relations['position']->relations['dungeon']) {
 				
 				switch($args['action']) {
 					case 'search': return json_encode(['success' => $dungeon->search($character)]);
@@ -320,9 +362,9 @@
 		$selected = $request->getParams()['target'] ?? null;
 			
 		if($account && $selected) {
-			$character = $account->selected;
+			$character = $account->relations['selected'];
 
-			if($character && ($battle = $character->battle()) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
 
 				$skill = $character->skills()
 					->where('id', '=', $args['skill'])
@@ -336,8 +378,9 @@
 						case 'enemy': $target = Enemy::find($selected['id']); break;
 					}
 					
-					if(isset($target) && $target && $target->battle()->id == $battle->id) {
+					if(isset($target) && $target && $target->relations['battle']->id == $battle->id) {
 						$message = $skill->apply($target, $character);
+						$battle->refresh();
 						if($message) {
 							$skill->timeout($character);
 							$battle->next($message);
@@ -350,9 +393,10 @@
 				return json_encode(['success' => false, 'message' => 'skill not found']);
 
 			}
+			return json_encode(['success' => false, 'message' => 'character not active in battle']);
 
 		}
-		return json_encode(['success' => false]);
+		return json_encode(['success' => false, 'message' => 'no target specified']);
 		
 	});
 
@@ -361,16 +405,17 @@
 		$account = getAccount();
 			
 		if($account) {
-			$character = $account->selected;
+			$character = $account->relations['selected'];
 
-			if($character && ($battle = $character->battle()) && ($battle->active == $character->id)) {				
-					
+			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
+				
 				$message = $battle->next($character->name.' skipped');
 				return json_encode(['success' => $message !== false, 'message' => $message]);
 
 			}
 
 		}
+		
 		return json_encode(['success' => false]);
 		
 	});

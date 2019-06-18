@@ -66,6 +66,21 @@
 			return $this->belongsTo(Race::class, 'race');
 		}
 		
+		public function addLoot($loot) {
+			
+			$this->xp += $loot['xp'];
+			foreach($loot['items'] as $item) {
+				
+				$item->character = $this->id;
+				$item->slot = 4;
+				$item->save();
+				
+			}
+			
+			$this->save();
+			
+		}
+		
 		public function clazz() {
 			return $this->belongsTo(Clazz::class, 'class');
 		}
@@ -162,18 +177,6 @@
 		
 		public function maxHealth() {
 			return 100;	
-		}
-		
-		public function heal($amount) {
-			$this->health = min($this->maxHealth(), $this->health + $amount);
-			$this->save();
-			return true;
-		}
-		
-		public function damage($amount) {
-			$this->health = max(0, $this->health - $amount);
-			$this->save();
-			return true;
 		}
 		
 	}
