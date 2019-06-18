@@ -94,7 +94,7 @@
 		}
 		
 		public function stats() {
-			return $this->relations['clazz']->relations['stats']->toBase()->add($this->relations['race']->relations['stats']);
+			return $this->relations['clazz']->relations['stats']->add($this->relations['race']->relations['stats']);
 		}
 		
 		public function position() {
