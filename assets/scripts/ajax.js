@@ -1,3 +1,5 @@
+window.params = {};
+
 function sendAction(action, func) {
 	if(!func) func = function(result) {
 		if(result.success) location.reload();

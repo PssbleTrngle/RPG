@@ -51,7 +51,37 @@
 			}
 		}
 		
-		public static function take($stack) {
+		public function take($character) {
+			if(is_numeric($character)) $character = Character::find($character);
+			
+			if($character) {			
+				if($this->character == $character->id) {
+					if($this->slot != 1) {
+						
+						$hasSpace = $character->itemIn(1)->count() < $character->bagSize();
+						
+						if(!$hasSpace && $this->stackable) foreach($character->itemIn(1) as $stack)
+							if($stack->item == $this->item) {
+								$hasSpace = true;
+								break;
+							}
+						
+						if($hasSpace) {
+						
+							$this->slot = 1;
+							$this->save();
+							$character->refresh();
+							Stack::tidy($character);
+							
+							return true;
+							
+						}
+						
+					}
+				}			
+			}
+			
+			return false;
 			
 		}
 		

@@ -81,6 +81,10 @@
 			
 		}
 		
+		public function bagSize() {
+			return option('base_bag_size');
+		}
+		
 		public function clazz() {
 			return $this->belongsTo(Clazz::class, 'class');
 		}

@@ -268,7 +268,7 @@
 			
 			if($battle && ($characters = $battle->relations['characters'])) {
 				
-				if(rand(1, 100) < (100 * $GLOBALS['OPTIONS']['call_chance'])  && $battle->relations['enemies']->where('health', '>', '0')->count() < $GLOBALS['OPTIONS']['max_enemies']) {
+				if(rand(1, 100) < (100 * options('call_chance'))  && $battle->relations['enemies']->where('health', '>', '0')->count() < option('max_enemies')) {
 					
 					$position = $battle->relations['position'];
 					

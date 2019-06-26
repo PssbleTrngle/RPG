@@ -99,7 +99,7 @@
 	    return $view;
 	};
 
-	$app->get('/', function (Request $request, Response $response, array $args) {
+	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$account = getAccount();
 
@@ -449,10 +449,33 @@
 		
 	});
 
+	$app->post('/inventory/take', function (Request $request, Response $response, array $args) {
+		
+		$account = getAccount();
+			
+		if($account) {
+			
+			$character = $account->relations['selected'];
+			$stack = $request->getParams()['stack'] ?? null;
+			
+
+			if($character && ($stack = Stack::find($stack)) && !$character->relations['battle']) {
+				
+				$message = $stack->take($character);
+				return json_encode(['success' => $message !== false, 'message' => $message]);
+
+			}
+
+		}
+		
+		return json_encode(['success' => false]);
+		
+	});
+
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
 	    	$account = Account::where('id', $_SESSION['account'])->first();
-			Inventory::tidy($account->relations['selected']);
+			Stack::tidy($account->relations['selected']);
 			return $account;
 	    }
 	    return null;
