@@ -12,6 +12,14 @@
 	
 }
 
+.row {
+	display: table-row;
+}
+
+.row > * {
+	float: left;
+}
+
 .navbar {
 
 	width: 100%;
@@ -153,6 +161,12 @@ img.icon {
 .h-50 { height: 50% }
 .h-75 { height: 75% }
 .h-100 { height: 100% }
+
+.h-1 { height: calc(var(--marg) * 1); }
+.h-2 { height: calc(var(--marg) * 2); }
+.h-3 { height: calc(var(--marg) * 3); }
+.h-4 { height: calc(var(--marg) * 4); }
+.h-5 { height: calc(var(--marg) * 5); }
 
 .container {
 

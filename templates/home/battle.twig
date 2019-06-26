@@ -1,60 +1,63 @@
 <div class='battle'>
 
-	<div class='battlefield'>
-		<p class='right'>Round {{ battle.round }}</p>
-		<div class='participants'>
-			<div class='row'>
-				{% for enemy in battle.relations.enemies if enemy.health() > 0 %}
+	<div class='row'>
+		<div class='battlefield'>
+			<p class='right'>Round {{ battle.round }}</p>
+			<p class='right feedback'></p>
+			<div class='participants'>
+				<div class='row'>
+					{% for enemy in battle.relations.enemies if enemy.health() > 0 %}
 
-					<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
-						<p>{{enemy.npc().name }} [lvl: {{enemy.relations.npc.level }}]</p>
-						<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
-						{{ icon('npc/' ~ enemy.npc().name)|raw }}
-					</div>
-					
-				{% endfor %}
+						<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
+							<p>{{enemy.name() }} [lvl: {{enemy.relations.npc.level }}]</p>
+							<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
+							{{ icon('npc/' ~ enemy.relations.npc.name)|raw }}
+						</div>
+
+					{% endfor %}
+				</div>
+			</div>
+			<div class='participants'>
+				<div class='row'>
+					{% for char in battle.relations.characters %}
+
+						<div class='participant {% if battle.active == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
+							<p>{{char.name }} [lvl: {{char.level() }}]</p>
+							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
+							{{ icon('class/' ~ char.relations.clazz.name)|raw }}
+						</div>
+
+					{% endfor %}
+				</div>
 			</div>
 		</div>
-		<div class='participants'>
-			<div class='row'>
-				{% for char in battle.relations.characters %}
 
-					<div class='participant' data-id='{{ char.id }}' data-type='character'>
-						<p>{{char.name }} [lvl: {{char.level() }}]</p>
-						<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
-						{{ icon('class/' ~ char.relations.clazz.name)|raw }}
-					</div>
+		{% if battle.active == character.id %}
 
+			<div class='options vertical ml-3'>
+
+				<div class='option' id='attack'>Attack</div>
+				<div class='option' data-action='battle/skip'>Skip</div>
+				<div class='option' id='item'>Item</div>
+				<div class='option' data-action='battle/run'>Run</div>
+
+				{% for skill in character.skills().get() %}
+				<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name }}</div>
 				{% endfor %}
 			</div>
-		</div>
-	</div>	
+		
+		{% else %}
+		
+			{{ battle.relations.active.name }}' turn
+
+		{% endif %}
+	</div>
 	
 	<div class='mb-2'>
 		{% for line in battle.message|split('\\n') %}
 		<p>{{ line }}</p>	
 		{% endfor %}
 	</div>
-
-	{% if battle.relations.active.id == character.id %}
-	
-		<div class='options'>
-
-			<div class='option' id='attack'>Attack</div>
-			<div class='option' data-action='battle/skip'>Skip</div>
-			<div class='option' id='item'>Item</div>
-			<div class='option' data-action='battle/run'>Run</div>
-
-			{% for skill in character.skills().get() %}
-			<div class='option {% if skill.usage.nextUse %}disabled{% endif %}' data-parent='attack' data-action='battle/skill/{{ skill.id }}'>{{ skill.name }}</div>
-			{% endfor %}
-		</div>
-
-	{% elseif battle.relations.active %}
-
-		<p>{{ battle.relations.active.name }}'s turn</p>
-
-	{% endif %}
 	
 </div>
 
@@ -71,8 +74,28 @@
 				'type': $(this).attr('data-type')
 			};
 			
+			sendAction('battle/skill');
+			
+		});
+		
+		$('.participant').hover(function() {
+			
 			$('.participant').removeClass('selected');
-			$(this).addClass('selected');
+			
+			let skill = window.params.skill;
+			let group = $('[data-skill=' + skill + ']').attr('data-group') != 0;
+			
+			if(skill) {
+				if(group)
+					$(this).closest('.row').find('.participant').addClass('selected');
+				else 
+					$(this).addClass('selected');
+			}
+		});
+		
+		$('.skill').click(function() {
+			
+			window.params.skill = $(this).attr('data-skill');
 			
 		});
 		

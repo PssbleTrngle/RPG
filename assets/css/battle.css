@@ -1,6 +1,6 @@
 .battlefield {
 
-	width: calc(100% - 20px);
+	width: calc(100vw - 280px);
 	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
 	background-color: #666;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
@@ -32,6 +32,10 @@
 
 .participant.selected {
 	 filter: drop-shadow(0 0 4px var(--gold-light));
+}
+
+.participant.active {
+	 filter: drop-shadow(0 0 4px #FFF);
 }
 
 .healthbar {

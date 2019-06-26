@@ -21,6 +21,40 @@
 			return $this->belongsTo(Enchantment::class, 'enchantment');
 		}
 		
+		public static function tidy($character) {
+			if(is_numeric($character)) $character = Character::find($character);
+			
+			if($character) {
+			
+				foreach([1, 4] as $slot) {
+					
+					$stacked = [];
+					
+					foreach($character->relations['inventory'] as $stack) if($stack->slot == $slot) {
+						
+						if($stack->relations['item']->stackable) {
+							if(array_key_exists($stack->item, $stacked)) {
+
+								$stacked[$stack->item]->amount += $stack->amount;
+								$stack->delete();
+
+							} else $stacked[$stack->item] = $stack;
+						}
+
+					}
+					
+					foreach($stacked as $stack) $stack->save();
+				}
+				
+				$character->refresh();
+			
+			}
+		}
+		
+		public static function take($stack) {
+			
+		}
+		
 	}
 
 	class ItemType extends BaseModel {

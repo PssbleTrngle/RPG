@@ -1,3 +1,17 @@
+<div class='inventory loot'>
+{% for stack in character.itemIn(4) %}
+
+	<div class='slot'>
+		<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+		<p>{{ stack.amount }}x</p>
+		<p>{{ stack.item().name }}</p>
+	</div>
+
+{% endfor %}
+</div>
+
+<div class='row h-4'></div>
+
 <div class='inventory'>
 {% for i in 2..3 %}
 
@@ -14,7 +28,6 @@
 
 {% endfor %}
 </div>
-
 <div class='inventory'>
 {% for stack in character.itemIn(1) %}
 

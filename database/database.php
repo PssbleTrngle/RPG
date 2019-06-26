@@ -1,5 +1,7 @@
 <?php
 
+	include_once 'options.php';
+
 	use Illuminate\Database\Eloquent\Model as Model;
 	use Illuminate\Database\Capsule\Manager as Capsule;
 

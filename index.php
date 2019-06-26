@@ -356,10 +356,11 @@
 		
 	});
 
-	$app->post('/battle/skill/{skill}', function (Request $request, Response $response, array $args) {
+	$app->post('/battle/skill', function (Request $request, Response $response, array $args) {
 		
 		$account = getAccount();
 		$selected = $request->getParams()['target'] ?? null;
+		$skillID = $request->getParams()['skill'] ?? null;
 			
 		if($account && $selected) {
 			$character = $account->relations['selected'];
@@ -367,36 +368,44 @@
 			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
 
 				$skill = $character->skills()
-					->where('id', '=', $args['skill'])
+					->where('id', '=', $skillID)
 					->wherePivot('nextUse', '<=', 0)
 					->first();
 				
-				if($skill) {
+				if($skillID && $skill) {
 					
 					switch($selected['type']) {
-						case 'character': $target = Character::find($selected['id']); break;
-						case 'enemy': $target = Enemy::find($selected['id']); break;
+						case 'character': $target = $battle->relations['characters']; break;
+						case 'enemy': $target = $battle->relations['enemies']; break;
 					}
 					
-					if(isset($target) && $target && $target->relations['battle']->id == $battle->id) {
+					if(isset($target) && $target) {
+						
+						if(!$skill->affectDead)
+							$target = $target->where('health', '>', '0');
+							
+						if(!$skill->group)
+							$target = $target->where('id', '=', $selected['id'])->first();
+							
 						$message = $skill->apply($target, $character);
 						$battle->refresh();
+						
 						if($message) {
 							$skill->timeout($character);
 							$battle->next($message);
 						}
 
 						return json_encode(['success' => $message !== false, 'message' => $message]);
-					} else return json_encode(['success' => false, 'message' => 'target not found']);
+					} else return json_encode(['success' => false, 'message' => 'Choose a valid target']);
 				}
 
-				return json_encode(['success' => false, 'message' => 'skill not found']);
+				return json_encode(['success' => false, 'message' => 'Choose a skill']);
 
 			}
-			return json_encode(['success' => false, 'message' => 'character not active in battle']);
+			return json_encode(['success' => false, 'message' => 'It\' not your turn']);
 
 		}
-		return json_encode(['success' => false, 'message' => 'no target specified']);
+		return json_encode(['success' => false, 'message' => 'Choose a target']);
 		
 	});
 
@@ -420,9 +429,31 @@
 		
 	});
 
+	$app->post('/battle/run', function (Request $request, Response $response, array $args) {
+		
+		$account = getAccount();
+			
+		if($account) {
+			$character = $account->relations['selected'];
+
+			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
+				
+				$message = $battle->run($character);
+				return json_encode(['success' => $message !== false, 'message' => $message]);
+
+			}
+
+		}
+		
+		return json_encode(['success' => false]);
+		
+	});
+
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
-	    	return Account::where('id', $_SESSION['account'])->first();
+	    	$account = Account::where('id', $_SESSION['account'])->first();
+			Inventory::tidy($account->relations['selected']);
+			return $account;
 	    }
 	    return null;
 	}

@@ -57,6 +57,13 @@
     			->withPivot('minFloor');
 		}
 		
+		public function getNPC($floor) {
+			
+			$npc = $this->relations['npcs']->random();
+			return NPC::find(1);
+			
+		}
+		
 		public function leave($character) {
 			if(is_numeric($character)) $character = Character::find($character);
 			
@@ -89,10 +96,10 @@
 					
 					$position->attempts++;
 					
-					if($npc = $dungeon->relations['npcs']->random()) {
+					if($npc = $dungeon->getNPC($position->floor)) {
 						$battle = Battle::start($character);
 						if(!$battle) return false;
-						$battle->addNPC(NPC::find(1));
+						$battle->addNPC($npc);
 					}
 					
 				}

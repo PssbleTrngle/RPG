@@ -19,6 +19,13 @@
 	display: table-row;
 }
 
+.inventory.loot > .slot {
+
+	/* background-color: var(--gold-light); */
+	filter: drop-shadow(0 0 4px var(--gold-light)) drop-shadow(0 0 4px var(--gold-light)) drop-shadow(0 0 4px var(--gold-light));
+	
+}
+
 .slot > div {
 	margin-top: 10%;
 	margin-left: 10%;

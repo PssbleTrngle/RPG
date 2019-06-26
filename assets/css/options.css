@@ -5,6 +5,15 @@
 	
 }
 
+.options.vertical > .option {
+	
+	float: initial;
+	margin-right: 0;
+	margin-top: 8px;
+		
+}
+	
+
 .option {
 
 	user-select: none;
@@ -39,6 +48,7 @@
 
 .option:last-child {
 	margin-right: 0;
+	margin-bottom: 0;
 }
 
 .option:hover {
