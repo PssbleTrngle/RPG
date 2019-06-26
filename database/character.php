@@ -90,7 +90,7 @@
 		}
 		
 		public function inventory() {
-			return $this->hasMany(Inventory::class, 'character')->without('character');
+			return $this->hasMany(Stack::class, 'character')->without('character');
 		}
 		
 		public function stats() {

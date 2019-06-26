@@ -1,6 +1,6 @@
 <?php
 
-	class Inventory extends BaseModel {
+	class Stack extends BaseModel {
    		
 		protected $table = 'inventory';
 		protected $with = ['item', 'slot', 'character', 'enchantment'];
