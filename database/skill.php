@@ -51,6 +51,19 @@
 				}
 				return false;
 			});
+			
+			static::register(['id' => 2, 'name' => 'Backstab', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {
+				if(method_exists($target, 'damage')) {
+					$damage = $user->stats()->apply(8, 'strength');
+
+					if(rand(1, 100) < 0.1 && method_exists($target, 'addEffect')) {
+						$target->addEffect(Effect::where('name', 'poison'));
+					}
+
+					return $target->damage($damage) ? 'The backstab dealt '.$damage.'K damage to '.$target->name() : 'The attack had no effect!';
+				}
+				return false;
+			});
 
 			/* ------------------------  HEALING  ------------------------ */
 			

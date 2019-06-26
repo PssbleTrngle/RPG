@@ -258,7 +258,7 @@
 	class Enemy extends Participant {
    		
 		protected $table = 'enemy';
-		protected $with = ['npc', 'battle'];
+		protected $with = ['npc', 'battle', 'effects'];
 		
 		public function name() {
 			return $this->relations['npc']->name .' '. $this->suffix;
@@ -268,6 +268,14 @@
 
 			return Stats::find(1);
 
+		}
+
+		public function addEffect($effect) {
+			global $capsule;
+
+			$capule::table('enemy_effects')->insert(['enemy' => $this->id, 'effect' => $effect->id]);
+			$this->refresh();			
+			
 		}
 		
 		public function takeTurn($battle) {
@@ -305,6 +313,10 @@
 		
 		public function npc() {
 			return $this->belongsTo(NPC::class, 'npc');
+		}
+		
+		public function effects() {
+			return $this->belongsToMany(Effect::class, 'enemy', 'effect');
 		}
 	}
 
