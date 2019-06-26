@@ -247,7 +247,7 @@
 			return true;
 		}
 		
-		public function damage($amount) {
+		public function damage($amount, $source) {
 			$this->health = max(0, $this->health - $amount);
 			$this->save();
 			return true;
@@ -262,6 +262,12 @@
 		
 		public function name() {
 			return $this->relations['npc']->name .' '. $this->suffix;
+		}
+
+		public function stats() {
+
+			return Stats::find(1);
+
 		}
 		
 		public function takeTurn($battle) {
@@ -348,6 +354,24 @@
 			
 			return $stats;
 			
+		}
+
+		public function statFactor($name) {
+
+			return $this->$name / 100;
+
+		}
+
+		public function apply($value, $stat, $negative = false) {
+
+			if(negative)
+				$by = 1 + $this->statFactor($stat);
+			else
+				$by = 1 - $this->statFactor($stat);
+
+
+			return floor($value * ($by));
+
 		}
 		
 	}
