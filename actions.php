@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 	$app->registerAction('/character/select/{id}', function($args) {
 
@@ -11,8 +11,6 @@
 		return ['success' => false];
 
 	});
-
-	/*
 
 	$app->registerAction('/character/evolve', function ($args) {
 		
