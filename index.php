@@ -259,6 +259,18 @@
 	function registerAction($url, $func) {
 		global $app;
 
+		if(is_callable($func))
+			$app->post($url, function (Request $request, Response $response, array $args) use ($func) {
+
+			foreach($request->getParams() as $key => $value) {
+				$args[$key] = $value;
+			}
+
+			$answer = $func($args);
+			return json_encode($answer);
+
+		});
+
 	};
 
 	include_once 'actions.php';
