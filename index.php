@@ -273,7 +273,7 @@
 
 	};
 
-	#include_once 'actions.php';
+	include_once 'actions.php';
 
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
