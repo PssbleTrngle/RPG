@@ -266,7 +266,8 @@
 				$args[$key] = $value;
 			}
 
-			return json_encode($func($args));
+			$answer = $func($args);
+			return json_encode($answer);
 
 		});
 
