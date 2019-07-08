@@ -262,7 +262,7 @@
 		if(is_callable($func))
 			$app->post($url, function (Request $request, Response $response, array $args) {
 
-			$foreach ($request->getParams() as $key => $value) {
+			foreach($request->getParams() as $key => $value) {
 				$args[$key] = $value;
 			}
 
