@@ -82,20 +82,6 @@
 			return round(abs($time - time()) / 24 / 60 / 60);
 	    }));
 
-		/*
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('get', function ($model, $relation) {
-	    	if(!$model || !is_a($model, 'BaseModel')) {
-	    		echo 'error accessing '.$relation.': not a model<br>';
-	    		return null;
-	    	} else if(!array_key_exists($relation, $model->relations)) {
-	    		echo 'error accessing '.$relation.': not a relation<br>';
-	    		return null;
-	    	}
-
-			return $model->relations[$relation];
-	    }));
-		*/
-
 	    return $view;
 	};
 
@@ -270,16 +256,33 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
-	$app->post('/character/select/{id}', function (Request $request, Response $response, array $args) {
-		
+	function registerAction($url, $func) {
+		global $app;
+
+		if(is_callable($func))
+			$app->post($url, function (Request $request, Response $response, array $args) {
+
+			$foreach ($request->getParams() as $key => $value) {
+				$args[$key] = $value;
+			}
+
+			return json_encode($func($args));
+
+		});
+
+
+	}
+
+	registerAction('/character/select/{id}', function($args) {
+
 		$id = $args['id'];
 		$account = getAccount();
 		
 		if($id && $account)
-			return json_encode(['success' => $account->select($id)]);
+			return ['success' => $account->select($id)];
 		
-		return json_encode(['success' => false]);
-		
+		return ['success' => false];
+
 	});
 
 	$app->post('/character/evolve', function (Request $request, Response $response, array $args) {
