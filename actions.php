@@ -1,7 +1,5 @@
 <?php 
 
-	/*
-
 	$app->registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];
@@ -13,6 +11,8 @@
 		return ['success' => false];
 
 	});
+
+	/*
 
 	$app->registerAction('/character/evolve', function ($args) {
 		
