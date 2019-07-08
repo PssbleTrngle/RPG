@@ -258,8 +258,17 @@
 
 	$app->registerAction = function($url, $func) {
 
-		
+		if(is_callable($func && false))
+			$this->post($url, function (Request $request, Response $response, array $args) use ($func) {
 
+			foreach($request->getParams() as $key => $value) {
+				$args[$key] = $value;
+			}
+
+			$answer = $func($args);
+			return json_encode($answer);
+
+		});
 
 	};
 
