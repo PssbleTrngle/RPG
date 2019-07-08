@@ -41,7 +41,9 @@
 		
 		return ['success' => false];
 		
-	});
+	}); 
+
+	/*
 
 	$app->registerAction('/dungeon/{action}', function ($args) {
 		
@@ -179,5 +181,7 @@
 		return json_encode(['success' => false]);
 		
 	});
+
+	*/
 
 ?>
