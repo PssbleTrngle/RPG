@@ -260,7 +260,7 @@
 		global $app;
 
 		if(is_callable($func))
-			$app->post($url, function (Request $request, Response $response, array $args) {
+			$app->post($url, function (Request $request, Response $response, array $args) use ($func) {
 
 			foreach($request->getParams() as $key => $value) {
 				$args[$key] = $value;
