@@ -1,6 +1,6 @@
 <?php
 
-	$app->registerAction('/character/select/{id}', function($args) {
+	registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];
 		$account = getAccount();
@@ -12,7 +12,7 @@
 
 	});
 
-	$app->registerAction('/character/evolve', function ($args) {
+	registerAction('/character/evolve', function ($args) {
 		
 		$to = $args['to'] ?? null;
 		$account = getAccount();
@@ -27,7 +27,7 @@
 		
 	});
 
-	$app->registerAction('/character/travel', function ($args) {
+	registerAction('/character/travel', function ($args) {
 		
 		$id = $args['id'] ?? null;
 		$account = getAccount();
@@ -43,7 +43,7 @@
 		
 	}); 
 
-	$app->registerAction('/dungeon/{action}', function ($args) {
+	registerAction('/dungeon/{action}', function ($args) {
 		
 		$account = getAccount();
 		
@@ -64,7 +64,7 @@
 		
 	});
 
-	$app->registerAction('/battle/skill', function ($args) {
+	registerAction('/battle/skill', function ($args) {
 		
 		$account = getAccount();
 		$selected = $args['target'] ?? null;
@@ -117,7 +117,7 @@
 		
 	});
 
-	$app->registerAction('/battle/skip', function ($args) {
+	registerAction('/battle/skip', function ($args) {
 		
 		$account = getAccount();
 			
@@ -137,7 +137,7 @@
 		
 	});
 
-	$app->registerAction('/battle/run', function ($args) {
+	registerAction('/battle/run', function ($args) {
 		
 		$account = getAccount();
 			
@@ -157,7 +157,7 @@
 		
 	});
 
-	$app->registerAction('/inventory/take', function ($args) {
+	registerAction('/inventory/take', function ($args) {
 		
 		$account = getAccount();
 			

@@ -256,9 +256,10 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
-	$app->registerAction = function($url, $func) {
+	function registerAction($url, $func) {
+		global $app;
 
-		if(is_callable($func && false))
+		if(is_callable($func))
 			$this->post($url, function (Request $request, Response $response, array $args) use ($func) {
 
 			foreach($request->getParams() as $key => $value) {
