@@ -206,7 +206,7 @@
 				$loot['xp'] += pow(1.5, $npc->level - 1);
 				
 				foreach($npc->relations['loot'] as $item) {
-					$inventory = new Inventory;
+					$inventory = new Stack;
 					$inventory->item = $item->id;
 					$inventory->amount = 1;
 					$loot['items'][] = $inventory;
@@ -248,7 +248,7 @@
 			return true;
 		}
 		
-		public function damage($amount, $source) {
+		public function damage($amount, $source = null) {
 			$this->health = max(0, $this->health - $amount);
 			$this->save();
 			return true;
@@ -283,6 +283,7 @@
 
 		public function statFactor($name) {
 
+			return 0.2;
 			return $this->$name / 100;
 
 		}
@@ -295,7 +296,7 @@
 				$by = 1 - $this->statFactor($stat);
 
 
-			return floor($value * ($by));
+			return floor($value * $by);
 
 		}
 		

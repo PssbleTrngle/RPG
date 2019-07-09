@@ -27,7 +27,7 @@
 			
 			if($battle && ($characters = $battle->relations['characters'])) {
 				
-				if(rand(1, 100) < (100 * options('call_chance'))  && $battle->relations['enemies']->where('health', '>', '0')->count() < option('max_enemies')) {
+				if(rand(1, 100) < (100 * option('call_chance'))  && $battle->relations['enemies']->where('health', '>', '0')->count() < option('max_enemies')) {
 					
 					$position = $battle->relations['position'];
 					
@@ -35,17 +35,19 @@
 					$battle->addNPC($called);
 					$called->save();
 					
-					return $this->relations['npc']->name.' called for help';
+					return $this->name().' called for help';
 					
 				} else {
+					
 					$target = $characters->random();
 					$damage = 5;
 					
 					$target->damage($damage);
-					return $this->relations['npc']->name.' dealt '.$damage.'K damage to '.$target->name;
+					return $this->name().' dealt '.$damage.' damage to '.$target->name;
+					
 				}
 				
-				return $this->relations['npc']->name.' was too scared to attack';
+				return $this->name().' was too scared to attack';
 				
 			}
 		

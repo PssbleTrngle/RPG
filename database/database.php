@@ -38,13 +38,13 @@
 		
 	}
 
+	include_once 'item.php';
 	include_once 'battle.php';
 	include_once 'npc.php';
 	include_once 'character.php';	
 	include_once 'clazz.php';	
 	include_once 'skill.php';
-	include_once 'effect.php';
-	include_once 'item.php';		
+	include_once 'effect.php';		
 	include_once 'location.php';
 
 	registerAll();
