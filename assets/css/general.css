@@ -39,7 +39,7 @@
 	
 }
 
-.center { text-align: center; }
+.center { text-align: center; margin: auto; }
 .right { text-align: right; }
 
 .navbar-link.active {
@@ -222,4 +222,24 @@ input:first-child {
 
 input:last-child {
 	border-radius: 0 5px 5px 0;	
+}
+
+.login {
+	width: 50%;	
+}
+
+.login-icon {
+	width: 300px;
+	height: 300px;
+}
+
+.login-icon.small {
+	width: 200px;
+	height: 200px;
+	margin-top: 100px;
+}
+
+.login-icons {
+	width: 800px;
+	margin: 0 auto;
 }

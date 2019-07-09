@@ -1,7 +1,14 @@
 <div class='dungeon my-5'>
 	
 	<h2>{{ position.relations.dungeon.name }}</h2>
+	
+	{% for floor in range(1, position.relations.dungeon.floors) %}
+	
+		<div class='floor {% if floor == position.floor %}current{% endif %}'>{{ floor }}</div>
+	
+	{% endfor %}
 
+	<div class='my-1'></div>
 	<div class='options'>
 		<div class='option' data-action='dungeon/leave'>Exit</div>
 		<div class='option' data-action='dungeon/search'>Search</div>
