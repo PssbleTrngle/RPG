@@ -75,7 +75,7 @@
 		
 		$account = getAccount();
 		$selected = $args['target'] ?? null;
-		$skillID = $request->getParams()['skill'] ?? null;
+		$skillID = $args['skill'] ?? null;
 			
 		if($account && $selected) {
 			$character = $account->relations['selected'];
@@ -110,17 +110,17 @@
 							$battle->next($message);
 						}
 
-						return json_encode(['success' => $message !== false, 'message' => $message]);
-					} else return json_encode(['success' => false, 'message' => 'Choose a valid target']);
+						return ['success' => $message !== false, 'message' => $message];
+					} else return ['success' => false, 'message' => 'Choose a valid target'];
 				}
 
-				return json_encode(['success' => false, 'message' => 'Choose a skill']);
+				return ['success' => false, 'message' => 'Choose a skill'];
 
 			}
-			return json_encode(['success' => false, 'message' => 'It\' not your turn']);
+			return ['success' => false, 'message' => 'It\' not your turn'];
 
 		}
-		return json_encode(['success' => false, 'message' => 'Choose a target']);
+		return ['success' => false, 'message' => 'Choose a target'];
 		
 	});
 
@@ -134,13 +134,13 @@
 			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
 				
 				$message = $battle->next($character->name.' skipped');
-				return json_encode(['success' => $message !== false, 'message' => $message]);
+				return ['success' => $message !== false, 'message' => $message];
 
 			}
 
 		}
 		
-		return json_encode(['success' => false]);
+		return ['success' => false];
 		
 	});
 
@@ -154,13 +154,13 @@
 			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
 				
 				$message = $battle->run($character);
-				return json_encode(['success' => $message !== false, 'message' => $message]);
+				return ['success' => $message !== false, 'message' => $message];
 
 			}
 
 		}
 		
-		return json_encode(['success' => false]);
+		return ['success' => false];
 		
 	});
 
@@ -171,19 +171,19 @@
 		if($account) {
 			
 			$character = $account->relations['selected'];
-			$stack = $request->getParams()['stack'] ?? null;
+			$stack = $args['stack'] ?? null;
 			
 
 			if($character && ($stack = Stack::find($stack)) && !$character->relations['battle']) {
 				
 				$message = $stack->take($character);
-				return json_encode(['success' => $message !== false, 'message' => $message]);
+				return ['success' => $message !== false, 'message' => $message];
 
 			}
 
 		}
 		
-		return json_encode(['success' => false]);
+		return ['success' => false];
 		
 	});
 

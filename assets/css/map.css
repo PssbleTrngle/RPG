@@ -50,3 +50,18 @@
 .map > .back:hover {
 	background-color: var(--gold);
 }
+
+.floor {
+	
+	margin-left: 15px;
+	padding: 5px;
+	width: 300px;
+	background-color: #BBB;
+	
+}
+
+.floor.current {
+	
+	background-color: #666;
+	
+}

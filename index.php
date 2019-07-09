@@ -38,37 +38,34 @@
 			return $array;
 		}));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $colors = []) {
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path) {
 			
 			$path = strtolower(str_replace(' ', '_', $path));
-			$images = [];
-			if(is_dir("assets/img/$path")) {
+			$img = 'missing.png';
 			
-				foreach(scandir("assets/img/$path") as $key => $file) if(!is_dir($file)) {
-					
-					$regex = '/(.*?)_([0-9]*?)\.png/';
-					preg_match($regex, $file, $matches);
-					$index = $matches[2] ?? null;
-					$images["$path/$file"] = $colors[$index] ?? false;
-				}
+			if(endsWith($path, '/random')) {
 				
-			} #else if(file_exists("assets/img/$path.svg")) $images[$path.'.svg'] = false;
-			else if(file_exists("assets/img/$path.png")) $images[$path.'.png'] = false;
-			
-			if(empty($images)) $images['missing.png'] = false;
+				$dir = str_replace('/random', '', $path);
+				
+				$all = scandir('assets/img/'.$dir);
+				$all = array_filter($all, function($val) use($all) {
+					return endsWith($val, '.png') || endsWith($val, '.svg');
+				});			
+				
+				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
+				
+			}
+			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
+			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
 			
 			$html = '<div>';
-			foreach($images as $img => $color) {
 				
-				$img = "/assets/img/$img";
-				if($color) $style = "mask-image: url($img); -webkit-mask-image: url($img); mask-size: 100%; -webkit-mask-size: 100%; display: block; background-color: $color; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;";
-				else $style = '';
-				
+				$img = "/assets/img/$img";				
 	        	$html .= 	"<div class='icon'>
 								<img class='icon' src='$img'></img>
-								<div style='$style' class='colored'></div>
+								<div class='colored'></div>
 							</div>";	
-			}
+			
 			
 			return $html.'</div>';
 	    }));
@@ -88,7 +85,6 @@
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$account = getAccount();
-
 		if($account) {
 		
 			if(($selected = $account->relations['selected']) && ($battle = $selected->relations['battle'])) {
@@ -104,16 +100,14 @@
 			return $this->view->render($response, 'home.twig', []);
 		}
 		
-		return $response->withRedirect('/login');
-		
-	});
+	})->add(new NeedsAuthentication($container['view'], 'user'));
 
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
 		$expanded = $request->getParams()['area'] ?? null;
 		$this->view->render($response, 'map.twig', ['areas' => Area::all(), 'expanded' => $expanded]);
 		
-	});
+	})->add(new NeedsAuthentication($container['view'], 'user'));
 
 	$app->get('/login', function (Request $request, Response $response, array $args) {
 		$this->view->render($response, 'login.twig', []);
@@ -121,7 +115,7 @@
 
 	$app->get('/profile', function (Request $request, Response $response, array $args) {
 		$this->view->render($response, 'profile.twig', []);
-	});
+	})->add(new NeedsAuthentication($container['view'], 'user'));
 
 	$app->get('/logout', function (Request $request, Response $response, array $args) {		
 		unset($_SESSION['account']);
@@ -300,6 +294,15 @@
             return $container['view']->render($container['response']->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
         };
     };
+
+	function endsWith($haystack, $needle) {
+		$length = strlen($needle);
+		if ($length == 0) {
+			return true;
+		}
+
+		return (substr($haystack, -$length) === $needle);
+	}
 
 	class NeedsAuthentication {
 	    private $view;

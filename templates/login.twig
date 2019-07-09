@@ -7,26 +7,38 @@
 	{% if failed %}
 		<h2>Login failed</h2>
 	{% endif %}
+	
+	<div class='login-icon center'>{{ icon('class/random')|raw }}</div>
+	<h1 class='highlight center' >Welcome!</h1>
+	 
+	<div class='row'>
 
-	<div>
-		<form method='post'>
+		<div class='login center'>
 
-			<input type='text' placeholder='Username' name='username'></input>
-			<input type='password' placeholder='Password' name='password'></input>
-			<input type='submit' value='Login'></input>
+			<h2>Login</h2>
 
-		</form>
-	</div>
+			<form method='post'>
 
-	<div>
-		<form method='post' action='signup'>
+				<input type='text' placeholder='Username' name='username'></input>
+				<input type='password' placeholder='Password' name='password'></input>
+				<input type='submit' value='Login'></input>
 
-			<input type='text' placeholder='Username' name='username'></input>
-			<input type='password' placeholder='Password' name='password'></input>
-			<input type='password' placeholder='Repeat password'></input>
-			<input type='submit' value='Create'></input>
+			</form>
+		</div>
 
-		</form>
+		<div class='login center'>
+
+			<h2>Signup</h2>
+
+			<form method='post' action='signup'>
+
+				<input type='text' placeholder='Username' name='username'></input>
+				<input type='password' placeholder='Password' name='password'></input>
+				<input type='password' placeholder='Repeat password'></input>
+				<input type='submit' value='Create'></input>
+
+			</form>
+		</div>
 	</div>
 
 {% endblock %}

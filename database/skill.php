@@ -47,7 +47,7 @@
 			static::register(['id' => 1, 'name' => 'Slash', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {
 				if(method_exists($target, 'damage')) {
 					$damage = $user->stats()->apply(8, 'strength');
-					return $target->damage($damage) ? 'The slash dealt '.$damage.'K damage to '.$target->name() : 'The attack had no effect!';
+					return $target->damage($damage) ? 'The slash dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 				}
 				return false;
 			});
@@ -60,7 +60,7 @@
 						$target->addEffect(Effect::where('name', 'poison'));
 					}
 
-					return $target->damage($damage) ? 'The backstab dealt '.$damage.'K damage to '.$target->name() : 'The attack had no effect!';
+					return $target->damage($damage) ? 'The backstab dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 				}
 				return false;
 			});
@@ -70,7 +70,7 @@
 			static::register(['id' => 51, 'name' => "Heal", 'timeout' => 0, 'cost' => 2, 'group' => false], function($target, $user) {
 				if(method_exists($target, 'heal')) {
 					$health = $user->stats()->apply(15, 'wisdom');
-					return $target->heal($health) ? 'You healed '.$target->name().' by '.$health.'K' : 'The spell failed!';
+					return $target->heal($health) ? 'You healed '.$target->name().' by '.$health : 'The spell failed!';
 				}
 				return false;
 			});
@@ -88,10 +88,10 @@
 
 			/* ------------------------  ATTACK SPELLS  ------------------------ */
 			
-			static::register(['id' => 101, 'name' => 'Pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {
+			static::register(['id' => 101, 'name' => 'Pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {				
 				if(method_exists($target, 'damage')) {
 					$damage = $user->stats()->apply(8, 'wisdom');
-					return $target->damage($damage) ? 'The pulse dealt '.$damage.'K damage to '.$target->name() : 'The attack had no effect!';
+					return $target->damage($damage) ? 'The pulse dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 				}
 				return false;
 			});
