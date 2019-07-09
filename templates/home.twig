@@ -26,7 +26,7 @@
 
 						<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
 							<h5>{{ evolution.name }}</h5>
-							{{ icon("class/" ~ evolution.name|lower, [])|raw }}
+							{{ icon("class/" ~ evolution.name|lower)|raw }}
 						</div>
 
 					{% endfor %}
@@ -44,6 +44,7 @@
 		</div>
 		<div class='col'>
 
+			{% include 'home/character.twig' with {'character': character} %}
 			{% include 'home/inventory.twig' with {'character': character} %}
 
 		</div>
