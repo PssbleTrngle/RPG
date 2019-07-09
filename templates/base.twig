@@ -30,6 +30,7 @@
 	</head>
 	<body>
 	
+		{#
 		<div class='navbar'>
 			<a href='/'><div class="navbar-link {% if uri() == '/' %}active{% endif %}">Home</div></a>
 			{% if account() %}
@@ -39,7 +40,8 @@
 				{{ base.nav('login') }}
 			{% endif %}
 		</div>
-
+		#}
+			
 		<div class='container'>
 		{% block content %}{% endblock %}
 		</div>

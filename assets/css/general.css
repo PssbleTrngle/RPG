@@ -8,6 +8,7 @@
 	--green: 65d628;
 	--gold: #e2a126;
 	--gold-light: #f2b748;
+	--gold-light-light: #f2c56f;
 	--marg: 10px;
 	
 }
@@ -193,7 +194,7 @@ img.icon {
 .col-100 { width: 100%; }
 .col { width: auto; }
 
-div {
+* {
 	transition: background-color 0.15s linear;
 }
 
@@ -204,28 +205,44 @@ footer {
 }
 
 button {
+	
 	border: none;
 	padding: 5px;
 	outline: 0;
 	transition: background-color 0.15s linear, opacity 0.2s linear;
+	
 }
 
 input {
-	padding: 5px;
-	background: var(--gold-light);
+	padding: 10px;
 	border: var(--gold) 2px solid;
 }
 
 input:first-child {
-	border-radius: 5px 0 0 5px;	
+	border-radius: 7px 0 0 7px;	
 }
 
 input:last-child {
-	border-radius: 0 5px 5px 0;	
+	border-radius: 0 7px 7px 0;	
+}
+
+input[type=submit] {
+	background: var(--gold-light);
+	border-color: var(--gold);
+}
+
+input[type=submit]:hover {
+	background: var(--gold);
 }
 
 .login {
-	width: 50%;	
+	
+	background-color: var(--gold-light-light);
+	width: calc(50% - 160px);
+	height: 200px;
+	border-radius: 10px;
+	margin: 20px 80px;
+	
 }
 
 .login-icon {
