@@ -33,19 +33,12 @@
 				</div>
 			{% endif %}
 
+
 			{% set pos = character.relations.position %}
 			{% if pos.relations.dungeon %}
-			<div class='dungeon my-5'>
+
+				{% include 'home/dungeon.twig' with {'position': pos, 'character': character} %}
 				
-				<h2>{{ pos.relations.dungeon.name }}</h2>
-
-				<div class='options'>
-					<div class='option' data-action='dungeon/leave'>Exit</div>
-					<div class='option' data-action='dungeon/search'>Search</div>
-					{% if pos.foundStairs %}<div class='option' data-action='dungeon/down'>Down</div>{% endif %}
-				</div>				
-
-			</div>
 			{% endif %}
 
 		</div>

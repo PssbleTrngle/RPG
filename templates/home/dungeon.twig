@@ -1,0 +1,11 @@
+<div class='dungeon my-5'>
+	
+	<h2>{{ position.relations.dungeon.name }}</h2>
+
+	<div class='options'>
+		<div class='option' data-action='dungeon/leave'>Exit</div>
+		<div class='option' data-action='dungeon/search'>Search</div>
+		{% if position.foundStairs %}<div class='option' data-action='dungeon/down'>Down</div>{% endif %}
+	</div>				
+
+</div>
