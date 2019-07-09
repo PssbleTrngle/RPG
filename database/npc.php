@@ -3,7 +3,7 @@
 	class Enemy extends Participant {
    		
 		protected $table = 'enemy';
-		protected $with = ['npc', 'battle', 'effects'];
+		protected $with = ['npc', 'battle'];
 		
 		public function name() {
 			return $this->relations['npc']->name .' '. $this->suffix;

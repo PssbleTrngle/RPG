@@ -50,14 +50,21 @@
 		if($account) {
 			$character = $account->relations['selected'];
 
-			if($character && !$character->relations['battle']
-			   && $dungeon = $character->relations['position']->relations['dungeon']) {
+			if($character && !$character->relations['battle']) {
 				
-				switch($args['action']) {
-					case 'search': return ['success' => $dungeon->search($character)];
-					case 'leave': return ['success' => $dungeon->leave($character)];
+				$dungeon = $character->relations['position']->relations['dungeon'];
+			   	if($dungeon) {
+				
+					switch($args['action']) {
+						case 'search': return ['success' => $dungeon->search($character)];
+						case 'leave': return ['success' => $dungeon->leave($character)];
+					}
 				}
+				
+				return ['success' => false, 'message' => 'You are not in a dungeon'];
 			}
+
+			return ['success' => false, 'message' => 'You are in a battle'];
 		}
 
 		return ['success' => false];

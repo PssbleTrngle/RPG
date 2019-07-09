@@ -172,6 +172,7 @@
 			if($character) {
 				$character->battle = $this->id;
 				$character->save();
+				$character->refresh();
 			}
 		}
 		

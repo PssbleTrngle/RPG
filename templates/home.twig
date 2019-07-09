@@ -7,6 +7,7 @@
 {% block content %}
 
 	{% set battle = character.relations.battle %}
+	
 	{% if battle %}
 
 		{% include 'home/battle.twig' with {'battle': battle, 'character': character} %}
