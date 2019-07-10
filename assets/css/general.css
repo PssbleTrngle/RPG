@@ -195,7 +195,7 @@ img.icon {
 .col { width: auto; }
 
 * {
-	transition: background-color 0.15s linear;
+	transition: background-color 0.1s linear, opacity 0.1s linear;
 }
 
 footer {

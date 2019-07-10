@@ -91,3 +91,12 @@
 	width: 120px;
 	
 }
+
+.profile-icon {
+	width: 200px;
+	cursor: pointer;
+}
+
+.profile-icon:hover {
+	opacity: 0.8;
+}
