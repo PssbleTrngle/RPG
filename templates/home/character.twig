@@ -1,5 +1,33 @@
-<div class='profile-icon'>
-	<a href='/profile'>
-		{{ icon('class/' ~ character.relations.clazz.name)|raw }}
-	</a>
+{% set skills = character.canLearn() %}	
+
+<div class='popup h-0' data-popup='.learn'>
+
+	<h3>Learn new skills</h3>
+
+	{% for skill in skills %}
+		<p class='skill'>{{ skill.name }}</p>
+	{% endfor %}
+
+	<div class='h-2'></div>
+			
+</div>
+
+<div class='profile'>
+	<div class='row'>
+		
+		<div class='profile-icon fade' >
+			<a href='/profile'>
+				{{ icon('class/' ~ character.relations.clazz.name)|raw }}
+			</a>
+		</div>	
+
+		<div>
+			{% if skills.count() %}
+				<div class='profile-btn learn fade glow-2'></div>
+			{% endif %}
+
+			<div class='profile-btn inventory-btn fade'></div>
+		</div>
+		 
+	</div>
 </div>

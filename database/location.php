@@ -67,13 +67,35 @@
 		public function leave($character) {
 			if(is_numeric($character)) $character = Character::find($character);
 			
-			if($character && ($position = $character->position()) && ($dungeon = $position->dungeon()) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->relations['position']) && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
 			
 				#$position->dungeon = null;
+				$position->floor = 1;
 				$position->attempts = 0;
 				$position->foundStairs = 0;
 				$position->save();
 				return true;
+				
+			}
+			
+			return false;
+			
+		}
+		
+		public function down($character) {
+			if(is_numeric($character)) $character = Character::find($character);
+			
+			if($character && ($position = $character->relations['position']) && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
+				
+				if($position->floor < $dungeon->floors && $position->foundStairs) {
+			
+					$position->floor++;
+					$position->attempts = 0;
+					$position->foundStairs = 0;
+					$position->save();
+					return true;
+					
+				}
 				
 			}
 			

@@ -54,5 +54,37 @@ $(window).ready(function() {
 		}
 		
 	});
+
+	$('[data-popup]').each(function() {
+	
+		let popup = $(this);
+		let btn = $(popup.attr('data-popup'));
+		
+		if(btn)
+			btn.click(function() {		
+				let current = popup.innerHeight();
+
+				if(current) {
+
+					let max = popup.innerHeight();
+					popup.css({ height: max });
+					window.setTimeout(function() {
+						popup.css({ height: 0 });
+					}, 1);
+
+				} else {
+
+					popup.css({ height: 'auto' });
+					let max = popup.innerHeight();
+					popup.css({ height: 0 });
+					window.setTimeout(function() {
+						popup.css({ height: max });
+					}, 1);
+
+				}
+
+			});
+		
+	});
 	
 });

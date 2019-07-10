@@ -57,17 +57,15 @@
 			}
 			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
 			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
-			
-			$html = '<div>';
 				
 				$img = "/assets/img/$img";				
-	        	$html .= 	"<div class='icon'>
+	        	$html = 	"
 								<img class='icon' src='$img'></img>
 								<div class='colored'></div>
-							</div>";	
+							";	
 			
 			
-			return $html.'</div>';
+			return $html;
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('account', function () {

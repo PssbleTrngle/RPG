@@ -43,7 +43,7 @@
 		
 	}); 
 
-	registerAction('/dungeon/{action}', function ($args) {
+	registerAction('/dungeon/{option}', function ($args) {
 		
 		$account = getAccount();
 		
@@ -55,9 +55,13 @@
 				$dungeon = $character->relations['position']->relations['dungeon'];
 			   	if($dungeon) {
 				
-					switch($args['action']) {
+					$action = $args['option'];
+					
+					switch($action) {
 						case 'search': return ['success' => $dungeon->search($character)];
 						case 'leave': return ['success' => $dungeon->leave($character)];
+						case 'down': return ['success' => $dungeon->down($character)];
+						default: return ['success' => false, 'message' => "'$action' is not a valid action"];
 					}
 				}
 				
@@ -67,7 +71,7 @@
 			return ['success' => false, 'message' => 'You are in a battle'];
 		}
 
-		return ['success' => false];
+		return ['success' => false, 'message' => 'You are not logged in'];
 		
 	});
 

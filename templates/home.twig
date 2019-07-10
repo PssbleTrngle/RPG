@@ -16,7 +16,7 @@
 	
 		<div class='col-66'>
 		
-			{% set evolutions = character.relations.canEvolveTo %}	
+			{% set evolutions = character.canEvolveTo() %}	
 			{% if evolutions.count() %}
 
 				<div class='character-row'>
@@ -42,10 +42,12 @@
 			{% endif %}
 
 		</div>
-		<div class='col'>
+		<div class='col-33'>
 
-			{% include 'home/character.twig' with {'character': character} %}
-			{% include 'home/inventory.twig' with {'character': character} %}
+			<div class='right'>
+				{% include 'home/character.twig' with {'character': character} %}
+				{% include 'home/inventory.twig' with {'character': character} %}
+			</div>
 
 		</div>
 

@@ -1,44 +1,49 @@
-{% if character.itemIn(4).count > 0 %}
-	<div class='inventory loot'>
-	<h2 class='center'>Loot</h2>
-	{% for stack in character.itemIn(4) %}
+<div class='popup' data-popup='.inventory-btn' >
 
-		<div class='slot' id='{{ stack.id }}'>
-			<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
-			<p>{{ stack.amount }}x</p>
-			<p>{{ stack.item().name }}</p>
+	{% if character.itemIn(4).count > 0 %}
+		<div class='inventory loot'>
+		<h2 class='center'>Loot</h2>
+		{% for stack in character.itemIn(4) %}
+
+			<div class='slot' id='{{ stack.id }}'>
+				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<p>{{ stack.amount }}x</p>
+				<p>{{ stack.item().name }}</p>
+			</div>
+
+		{% endfor %}
 		</div>
-
-	{% endfor %}
-	</div>
-{% endif %}
-
-<div class='row h-4'></div>
-
-<div class='inventory'>
-{% for i in 2..3 %}
-
-	{% set stack = character.itemIn(i).first() %}
-	{% if stack %}
-	
-	<div class='slot' id='{{ stack.id }}'>
-		<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
-		<p>{{ stack.amount }}x</p>
-		<p>{{ stack.item().name }}</p>
-	</div>
-
 	{% endif %}
 
-{% endfor %}
-</div>
-<div class='inventory'>
-{% for stack in character.itemIn(1) %}
+	<div class='row h-4'></div>
 
-	<div class='slot' id='{{ stack.id }}'>
-		<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
-		<p>{{ stack.amount }}x</p>
-		<p>{{ stack.item().name }}</p>
+	<div class='inventory'>
+		{% for i in 2..3 %}
+
+			{% set stack = character.itemIn(i).first() %}
+			{% if stack %}
+
+			<div class='slot' id='{{ stack.id }}'>
+				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<p>{{ stack.amount }}x</p>
+				<p>{{ stack.item().name }}</p>
+			</div>
+
+			{% endif %}
+
+		{% endfor %}
 	</div>
 
-{% endfor %}
+	<div class='inventory'>
+		{% for stack in character.itemIn(1) %}
+
+			<div class='slot' id='{{ stack.id }}'>
+				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<p>{{ stack.amount }}x</p>
+				<p>{{ stack.item().name }}</p>
+			</div>
+
+		{% endfor %}
+	</div>
+	 
 </div>

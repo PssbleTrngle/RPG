@@ -60,7 +60,7 @@
 	class Character extends Participant {
    		
 		protected $table = 'character';
-		protected $with = ['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account'];
+		protected $with = ['clazz', 'race', 'position', 'battle', 'inventory', 'account'];
 		
 		public function race() {
 			return $this->belongsTo(Race::class, 'race');
@@ -120,15 +120,21 @@
 		public function travel($location) {
 			if(is_numeric($location)) $location = Location::find($location);
 			
-			$do = $location && $location->level <= $this->level();
-			
-			if($do) {
-				$pos = $this->position();
-				$pos->location = $location->id;
-				$pos->save();
+			if($location && $location->level <= $this->level()) {
+				
+				if(!$this->relations['battle']) {
+				
+					$pos = $this->position();
+					$pos->location = $location->id;
+					$pos->save();
+					
+				}
+				
+				return true;
+				
 			}
 			
-			return $do;
+			return false;
 		}
 		
 		public function level() {
@@ -157,7 +163,7 @@
 			if(is_numeric($to)) $to = Clazz::find($to);
 			
 			if($to) {
-				foreach($this->relations['canEvolveTo'] as $can)
+				foreach($this->canEvolveTo() as $can)
 					if($can->id == $to->id) {
 						$this->class = $to->id;
 						$this->save();
@@ -169,8 +175,12 @@
 			
 		}
 		
-		public function canEvolveTo() {		
-			return $this->clazz()->first()->evolvesTo()->wherePivot('level', '<=', $this->level());
+		public function canEvolveTo() {
+			return $this->relations['clazz']->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
+		}
+		
+		public function canLearn() {			
+			return $this->relations['clazz']->skills()->wherePivot('level', '<=', $this->level())->get();
 		}
 		
 		public function skills() {		
