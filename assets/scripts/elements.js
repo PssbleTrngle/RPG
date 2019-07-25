@@ -72,6 +72,8 @@ $(window).ready(function() {
 						popup.css({ height: 0 });
 					}, 1);
 
+					btn.removeClass("open");
+
 				} else {
 
 					popup.css({ height: 'auto' });
@@ -80,6 +82,8 @@ $(window).ready(function() {
 					window.setTimeout(function() {
 						popup.css({ height: max });
 					}, 1);
+
+					btn.addClass("open");
 
 				}
 

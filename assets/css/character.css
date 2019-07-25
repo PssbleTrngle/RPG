@@ -103,7 +103,6 @@
 .profile-btn {
 	cursor: pointer;
 
-	background-image: url('../img/icon.svg');
 	background-size: cover;
 	
 	width: 50px;
@@ -111,4 +110,16 @@
 	
 	margin-bottom: 15px;
 	
+}
+
+.inventory-btn {
+	background-image: url('../img/icon/chest.png');
+}
+
+.inventory-btn.open {
+	background-image: url('../img/icon/chest_open.png');
+}
+
+.learn {
+	background-image: url('../img/icon/skills.png');
 }
