@@ -80,6 +80,22 @@
 			$this->save();
 			
 		}
+
+		public function learn($skill) {
+			if(is_numeric($skill)) $skill = Skill::find($skill);
+			global $capsule;
+
+			if($skill) {
+			
+				$capsule::table('character_skills')
+					->insert({'skill' => $skill->id, 'character' => $this->id});
+
+				return true;
+
+			}
+
+			return false;
+		}
 		
 		public function bagSize() {
 			return option('base_bag_size');

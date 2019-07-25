@@ -27,6 +27,21 @@
 		
 	});
 
+	registerAction('/character/learn/{skill}', function ($args) {
+		
+		$skill = $args['skill'] ?? null;
+		$account = getAccount();
+		
+		if($skill && $account) {
+			$character = $account->relations['selected'];
+			if($character)
+				return ['success' => $character->learn($skill)];
+		}
+		
+		return ['success' => false];
+		
+	});
+
 	registerAction('/character/travel', function ($args) {
 		
 		$id = $args['id'] ?? null;
