@@ -5,39 +5,45 @@
 {% block content %}
 
 	{% if failed %}
-		<h2>Login failed</h2>
+		<div class='bubble red'>
+			<h3 class='center text-white'>Login failed</h3>
+		</div>
 	{% endif %}
 	
 	<div class='login-icon center mb-1'>{{ icon('class/random')|raw }}</div>
-	<h1 class='highlight center mb-2' >Welcome!</h1>
 	 
+	<div class='mb-4'></div>
 	<div class='row'>
 
+		<div class='w-50'>
 		<div class='login center'>
 
 			<h2 class='mb-2'>Login</h2>
 
 			<form method='post'>
 
-				<input type='text' placeholder='Username' name='username'></input>
-				<input type='password' placeholder='Password' name='password'></input>
-				<input type='submit' value='Login'></input>
+				<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
+				<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
+				<div><input type='submit' value='Login'></input></div>
 
 			</form>
 		</div>
+		</div>
 
+		<div class='w-50'>
 		<div class='login center'>
 
 			<h2 class='mb-2'>Signup</h2>
 
 			<form method='post' action='signup'>
 
-				<input type='text' placeholder='Username' name='username'></input>
-				<input type='password' placeholder='Password' name='password'></input>
-				<input type='password' placeholder='Repeat password'></input>
-				<input type='submit' value='Create'></input>
+				<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
+				<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
+				<div class='mb-1'><input type='password' placeholder='Repeat password'></input></div>
+				<div><input type='submit' value='Create'></input></div>
 
 			</form>
+		</div>
 		</div>
 	</div>
 

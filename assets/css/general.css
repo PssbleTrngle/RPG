@@ -4,11 +4,15 @@
 
 :root {
 	
-	--red: d62828;
-	--green: 65d628;
+	--red: #d62828;
+	--green: #65d628;
+	--red-light: #ed5a5a;
+	--green-light: #82db51;
+	
 	--gold: #e2a126;
 	--gold-light: #f2b748;
 	--gold-light-light: #f2c56f;
+	
 	--marg: 10px;
 	
 }
@@ -106,6 +110,10 @@ body, html {
 
 .text-green {
 	color: var(--green);
+}
+
+.text-white {
+	color: #FFF;
 }
 
 p {
@@ -255,17 +263,24 @@ button {
 	
 }
 
+form {
+	margin: 0;
+}
+
 input {
+	width: calc(100% - 100px);
 	padding: 10px;
 	border: var(--gold) 2px solid;
 }
 
 input:first-child {
-	border-radius: 7px 0 0 7px;	
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
 }
 
 input:last-child {
-	border-radius: 0 7px 7px 0;	
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
 }
 
 input[type=submit] {
@@ -289,13 +304,18 @@ input[type=submit]:hover {
 .login {
 	
 	background-color: var(--gold-light-light);
-	width: calc(50% - 160px);
-	height: 200px;
+	width: 100%;
+	max-width: 500px;
+	min-height: 260px;
 	border-radius: 10px;
-	margin: 0 80px;
+	padding: 8px 0;
 	
 	animation: slide-up 0.5s forwards cubic-bezier(0, 0, 0.52, 1.49);
 	
+}
+
+.login:focus {
+	background-color: #DDD;
 }
 
 .login-icon {
@@ -312,4 +332,20 @@ input[type=submit]:hover {
 .login-icons {
 	width: 800px;
 	margin: 0 auto;
+}
+
+.red {
+
+	background-color: var(--red-light);
+	border: 2px var(--red) solid;
+
+}
+
+.bubble {
+
+	padding: 8px;
+	margin: 0 auto;
+	max-width: 600px;
+	border-radius: 10px;	
+	
 }
