@@ -1,9 +1,9 @@
 # RPG
 
 ### Requirements
-[Composer](https://getcomposer.org/)
-PHP
-MySQL
+- [Composer](https://getcomposer.org/)
+- PHP
+- MySQL
 
 ### Setup
 1. Clone
