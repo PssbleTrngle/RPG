@@ -88,7 +88,7 @@
 			if($skill) {
 			
 				$capsule::table('character_skills')
-					->insert({'skill' => $skill->id, 'character' => $this->id});
+					->insert(['skill' => $skill->id, 'character' => $this->id]);
 
 				return true;
 
