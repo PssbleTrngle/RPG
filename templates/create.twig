@@ -38,7 +38,7 @@
 			$('.character-panel').click(function() {
 
 				window.params.clazz = $(this).attr('data-id');
-				window.params.name = $('#name').value();
+				window.params.name = $('#name').val();
 				sendAction('/character/create');
 
 			});
