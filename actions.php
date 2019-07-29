@@ -59,7 +59,7 @@
 			$character->account = $account->id;
 
 			$character->save();
-			return ['redirect' => 'profile'];
+			return ['redirect' => '/profile'];
 
 		}
 		
