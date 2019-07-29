@@ -1,19 +1,28 @@
 # RPG
+[Try me out](http://rpg.somethingcatchy.net/)
+
+---
 
 ### Requirements
 - [Composer](https://getcomposer.org/)
 - PHP
 - MySQL
 
+---
+
 ### Setup
 1. Clone
 2. Import rpg.sql
 3. Run `composer install`
 
+---
+
 ### Playing the Game
 As a variety of features are not implemented yet,
 playing the actual game is still confusing, because there
 are no guiding elements.
+
+---
 
 #### What you are able to do:
  - Click on your character to view your profile page and switch characters
