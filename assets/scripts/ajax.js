@@ -18,7 +18,16 @@ function sendAction(action, func) {
 	}
 	
 	$.post( action, window.params ).done(function(d) {
-		func(JSON.parse(d));
+
+		try {
+			func(JSON.parse(d));
+		} catch(err) {
+			func({
+				'success': false,
+				'message': 'Invalid JSON',
+				'json': d
+			})
+		}
 	});
 }
 
