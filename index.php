@@ -34,7 +34,8 @@
 
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
-	        return $account && $account->status >= Status::where('name', $status)->id;
+			$status = Status::where('name', $status)->first();
+	        return $account !== false && $status && $account->status >= $status->id;
 	    }));
 
 	    /*
