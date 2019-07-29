@@ -72,7 +72,8 @@
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
-			return round(abs($time - time()) / 24 / 60 / 60);
+	        $age = round(abs($time - time()) / 24 / 60 / 60);
+			return $age.' Day'.($age > 1 ? 's' : '');
 	    }));
 
 	    return $view;
