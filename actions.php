@@ -8,6 +8,7 @@
 
 	function registerAction($url, $func, $status = null) {
 		global $app;
+		global $container;
 
 		if(is_callable($func)) {
 			$action = $app->post($url, function (Request $request, Response $response, array $args) use ($func) {
@@ -22,7 +23,7 @@
 
 			if(!is_null($status)) {
 
-				$action->add(new NeedsAuthentication($app->container['view'], $status));
+				$action->add(new NeedsAuthentication($container['view'], $status));
 			
 			}
 
