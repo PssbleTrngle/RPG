@@ -1,5 +1,9 @@
 <?php
 
+	/* Used for Routing */
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+
 	function gitPull() {
 
 		return exec('git pull');

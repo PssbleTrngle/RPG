@@ -4,6 +4,10 @@
 		This file handles all post request regarding login/logout/account creation
 	*/
 
+	/* Used for Routing */
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+
 	$app->get('/logout', function (Request $request, Response $response, array $args) {		
 		unset($_SESSION['account']);
 		return $response->withRedirect($request->getParams()['next'] ?? '/');		
