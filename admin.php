@@ -6,7 +6,7 @@
 
 	function gitPull() {
 
-		return exec('git pull');
+		return shell_exec('git pull');
 
 	}
 
