@@ -84,17 +84,25 @@
 		$account = getAccount();
 		if($account) {
 		
-			if(($selected = $account->relations['selected']) && ($battle = $selected->relations['battle'])) {
+			$selected = $account->relations['selected'];
+			if($selected) {
+
+				if($battle = $selected->relations['battle']) {
+					
+					$won = true;
+					foreach($battle->relations['enemies'] as $enemy)
+						$won &= $enemy->health <= 0;
+					
+					if($won) $battle->win();
 				
-				$won = true;
-				foreach($battle->relations['enemies'] as $enemy)
-					$won &= $enemy->health <= 0;
+				}
 				
-				if($won) $battle->win();
-			
+				return $this->view->render($response, 'home.twig', []);
+
 			}
-			
-			return $this->view->render($response, 'home.twig', []);
+
+			return $response->withRedirect('/profile');
+
 		}
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
