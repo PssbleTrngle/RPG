@@ -1,5 +1,9 @@
 <?php
 
+	/*
+		Only used for a admin interface for now
+	*/
+
 	include_once "database.php";
 
 	function info($text, $class = 'primary') {
