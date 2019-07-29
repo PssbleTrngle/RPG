@@ -296,6 +296,10 @@ input[type=submit]:hover {
 	background: var(--gold);
 }
 
+span.grow {
+	min-width: 100px;
+}
+
 @keyframes slide-up {
 	from	{
 		margin-top: 30px;
