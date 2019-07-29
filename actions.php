@@ -21,10 +21,6 @@
 					$args[$key] = $value;
 
 				$answer = $func($args);
-
-				if($answer && $answer['redirect'])
-					return $response->withRedirect($answer['redirect']);
-
 				return json_encode($answer);
 
 			});
