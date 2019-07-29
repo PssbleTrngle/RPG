@@ -1,4 +1,4 @@
-# RPG
+# RPG ![Icon](http://rpg.somethingcatchy.net/assets/img/icon.png")
 [Try me out](http://rpg.somethingcatchy.net/)
 
 ---
