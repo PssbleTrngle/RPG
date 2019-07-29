@@ -296,8 +296,11 @@ input[type=submit]:hover {
 	background: var(--gold);
 }
 
-span.grow {
+input.grow {
+	width: initial;
 	min-width: 100px;
+	max-width: 500px;
+	background-color: var(--gold-light);
 }
 
 @keyframes slide-up {
