@@ -1,5 +1,11 @@
 <?php
 
+	/*
+		Handles everything related to the MySQL Database
+		by using the Illuminate Database Model
+		The various classes are imported at the bottom
+	*/
+
 	include_once 'options.php';
 
 	use Illuminate\Database\Eloquent\Model as Model;

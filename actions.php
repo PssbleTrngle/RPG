@@ -1,5 +1,11 @@
 <?php
 
+	/*
+		This file creates every possible game action, a user can perform by sending a post-request.
+		These are mainly activated by buttons with the html class 'option' and are sent through the code
+		defined in 'ajax.js' and 'elements.js'
+	*/
+
 	registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];

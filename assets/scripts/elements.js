@@ -1,3 +1,10 @@
+/*
+	Handles the functionality of certain often required elements like
+		- Buttons
+		- Healthbars
+		- Minimize/Maximizeable content (for Example the inventory)
+*/
+
 $(window).ready(function() {
 	
 	$('.healthbar').each(function() {

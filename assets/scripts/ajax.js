@@ -1,5 +1,13 @@
 window.params = {};
 
+/* 
+	Used to send a user action to the server
+	(for example 'character/evolve')
+	The 'window.params' variable is sent as the
+	request params and is altered by javascript code sending
+	the request.
+*/
+
 function sendAction(action, func) {
 	if(!func) func = function(result) {
 		if(result.success) location.reload();
