@@ -269,20 +269,24 @@
 	class NeedsAuthentication {
 	    private $view;
 	    private $accessLevel;
+	    private $post;
 
-	    public function __construct(\Slim\Views\Twig $view, $accessLevel) {
+	    public function __construct(\Slim\Views\Twig $view, $accessLevel, $post = false) {
 	        $this->view = $view;
 	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
 	        $this->accessLevel = $status->id;
+	        $this->post = $post;
 	    }
 	    public function __invoke($request, $response, $next) {
 			
 			$account = getAccount();
 			
 	        if ($account == null) {
+	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not logged in']);
 	            return $response->withRedirect('/login?next=' . $request->getUri()->getPath());
 	        }
 	        if ($account->status < $this->accessLevel) {
+	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not allowed to do this']);
 	            return $this->view->render($response->withStatus(403), 'handlers/403.twig');
 	        }
 	        return $next($request, $response);
