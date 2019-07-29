@@ -116,6 +116,10 @@ body, html {
 	color: #FFF;
 }
 
+.text-black {
+	color: #000;
+}
+
 p {
 	margin: 0;
 }
