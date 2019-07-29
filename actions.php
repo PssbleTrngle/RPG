@@ -35,6 +35,37 @@
 
 	};
 
+	registerAction('/character/create', function($args) {
+
+		$account = getAccount();
+		$clazz = $args['clazz'];
+		$name = $args['name'];
+		
+		if($id && $account && $name) {
+
+			if(Character::where('name', $name)->first())
+				return ['success' => false, 'message' => 'Name not available'];
+
+			$clazz = Clazz::find($clazz);
+			if(!$clazz && !$clazz->relations['evolvesFrom']->first())
+				return ['success' => false, 'message' => 'Not a starter class'];
+
+			$character = new Character;
+			$character->name = $name;
+			$character->race = 1;
+			$character->class = $clazz->id;
+			$character->health = 1000;
+			$character->account = $account->id;
+
+			$character->save();
+			return ['success' => true];
+
+		}
+		
+		return ['success' => false];
+
+	});
+
 	registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];
