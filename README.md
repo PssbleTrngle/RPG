@@ -9,3 +9,16 @@
 1. Clone
 2. Import rpg.sql
 3. Run `composer install`
+
+### Playing the Game
+As a variety of features are not implemented yet,
+playing the actual game is still confusing, because there
+are no guiding elements.
+
+#### What you are able to do:
+ - Click on your character to view your profile page and switch characters
+ - Evolve your character into a higher class if the level is high enough
+ - Searching in a dungeon and finding the stairs or an enemy
+ - Going down the stairs
+ - Fighting the enemy you encountered by using skills
+ - Defeating the enemies and taking the dropped loot
