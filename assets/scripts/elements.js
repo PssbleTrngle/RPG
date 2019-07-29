@@ -16,16 +16,18 @@ $(window).ready(function() {
 		bar.append(inner);
 		
 	});
+
+	$('[data-action]').each(function() {
+		let action = $(this).attr('data-action');
+		$(this).sendAction(action);		
+	})
 	
 	$('.option').each(function() {
 		let option = $(this);
 		
 		let options = option.closest('.options');
-		let action = option.attr('data-action');
 		let parent = option.attr('data-parent');
 		if(parent) parent = $('.option#' + parent);
-		
-		if(action) option.sendAction(action);
 			
 		if(parent && options) {
 		
