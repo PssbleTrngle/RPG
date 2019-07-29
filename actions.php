@@ -21,15 +21,16 @@
 					$args[$key] = $value;
 
 				$answer = $func($args);
+
+				if($answer && $answer['redirect'])
+					return $response->withRedirect($answer['redirect']);
+
 				return json_encode($answer);
 
 			});
 
-			if(!is_null($status)) {
-
+			if(!is_null($status))
 				$action->add(new NeedsAuthentication($container['view'], $status, true));
-			
-			}
 
 		}
 
@@ -58,7 +59,7 @@
 			$character->account = $account->id;
 
 			$character->save();
-			return ['success' => true];
+			return ['redirect' => 'profile'];
 
 		}
 		

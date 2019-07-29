@@ -10,7 +10,7 @@
 
 	$app->get('/logout', function (Request $request, Response $response, array $args) {		
 		unset($_SESSION['account']);
-		return $response->withRedirect($request->getParams()['next'] ?? '/');		
+		return $response->withRedirect($request->getParams()['next'] ?? '/');
 	});
 
 	$app->post('/login', function (Request $request, Response $response, array $args) {
