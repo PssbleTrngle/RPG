@@ -13,7 +13,7 @@
 	registerAction('/admin/update', function($args) {
 
 		$msg = gitPull();
-		return ['success' => $msg !== false, 'message' => $msg];
+		return ['success' => false, 'message' => $msg];
 
 	}, 'admin');
 	
