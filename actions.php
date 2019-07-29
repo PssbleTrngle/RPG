@@ -6,6 +6,30 @@
 		defined in 'ajax.js' and 'elements.js'
 	*/
 
+	function registerAction($url, $func, $status = null) {
+		global $app;
+
+		if(is_callable($func)) {
+			$action = $app->post($url, function (Request $request, Response $response, array $args) use ($func) {
+
+				foreach($request->getParams() as $key => $value)
+					$args[$key] = $value;
+
+				$answer = $func($args);
+				return json_encode($answer);
+
+			});
+
+			if(!is_null($status)) {
+
+				$action->add(new NeedsAuthentication($container['view'], $status));
+			
+			}
+
+		}
+
+	};
+
 	registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];
