@@ -22,7 +22,7 @@
 
 			if(!is_null($status)) {
 
-				$action->add(new NeedsAuthentication($container['view'], $status));
+				$action->add(new NeedsAuthentication($app->container['view'], $status));
 			
 			}
 
