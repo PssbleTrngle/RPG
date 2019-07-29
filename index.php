@@ -124,6 +124,16 @@
 		$this->view->render($response, 'profile.twig', []);
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
+	$app->get('/profile/create', function (Request $request, Response $response, array $args) {
+
+		$starters = Clazz::all()->filter(function($clazz, $i) {
+			return $clazz->relations['evolvesFrom']->count() > 0;
+		});
+
+		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
+	
+	})->add(new NeedsAuthentication($container['view'], 'user'));
+
 	/*
 		Used by 'actions.php' to register to user input actions.
 		These are handled via post-requests

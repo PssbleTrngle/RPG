@@ -19,14 +19,14 @@
 					<p>Level {{ character.level() }}</p>
 					<p>{{ character.birth|age }}</p>
 				</small>
-				{{ icon("class/" ~ character.relations.clazz.name|lower, [ character.relations.race.skin ])|raw }}
+				{{ icon("class/" ~ character.relations.clazz.name)|raw }}
 			</div>
 
 		{% else %}
 			
-			<a href='create'>
+			<a href='profile/create'>
 				<div class='character-panel create'>
-					<h4 class='text-black center' >Create</h4>
+					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
 				</div>
 			</a>
 
