@@ -1,5 +1,11 @@
 <?php
 
+	/*
+		These are some game constants,
+		localized here to be ease to alter
+		and accessed in code through the function below
+	*/
+
 	$OPTIONS = [
 	
 		'max_enemies' => 4,

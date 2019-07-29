@@ -8,6 +8,7 @@
 
 	session_start();
 
+	/* Used for Routing */
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -17,6 +18,7 @@
 	$container = new \Slim\Container($configuration);
 	$app = new \Slim\App($container);
 
+	/* Twig Template engine */
 	$loader = new \Twig\Loader\FilesystemLoader("templates");
 	$twig = new \Twig\Environment($loader);
 
@@ -29,15 +31,11 @@
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('uri', function () {
 	        return $_SERVER['REQUEST_URI'];
 	    }));
-		
-		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('as_array', function ($stdClassObject) {
-			$array = array();
-			foreach ($stdClassObject as $key => $value) {
-				$array[$key] = array($key, $value);
-			}
-			return $array;
-		}));
 
+	    /*
+		    Used in templates to access a certain icon (for example of a class or an item)
+		    or return the 'missing.png' image 
+	    */
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path) {
 			
 			$path = strtolower(str_replace(' ', '_', $path));
@@ -57,14 +55,8 @@
 			}
 			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
 			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
-				
-				$img = "/assets/img/$img";				
-	        	$html = 	"
-								<img class='icon' src='$img'></img>
-								<div class='colored'></div>
-							";	
-			
-			
+							
+	        $html = "<img class='icon' src='/assets/img/$img'></img>";			
 			return $html;
 	    }));
 
@@ -80,6 +72,7 @@
 	    return $view;
 	};
 
+	/* The Home page, acting as the game screen */
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$account = getAccount();
@@ -100,6 +93,7 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
+	/* A functioning, but no yet used map screen */
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
 		$expanded = $request->getParams()['area'] ?? null;
@@ -164,6 +158,8 @@
 		
 	});
 
+	/* A variety of admin pages, used mainly for debugging */
+
 	$app->get('/admin/validate', function (Request $request, Response $response, array $args) {
 		
 		$level = $request->getParams()['level'] ?? 0b11111111;
@@ -179,19 +175,6 @@
 			
 			foreach($npc->relations['loot'] as $item)
 				$log .= '<li>'.$item->name.'</li>';
-		}
-		
-		$log .= "<br>";
-		
-		foreach(Enemy::all() as $enemy) {
-			$log .= '<p>Test Loot for '.$enemy->name().'</p>';
-			
-			$enemy->getLoot();
-			
-			/*
-			foreach($enemy->getLoot()['items'] as $item)
-				$log .= '<li>'.$item->name.'</li>';
-			*/
 		}
 			
 		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
@@ -217,15 +200,6 @@
 
 	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {
 		
-		/*
-		foreach(['Wizard', 'Touched', 'Spirit', 'Gate', 'Narrator', 'Fate', 'Death', 'Wind', 'Seal', 'Truth', 'Pain'] as $i => $clazz) {
-			$c = new Clazz;
-			$c->id = 400 + $i;
-			$c->name = $clazz;
-			$c->save();
-		}
-		*/
-		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'betatest'));
@@ -247,6 +221,11 @@
 		return $this->view->render($response, 'admin/level.twig', ['points' => $points]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
+
+	/*
+		Used by 'actions.php' to register to user input actions.
+		These are handled via post-requests
+	*/
 
 	function registerAction($url, $func) {
 		global $app;
@@ -302,6 +281,7 @@
 		return (substr($haystack, -$length) === $needle);
 	}
 
+	/* Used by pages requiring a certain status like admin or betatester */
 	class NeedsAuthentication {
 	    private $view;
 	    private $accessLevel;
