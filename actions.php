@@ -25,15 +25,43 @@
 
 			});
 
-			if(!is_null($status)) {
-
+			if(!is_null($status))
 				$action->add(new NeedsAuthentication($container['view'], $status, true));
-			
-			}
 
 		}
 
 	};
+
+	registerAction('/character/create', function($args) {
+
+		$account = getAccount();
+		$clazz = $args['class'];
+		$name = $args['name'];
+		
+		if($clazz && $account && $name) {
+
+			if(Character::where('name', $name)->first())
+				return ['success' => false, 'message' => 'Name not available'];
+
+			$clazz = Clazz::find($clazz);
+			if(!$clazz && !$clazz->relations['evolvesFrom']->first())
+				return ['success' => false, 'message' => 'Not a starter class'];
+
+			$character = new Character;
+			$character->name = $name;
+			$character->race = 1;
+			$character->class = $clazz->id;
+			$character->health = 1000;
+			$character->account = $account->id;
+
+			$character->save();
+			return ['redirect' => '/profile'];
+
+		}
+		
+		return ['success' => false];
+
+	});
 
 	registerAction('/character/select/{id}', function($args) {
 

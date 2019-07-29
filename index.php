@@ -72,7 +72,8 @@
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
-			return round(abs($time - time()) / 24 / 60 / 60);
+	        $age = round(abs($time - time()) / 24 / 60 / 60);
+			return $age.' Day'.($age > 1 ? 's' : '');
 	    }));
 
 	    return $view;
@@ -121,6 +122,16 @@
 
 	$app->get('/profile', function (Request $request, Response $response, array $args) {
 		$this->view->render($response, 'profile.twig', []);
+	})->add(new NeedsAuthentication($container['view'], 'user'));
+
+	$app->get('/profile/create', function (Request $request, Response $response, array $args) {
+
+		$starters = Clazz::all()->filter(function($clazz, $i) {
+			return !$clazz->evolvesFrom()->first();
+		});
+
+		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
+	
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
 	/*

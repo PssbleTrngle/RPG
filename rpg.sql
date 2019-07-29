@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 29, 2019 at 12:23 AM
+-- Generation Time: Jul 29, 2019 at 10:43 PM
 -- Server version: 10.1.40-MariaDB-0ubuntu0.18.04.1
 -- PHP Version: 7.1.14
 
@@ -47,7 +47,8 @@ INSERT INTO `account` (`id`, `username`, `password_hash`, `status`, `birth`, `se
 (4, 'Luis', '$2y$10$wP5OEhJ.NjUZBOSpZ5KKbejZgxELrcuM/0NwA//JQrwTO0jYgntXu', 50, '2019-05-29 11:44:25', 2),
 (5, 'DerDruide', '$2y$10$I9UzxQjPAfDPNqODmh7y/embo.A8YqWMK91Xq2zHXkCV.U3avgAWq', 50, '2019-05-29 11:44:28', 3),
 (6, 'GoodThor', '$2y$10$OZHCNrEud4cL99M.Nvs4V.yue5iq6fm.WIeeTvhCb8OsD30Ck6Q1m', 1, '2019-07-10 18:53:18', NULL),
-(7, 'tester', '$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y', 1, '2019-07-28 22:22:24', 4);
+(7, 'tester', '$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y', 1, '2019-07-28 22:22:24', 4),
+(8, 'xxx_darkoverlord_xxx', '$2y$10$jnClTKPXbjNTtDBDyuu7oObN/9jfLBfK0Z1s0sOWwSDYwfRg1wmRK', 100, '2019-07-29 17:23:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -107,7 +108,7 @@ CREATE TABLE `character` (
   `class` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `health` int(11) NOT NULL,
-  `xp` int(10) UNSIGNED NOT NULL,
+  `xp` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `account` int(11) NOT NULL,
   `birth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `battle` int(11) DEFAULT NULL
@@ -122,7 +123,12 @@ INSERT INTO `character` (`id`, `race`, `class`, `name`, `health`, `xp`, `account
 (2, 2, 2, 'The Rock', 100, 0, 4, '2019-05-13 15:48:01', NULL),
 (3, 3, 111, 'Groooover', 80, 805, 5, '2019-05-20 08:25:24', NULL),
 (4, 4, 1, 'Kurt', 1000, 73003, 7, '2019-05-20 08:27:06', NULL),
-(5, 1, 23, 'Test Subject 24', 90, 0, 7, '2019-05-20 11:57:21', NULL);
+(5, 1, 23, 'Test Subject 24', 90, 0, 7, '2019-05-20 11:57:21', NULL),
+(6, 1, 3, 'HoyHoy', 1000, 0, 8, '2019-07-29 20:24:43', NULL),
+(7, 1, 2, 'Peter', 1000, 0, 8, '2019-07-29 20:31:40', NULL),
+(8, 1, 1, 'Kim', 1000, 0, 8, '2019-07-29 20:32:42', NULL),
+(9, 1, 2, 'Troy', 1000, 0, 8, '2019-07-29 20:42:17', NULL),
+(10, 1, 4, 'Timo', 1000, 0, 8, '2019-07-29 20:42:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -807,10 +813,10 @@ ALTER TABLE `evolution`
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `character` (`character`),
   ADD KEY `item` (`item`),
   ADD KEY `slot` (`slot`),
-  ADD KEY `enchantment` (`enchantment`);
+  ADD KEY `enchantment` (`enchantment`),
+  ADD KEY `inventory_ibfk_1` (`character`);
 
 --
 -- Indexes for table `item`
@@ -899,13 +905,19 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `battle`
 --
 ALTER TABLE `battle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+
+--
+-- AUTO_INCREMENT for table `character`
+--
+ALTER TABLE `character`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `enemy`

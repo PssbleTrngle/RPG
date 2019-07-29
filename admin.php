@@ -6,14 +6,15 @@
 
 	function gitPull() {
 
-		return exec('git pull');
+		return shell_exec('git pull');
 
 	}
 
 	registerAction('/admin/update', function($args) {
 
 		$msg = gitPull();
-		return ['success' => $msg !== false, 'message' => $msg];
+		$success = strpos($msg, 'changed') !== false;
+		return ['success' => $success, 'message' => $msg];
 
 	}, 'admin');
 	

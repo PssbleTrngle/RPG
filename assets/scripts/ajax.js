@@ -10,7 +10,8 @@ window.params = {};
 
 function sendAction(action, func) {
 	if(!func) func = function(result) {
-		if(result.success) location.reload();
+		if(result.redirect) window.open(result.redirect, '_self');
+		else if(result.success) location.reload();
 		else {
 			console.log(result);
 			$('.feedback').text(result.message);

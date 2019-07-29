@@ -17,6 +17,11 @@ $(window).ready(function() {
 		
 	});
 
+	$('.grow').on('input', function() {
+	    var width = $(this).textWidth();
+	    $(this).css({width});
+	}).trigger('input');
+
 	$('[data-action]').each(function() {
 		let action = $(this).attr('data-action');
 		$(this).sendAction(action);		
@@ -101,3 +106,12 @@ $(window).ready(function() {
 	});
 	
 });
+
+$.fn.textWidth = function(text, font) {
+    
+    if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $('<span>').hide().appendTo(document.body);
+    
+    $.fn.textWidth.fakeEl.text(text || this.val() || this.text() || this.attr('placeholder')).css('font', font || this.css('font'));
+    
+    return $.fn.textWidth.fakeEl.width();
+};
