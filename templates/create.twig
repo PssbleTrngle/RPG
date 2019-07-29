@@ -5,13 +5,14 @@
 {% set account = account() %}
 
 {% block content %}
+
+	<h5>My name is <input type='text' id='name'></input> and I am a</h5>
 	
-	<h2>Choose a class</h2>
 	<div class='row'>
 		{% for starter in starters %}
 			
 
-			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-id='{{ starter.id }}'>
 				<h4>{{ starter.name }}</h4>
 				{{ icon("class/" ~ starter.name)|raw }}
 			</div>
@@ -27,4 +28,22 @@
 		{% endfor %}
 	</div>
 
+{% endblock %}
+
+{% block script %}
+	<script>
+
+		$(window).onload(function() {
+
+			$('.character-panel').click(function() {
+
+				window.params.clazz = $(this).attr('data-id');
+				window.params.name = $('#name').value();
+				sendAction('/character/create');
+
+			});
+
+		});
+
+	</script>
 {% endblock %}

@@ -13,7 +13,7 @@
 	registerAction('/admin/update', function($args) {
 
 		$msg = gitPull();
-		$success = strpos($msg, 'files changed') !== false;
+		$success = strpos($msg, 'changed') !== false;
 		return ['success' => $success, 'message' => $msg];
 
 	}, 'admin');

@@ -127,7 +127,7 @@
 	$app->get('/profile/create', function (Request $request, Response $response, array $args) {
 
 		$starters = Clazz::all()->filter(function($clazz, $i) {
-			return $clazz->evolvesFrom()->first();
+			return !$clazz->evolvesFrom()->first();
 		});
 
 		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
