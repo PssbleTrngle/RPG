@@ -50,7 +50,7 @@
 	<footer>
 		{% block script %}{% endblock %}
 		<small>
-			<div data-action='admin/update' >Update</div>
+			{% if account|hasStatus('admin') %}<div data-action='admin/update' >Update</div>{% endif %}
 		</small>
 	</footer>
 </html>

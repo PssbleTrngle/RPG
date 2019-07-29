@@ -32,6 +32,11 @@
 	        return $_SERVER['REQUEST_URI'];
 	    }));
 
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
+	        return $account && $account->status >= Status::where('name', $status)->id;
+	    }));
+
 	    /*
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
