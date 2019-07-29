@@ -6,6 +6,10 @@
 		defined in 'ajax.js' and 'elements.js'
 	*/
 
+	/* Used for Routing */
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+
 	function registerAction($url, $func, $status = null) {
 		global $app;
 		global $container;
