@@ -38,10 +38,10 @@
 	registerAction('/character/create', function($args) {
 
 		$account = getAccount();
-		$clazz = $args['clazz'];
+		$clazz = $args['class'];
 		$name = $args['name'];
 		
-		if($id && $account && $name) {
+		if($clazz && $account && $name) {
 
 			if(Character::where('name', $name)->first())
 				return ['success' => false, 'message' => 'Name not available'];
