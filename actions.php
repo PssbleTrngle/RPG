@@ -6,6 +6,63 @@
 		defined in 'ajax.js' and 'elements.js'
 	*/
 
+	/* Used for Routing */
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+
+	function registerAction($url, $func, $status = null) {
+		global $app;
+		global $container;
+
+		if(is_callable($func)) {
+			$action = $app->post($url, function (Request $request, Response $response, array $args) use ($func) {
+
+				foreach($request->getParams() as $key => $value)
+					$args[$key] = $value;
+
+				$answer = $func($args);
+				return json_encode($answer);
+
+			});
+
+			if(!is_null($status))
+				$action->add(new NeedsAuthentication($container['view'], $status, true));
+
+		}
+
+	};
+
+	registerAction('/character/create', function($args) {
+
+		$account = getAccount();
+		$clazz = $args['class'];
+		$name = $args['name'];
+		
+		if($clazz && $account && $name) {
+
+			if(Character::where('name', $name)->first())
+				return ['success' => false, 'message' => 'Name not available'];
+
+			$clazz = Clazz::find($clazz);
+			if(!$clazz && !$clazz->relations['evolvesFrom']->first())
+				return ['success' => false, 'message' => 'Not a starter class'];
+
+			$character = new Character;
+			$character->name = $name;
+			$character->race = 1;
+			$character->class = $clazz->id;
+			$character->health = 1000;
+			$character->account = $account->id;
+
+			$character->save();
+			return ['redirect' => '/profile'];
+
+		}
+		
+		return ['success' => false];
+
+	});
+
 	registerAction('/character/select/{id}', function($args) {
 
 		$id = $args['id'];

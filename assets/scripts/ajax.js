@@ -10,7 +10,8 @@ window.params = {};
 
 function sendAction(action, func) {
 	if(!func) func = function(result) {
-		if(result.success) location.reload();
+		if(result.redirect) window.open(result.redirect, '_self');
+		else if(result.success) location.reload();
 		else {
 			console.log(result);
 			$('.feedback').text(result.message);
@@ -18,7 +19,16 @@ function sendAction(action, func) {
 	}
 	
 	$.post( action, window.params ).done(function(d) {
-		func(JSON.parse(d));
+
+		try {
+			func(JSON.parse(d));
+		} catch(err) {
+			func({
+				'success': false,
+				'message': 'Invalid JSON',
+				'json': d
+			})
+		}
 	});
 }
 

@@ -1,0 +1,49 @@
+{% extends 'base.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% set account = account() %}
+
+{% block content %}
+
+	<h5>My name is <input class='grow' type='text' id='name'></input> and I am a</h5>
+	
+	<div class='row'>
+		{% for starter in starters %}
+			
+
+			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-id='{{ starter.id }}'>
+				<h4>{{ starter.name }}</h4>
+				{{ icon("class/" ~ starter.name)|raw }}
+			</div>
+
+		{% else %}
+			
+			<a href='profile/create'>
+				<div class='character-panel create'>
+					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+				</div>
+			</a>
+
+		{% endfor %}
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	<script>
+
+		$(window).ready(function() {
+
+			$('.character-panel').click(function() {
+
+				window.params.class = $(this).attr('data-id');
+				window.params.name = $('#name').val();
+				sendAction('/character/create');
+
+			});
+
+		});
+
+	</script>
+{% endblock %}

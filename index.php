@@ -32,6 +32,12 @@
 	        return $_SERVER['REQUEST_URI'];
 	    }));
 
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
+			$status = Status::where('name', $status)->first();
+	        return $account !== false && $status && $account->status >= $status->id;
+	    }));
+
 	    /*
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
@@ -66,7 +72,8 @@
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
-			return round(abs($time - time()) / 24 / 60 / 60);
+	        $age = round(abs($time - time()) / 24 / 60 / 60);
+			return $age.' Day'.($age > 1 ? 's' : '');
 	    }));
 
 	    return $view;
@@ -78,17 +85,25 @@
 		$account = getAccount();
 		if($account) {
 		
-			if(($selected = $account->relations['selected']) && ($battle = $selected->relations['battle'])) {
+			$selected = $account->relations['selected'];
+			if($selected) {
+
+				if($battle = $selected->relations['battle']) {
+					
+					$won = true;
+					foreach($battle->relations['enemies'] as $enemy)
+						$won &= $enemy->health <= 0;
+					
+					if($won) $battle->win();
 				
-				$won = true;
-				foreach($battle->relations['enemies'] as $enemy)
-					$won &= $enemy->health <= 0;
+				}
 				
-				if($won) $battle->win();
-			
+				return $this->view->render($response, 'home.twig', []);
+
 			}
-			
-			return $this->view->render($response, 'home.twig', []);
+
+			return $response->withRedirect('/profile');
+
 		}
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
@@ -109,142 +124,24 @@
 		$this->view->render($response, 'profile.twig', []);
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
-	$app->get('/logout', function (Request $request, Response $response, array $args) {		
-		unset($_SESSION['account']);
-		return $response->withRedirect($request->getParams()['next'] ?? '/');		
-	});
+	$app->get('/profile/create', function (Request $request, Response $response, array $args) {
 
-	$app->post('/login', function (Request $request, Response $response, array $args) {
+		$starters = Clazz::all()->filter(function($clazz, $i) {
+			return !$clazz->evolvesFrom()->first();
+		});
 
-		$username = $request->getParams()['username'];
-		$password = $request->getParams()['password'];
-		
-		$account = Account::where('username', '=', $username)->first();
-		
-		if ($account != null && password_verify($password, $account->password_hash)) {
-			$_SESSION['account'] = $account->id;
-			return $response->withRedirect($request->getParams()['next'] ?? '/');
-		} else {
-			return $this->view->render($response, 'login.twig', ['failed' => true]);
-		}
-		
-	});
-
-	$app->post('/signup', function (Request $request, Response $response, array $args) {
-
-		$username = $request->getParams()['username'] ?? null;
-		$password = $request->getParams()['password'] ?? null;
-		
-		if($username && $password) {
-
-			$account = Account::where('username', '=', $username)->first();
-			if($account)
-				return $this->view->render($response, 'login.twig', ['exists' => true]);
-
-			$account = new Account;
-			$account->username = $username;
-			$account->password_hash = password_hash($password, PASSWORD_DEFAULT);
-			$account->status = Status::where('name', 'user')->first()->id;
-			
-			$account->save();
-			$account->refresh();
-
-			$_SESSION['account'] = $account->id;
-			return $response->withRedirect('/');
-			
-		}
-		
-		return $this->view->render($response, 'login.twig', ['failed' => true]);
-		
-	});
-
-	/* A variety of admin pages, used mainly for debugging */
-
-	$app->get('/admin/validate', function (Request $request, Response $response, array $args) {
-		
-		$level = $request->getParams()['level'] ?? 0b11111111;
-		$this->view->render($response, 'admin/validate.twig', ['log' => validate($level)]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
-
-	$app->get('/admin/loot', function (Request $request, Response $response, array $args) {
-		
-		$log = "";
-		foreach(NPC::all() as $npc) {
-			$log .= '<p>Loot for '.$npc->name.'</p>';
-			
-			foreach($npc->relations['loot'] as $item)
-				$log .= '<li>'.$item->name.'</li>';
-		}
-			
-		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
-
-	$app->get('/admin/post', function (Request $request, Response $response, array $args) {
-		
-		$this->view->render($response, 'admin/post.twig', []);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
-
-	$app->post('/admin/post', function (Request $request, Response $response) {
-		
-		$args = $request->getParams()['args'] ?? null;
-		$action = $request->getParams()['action'] ?? null;
-		
-		if($action)
-			return $response->withRedirect('/'.$action, 307);
-		$this->view->render($response, 'post.twig', []);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
-
-	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {
-		
-		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'betatest'));
-
-	$app->get('/admin/level', function (Request $request, Response $response, array $args) {
-		
-		$points = [];		
-		$xp = 0;
-		
-		for($level = 0; $level < 60 && $xp < 10000; $level++) {
-			$point = [];
-			$point['required'] = Character::requiredXp($level);
-			$xp += $point['required'];
-			$point['total'] = $xp;
-			$point['test'] = Character::levelFrom($xp);
-			$points[] = $point;
-		}
-		
-		return $this->view->render($response, 'admin/level.twig', ['points' => $points]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
+		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
+	
+	})->add(new NeedsAuthentication($container['view'], 'user'));
 
 	/*
 		Used by 'actions.php' to register to user input actions.
 		These are handled via post-requests
 	*/
 
-	function registerAction($url, $func) {
-		global $app;
-
-		if(is_callable($func))
-			$app->post($url, function (Request $request, Response $response, array $args) use ($func) {
-
-			foreach($request->getParams() as $key => $value) {
-				$args[$key] = $value;
-			}
-
-			$answer = $func($args);
-			return json_encode($answer);
-
-		});
-
-	};
-
 	include_once 'actions.php';
+	include_once 'admin.php';
+	include_once 'account.php';
 
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
@@ -285,20 +182,24 @@
 	class NeedsAuthentication {
 	    private $view;
 	    private $accessLevel;
+	    private $post;
 
-	    public function __construct(\Slim\Views\Twig $view, $accessLevel) {
+	    public function __construct(\Slim\Views\Twig $view, $accessLevel, $post = false) {
 	        $this->view = $view;
 	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
 	        $this->accessLevel = $status->id;
+	        $this->post = $post;
 	    }
 	    public function __invoke($request, $response, $next) {
 			
 			$account = getAccount();
 			
 	        if ($account == null) {
+	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not logged in']);
 	            return $response->withRedirect('/login?next=' . $request->getUri()->getPath());
 	        }
 	        if ($account->status < $this->accessLevel) {
+	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not allowed to do this']);
 	            return $this->view->render($response->withStatus(403), 'handlers/403.twig');
 	        }
 	        return $next($request, $response);

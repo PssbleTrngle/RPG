@@ -63,7 +63,11 @@ $(window).ready(function() {
 	
 	$('.evolve').each(function() {
 		let panel = $(this);
-		panel.sendAction('character/evolve', { to: panel.attr('data-class') });
+
+		panel.click(function() {
+			window.params.to = panel.attr('data-class');
+			sendAction('character/evolve');
+		});
 	});
 	
 });
