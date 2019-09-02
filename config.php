@@ -5,7 +5,7 @@
 		Defines the database name and user.
 	*/
 
-	$database_url = "localhost";
+	$database_url = "somethingcatchy.net";
 	$database_pw = "x9q9mFDp";
 	$database_name = "rpg";
 	$database_user = $database_name;

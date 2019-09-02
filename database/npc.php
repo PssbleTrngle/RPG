@@ -6,7 +6,7 @@
 		protected $with = ['npc', 'battle'];
 		
 		public function name() {
-			return $this->relations['npc']->name .' '. $this->suffix;
+			return $this->npc->name .' '. $this->suffix;
 		}
 
 		public function stats() {
@@ -25,13 +25,13 @@
 		
 		public function takeTurn($battle) {
 			
-			if($battle && ($characters = $battle->relations['characters'])) {
+			if($battle && ($characters = $battle->characters)) {
 				
-				if(rand(1, 100) < (100 * option('call_chance'))  && $battle->relations['enemies']->where('health', '>', '0')->count() < option('max_enemies')) {
+				if(rand(1, 100) < (100 * option('call_chance'))  && $battle->enemies->where('health', '>', '0')->count() < option('max_enemies')) {
 					
-					$position = $battle->relations['position'];
+					$position = $battle->position;
 					
-					$called = $position->relations['dungeon']->getNPC($position->floor);
+					$called = $position->dungeon->getNPC($position->floor);
 					$battle->addNPC($called);
 					$called->save();
 					
@@ -55,7 +55,7 @@
 		}
 		
 		public function maxHealth() {
-			return $this->relations['npc']->maxHealth;
+			return $this->npc->maxHealth;
 		}
 		
 		public function npc() {

@@ -30,9 +30,9 @@
 					
 					$stacked = [];
 					
-					foreach($character->relations['inventory'] as $stack) if($stack->slot == $slot) {
+					foreach($character->inventory as $stack) if($stack->slot == $slot) {
 						
-						if($stack->relations['item']->stackable) {
+						if($stack->item->stackable) {
 							if(array_key_exists($stack->item, $stacked)) {
 
 								$stacked[$stack->item]->amount += $stack->amount;

@@ -59,7 +59,7 @@
 		
 		public function getNPC($floor) {
 			
-			$npc = $this->relations['npcs']->random();
+			$npc = $this->npcs->random();
 			return NPC::find(1);
 			
 		}
@@ -67,7 +67,7 @@
 		public function leave($character) {
 			if(is_numeric($character)) $character = Character::find($character);
 			
-			if($character && ($position = $character->relations['position']) && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->position) && ($dungeon = $position->dungeon) && ($dungeon->id == $this->id)) {
 			
 				#$position->dungeon = null;
 				$position->floor = 1;
@@ -85,7 +85,7 @@
 		public function down($character) {
 			if(is_numeric($character)) $character = Character::find($character);
 			
-			if($character && ($position = $character->relations['position']) && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->position) && ($dungeon = $position->dungeon) && ($dungeon->id == $this->id)) {
 				
 				if($position->floor < $dungeon->floors && $position->foundStairs) {
 			
@@ -106,8 +106,8 @@
 		public function search($character) {
 			if(is_numeric($character)) $character = Character::find($character);			
 			
-			if($character && ($position = $character->relations['position'])
-			   && ($dungeon = $position->relations['dungeon']) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->position)
+			   && ($dungeon = $position->dungeon) && ($dungeon->id == $this->id)) {
 				
 				if(!$position->foundStairs && rand(1, 100) < 5 + 3*$position->attempts) {
 				

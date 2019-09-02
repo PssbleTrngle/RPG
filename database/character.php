@@ -33,7 +33,7 @@
 			$do = false;
 			
 			if($character)
-				foreach($this->relations['characters'] as $char)
+				foreach($this->characters as $char)
 					$do = $do || $char->id == $character->id;
 			
 			if($do) {
@@ -114,7 +114,7 @@
 		}
 		
 		public function stats() {
-			return $this->relations['clazz']->relations['stats']->add($this->relations['race']->relations['stats']);
+			return $this->clazz->stats->add($this->race->stats);
 		}
 		
 		public function position() {
@@ -124,12 +124,12 @@
 		public function itemIn($slot) {
 		
 			if(is_numeric($slot)) $slot = Slot::find($slot);
-			return $this->relations['inventory']->where('slot', '=', $slot->id);
+			return $this->inventory->where('slot', '=', $slot->id);
 			
 		}
 		
 		public function isSelected() {
-			$selected = $this->account()->first()->relations['selected'];
+			$selected = $this->account()->first()->selected;
 			return $selected && $selected->id == $this->id;
 		}
 		
@@ -138,7 +138,7 @@
 			
 			if($location && $location->level <= $this->level()) {
 				
-				if(!$this->relations['battle']) {
+				if(!$this->battle) {
 				
 					$pos = $this->position();
 					$pos->location = $location->id;
@@ -192,11 +192,11 @@
 		}
 		
 		public function canEvolveTo() {
-			return $this->relations['clazz']->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
+			return $this->clazz->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
 		}
 		
 		public function canLearn() {			
-			return $this->relations['clazz']->skills()->wherePivot('level', '<=', $this->level())->get();
+			return $this->clazz->skills()->wherePivot('level', '<=', $this->level())->get();
 		}
 		
 		public function skills() {		
