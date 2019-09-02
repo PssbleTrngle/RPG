@@ -2,11 +2,11 @@
 
 {% block title %}Home{% endblock %}
 
-{% set character = account().relations.selected %}
+{% set character = account().selected %}
 
 {% block content %}
 
-	{% set battle = character.relations.battle %}
+	{% set battle = character.battle %}
 	
 	{% if battle %}
 
@@ -34,8 +34,8 @@
 			{% endif %}
 
 
-			{% set pos = character.relations.position %}
-			{% if pos.relations.dungeon %}
+			{% set pos = character.position %}
+			{% if pos.dungeon %}
 
 				{% include 'home/dungeon.twig' with {'position': pos, 'character': character} %}
 				
