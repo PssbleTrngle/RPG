@@ -13,8 +13,21 @@
 		$json = [
 			"schemaVersion" => 1,
 			"label" => "Users",
-			"message" => Account::all()->count(),
-			"color" => "orange"
+			"message" => "".Account::all()->count(),
+			"color" => "yellow"
+		];
+
+		return json_encode($json);
+
+	});
+
+	$app->get('/stats/characters', function (Request $request, Response $response, array $args) {	
+
+		$json = [
+			"schemaVersion" => 1,
+			"label" => "Users",
+			"message" => "".Character::all()->count(),
+			"color" => "yellow"
 		];
 
 		return json_encode($json);
