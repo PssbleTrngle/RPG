@@ -162,7 +162,7 @@
 		if($account && $selected) {
 			$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active->id == $character->id)) {
 
 				$skill = $character->skills()
 					->where('id', '=', $skillID)
@@ -182,8 +182,8 @@
 							$target = $target->where('health', '>', '0');
 							
 						if(!$skill->group)
-							$target = $target->where('id', '=', $selected['id'])->first();
-							
+							$target = $target->where('id', $selected['id'])->first();
+						
 						$message = $skill->apply($target, $character);
 						$battle->refresh();
 						

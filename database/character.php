@@ -71,8 +71,8 @@
 			$this->xp += $loot['xp'];
 			foreach($loot['items'] as $item) {
 				
-				$item->character = $this->id;
-				$item->slot = 4;
+				$item->character_id = $this->id;
+				$item->slot_id = 4;
 				$item->save();
 				
 			}
@@ -124,7 +124,7 @@
 		public function itemIn($slot) {
 		
 			if(is_numeric($slot)) $slot = Slot::find($slot);
-			return $this->inventory->where('slot', '=', $slot->id);
+			return $this->inventory->where('slot_id', '=', $slot->id);
 			
 		}
 		

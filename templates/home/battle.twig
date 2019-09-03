@@ -21,7 +21,7 @@
 				<div class='row'>
 					{% for char in battle.characters %}
 
-						<div class='participant {% if battle.active == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
+						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
 							<p>{{char.name }} [lvl: {{char.level() }}]</p>
 							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
 							{{ icon('class/' ~ char.clazz.name)|raw }}
@@ -32,7 +32,7 @@
 			</div>
 		</div>
 
-		{% if battle.active == character.id %}
+		{% if battle.active.id == character.id %}
 
 			<div class='options vertical ml-3'>
 
