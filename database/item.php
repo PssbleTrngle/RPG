@@ -30,15 +30,15 @@
 					
 					$stacked = [];
 					
-					foreach($character->inventory as $stack) if($stack->slot == $slot) {
+					foreach($character->inventory as $stack) if($stack->slot->id == $slot) {
 						
 						if($stack->item->stackable) {
-							if(array_key_exists($stack->item, $stacked)) {
+							if(array_key_exists($stack->item->id, $stacked)) {
 
 								$stacked[$stack->item]->amount += $stack->amount;
 								$stack->delete();
 
-							} else $stacked[$stack->item] = $stack;
+							} else $stacked[$stack->item->id] = $stack;
 						}
 
 					}
@@ -109,7 +109,7 @@
 		protected $table = 'item';
 		protected $with = ['type'];
 		
-		public function type_object() {
+		public function type() {
 			return $this->belongsTo(ItemType::class, 'type_id')->without(['items']);
 		}
 		

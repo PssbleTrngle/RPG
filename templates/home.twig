@@ -5,12 +5,10 @@
 {% set character = account().selected %}
 
 {% block content %}
-
-	{% set battle = character.battle %}
 	
-	{% if battle %}
+	{% if character.battle.exists %}
 
-		{% include 'home/battle.twig' with {'battle': battle, 'character': character} %}
+		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
 	
 	{% else %}
 	
@@ -35,7 +33,7 @@
 
 
 			{% set pos = character.position %}
-			{% if pos.dungeon %}
+			{% if pos.dungeon.exists %}
 
 				{% include 'home/dungeon.twig' with {'position': pos, 'character': character} %}
 				

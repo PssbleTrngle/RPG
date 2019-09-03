@@ -37,7 +37,7 @@
 					$do = $do || $char->id == $character->id;
 			
 			if($do) {
-				$this->selected = $character->id;
+				$this->selected_id = $character->id;
 				$this->save();
 			}
 			
@@ -141,7 +141,7 @@
 				if(!$this->battle) {
 				
 					$pos = $this->position();
-					$pos->location = $location->id;
+					$pos->location_id = $location->id;
 					$pos->save();
 					
 				}
