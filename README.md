@@ -1,4 +1,4 @@
-# RPG ![](http://rpg.somethingcatchy.net/assets/img/icon_github.png) 
+# RPG ![](http://rpg.somethingcatchy.net/assets/img/icon.png) 
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/users)
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/characters)
 
