@@ -90,7 +90,7 @@
 		public function createEnemy() {
 			$enemy = new Enemy;
 			
-			$enemy->npc = $this->id;
+			$enemy->npc_id = $this->id;
 			$enemy->health = $this->maxHealth;
 			
 			$enemy->save();

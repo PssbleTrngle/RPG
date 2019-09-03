@@ -43,7 +43,7 @@
 			$account = new Account;
 			$account->username = $username;
 			$account->password_hash = password_hash($password, PASSWORD_DEFAULT);
-			$account->status = Status::where('name', 'user')->first()->id;
+			$account->status_id = Status::where('name', 'user')->first()->id;
 			
 			$account->save();
 			$account->refresh();

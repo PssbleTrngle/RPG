@@ -1,0 +1,16 @@
+{
+	"time": {
+		"day": "1 Tag",
+		"days": "$1 Tage"
+	},
+	"message": {
+		"welcome": "Willkommen $1!"
+	},
+	"stat": {
+		"wisdom": "Weisheit",
+		"strength": "Kraft",
+		"resistance": "Resistenz",
+		"agility": "Beweglichkeit",
+		"luck": "Glück"
+	}
+}

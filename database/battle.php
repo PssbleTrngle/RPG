@@ -25,7 +25,7 @@
 			global $capsule;
 			
 			foreach($this->characters as $character) {
-				$character->battle = null;
+				$character->battle_id = null;
 				$character->save();
 			
 				$capsule::table('character_skills')
@@ -62,7 +62,7 @@
 			
 			if($this->active == $character->id) {
 				
-				$character->battle = null;
+				$character->battle_id = null;
 				$character->save();
 
 				$this->refresh();
@@ -85,7 +85,7 @@
 			
 			for($index = 0; $index < $this->participants()->count(); $index++) {
 				$participant = $this->participants()[$index];
-				if(is_a($participant, 'Character') && $participant->id == $this->active)
+				if(is_a($participant, 'Character') && $participant->id == $this->active_id)
 					return $index;
 
 			}
@@ -114,7 +114,7 @@
 				if($index == 0) $this->nextRound();
 			}
 				
-			$this->active = $next->id;
+			$this->active_id = $next->id;
 			$this->save();
 			$this->refresh();
 			
@@ -150,13 +150,14 @@
 			
 		}
 		
-		public function start($character) {
+		public static function start($character) {
 			if(is_numeric($character)) $character = Character::find($character);	
 			
 			if($character) {
 				$battle = new Battle;
-				$battle->active = $character->id;
-				$battle->position = $character->id;
+				$battle->active_id = $character->id;
+				$battle->position_id = $character->id;
+				$battle->message = '';
 				$battle->save();
 				$battle->refresh();
 				$battle->addCharacter($character);
@@ -170,7 +171,7 @@
 			if(is_numeric($character)) $character = Character::find($character);	
 			
 			if($character) {
-				$character->battle = $this->id;
+				$character->battle_id = $this->id;
 				$character->save();
 				$character->refresh();
 			}
@@ -182,13 +183,11 @@
 			if($npc && $enemy = $npc->createEnemy()) {
 				
 				$suffix = 'A';
-				foreach($this->enemies as $other) if($other->npc == $npc->id) {
+				foreach($this->enemies as $other) if($other->npc->id == $npc->id)
+					if($other->suffix && ord($other->suffix) >= ord($suffix)) 
+						$suffix = chr(ord($other->suffix) + 1);
 				
-					if($other->suffix && ord($other->suffix) >= ord($suffix)) $suffix = chr(ord($other->suffix) + 1);
-					
-				}
-				
-				$enemy->battle = $this->id;
+				$enemy->battle_id = $this->id;
 				$enemy->suffix = $suffix;
 				
 				$enemy->save();
@@ -207,7 +206,7 @@
 				
 				foreach($npc->loot as $item) {
 					$inventory = new Stack;
-					$inventory->item = $item->id;
+					$inventory->item_id = $item->id;
 					$inventory->amount = 1;
 					$loot['items'][] = $inventory;
 				}
@@ -290,7 +289,7 @@
 
 		public function apply($value, $stat, $negative = false) {
 
-			if(negative)
+			if($negative)
 				$by = 1 + $this->statFactor($stat);
 			else
 				$by = 1 - $this->statFactor($stat);

@@ -35,7 +35,7 @@
 						if($stack->item->stackable) {
 							if(array_key_exists($stack->item->id, $stacked)) {
 
-								$stacked[$stack->item]->amount += $stack->amount;
+								$stacked[$stack->item->id]->amount += $stack->amount;
 								$stack->delete();
 
 							} else $stacked[$stack->item->id] = $stack;
@@ -55,20 +55,20 @@
 			if(is_numeric($character)) $character = Character::find($character);
 			
 			if($character) {			
-				if($this->character == $character->id) {
-					if($this->slot != 1) {
+				if($this->character->id == $character->id) {
+					if($this->slot_id != 1) {
 						
 						$hasSpace = $character->itemIn(1)->count() < $character->bagSize();
 						
 						if(!$hasSpace && $this->stackable) foreach($character->itemIn(1) as $stack)
-							if($stack->item == $this->item) {
+							if($stack->item_id == $this->item) {
 								$hasSpace = true;
 								break;
 							}
 						
 						if($hasSpace) {
 						
-							$this->slot = 1;
+							$this->slot_id = 1;
 							$this->save();
 							$character->refresh();
 							Stack::tidy($character);

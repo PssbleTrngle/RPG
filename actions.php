@@ -49,10 +49,10 @@
 
 			$character = new Character;
 			$character->name = $name;
-			$character->race = 1;
-			$character->class = $clazz->id;
+			$character->race_id = 1;
+			$character->class_id = $clazz->id;
 			$character->health = 1000;
-			$character->account = $account->id;
+			$character->account_id = $account->id;
 
 			$character->save();
 			return ['redirect' => '/profile'];
@@ -162,7 +162,7 @@
 		if($account && $selected) {
 			$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active->id == $character->id)) {
 
 				$skill = $character->skills()
 					->where('id', '=', $skillID)
@@ -182,8 +182,8 @@
 							$target = $target->where('health', '>', '0');
 							
 						if(!$skill->group)
-							$target = $target->where('id', '=', $selected['id'])->first();
-							
+							$target = $target->where('id', $selected['id'])->first();
+						
 						$message = $skill->apply($target, $character);
 						$battle->refresh();
 						

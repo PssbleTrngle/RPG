@@ -25,15 +25,15 @@
 			if($character) {
 			
 				$capsule::table('character_skills')
-					->where('character', $character->id)
-					->where('skill', $this->id)
+					->where('character_id', $character->id)
+					->where('skill_id', $this->id)
 					->update(['nextUse' => $this->timeout]);
 				
 			}			
 		}
 			
 		public function apply($target, $user) {
-			$func = Skill::$functions[$this->id];
+			$func = static::$functions[$this->id];
 			
 			if(!$func) return false;
 			
@@ -88,7 +88,8 @@
 
 			/* ------------------------  ATTACK SPELLS  ------------------------ */
 			
-			static::register(['id' => 101, 'name' => 'Pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {				
+			static::register(['id' => 101, 'name' => 'Pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], function($target, $user) {			
+
 				if(method_exists($target, 'damage')) {
 					$damage = $user->stats()->apply(8, 'wisdom');
 					return $target->damage($damage) ? 'The pulse dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
