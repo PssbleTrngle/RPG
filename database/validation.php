@@ -23,7 +23,7 @@
 		$out = "";
 	
 		foreach(Race::all() as $race) {
-			$total = $race->relations['stats']->total();
+			$total = $race->stats->total();
 			$reference = 30;
 			
 			if($total != $reference) {
@@ -41,7 +41,7 @@
 		$out = "";
 	
 		foreach(Clazz::all() as $class) {
-			$total = $class->relations['stats']->total();
+			$total = $class->stats->total();
 			$rank = $class->rank();
 			$per_rank = 10;
 			$reference = 100 + $per_rank * ($rank-1);

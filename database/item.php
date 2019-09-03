@@ -6,19 +6,19 @@
 		protected $with = ['item', 'slot', 'character', 'enchantment'];
 		
 		public function item() {
-			return $this->belongsTo(Item::class, 'item');
+			return $this->belongsTo(Item::class, 'item_id');
 		}
 		
 		public function slot() {
-			return $this->belongsTo(Slot::class, 'slot');
+			return $this->belongsTo(Slot::class, 'slot_id');
 		}
 		
 		public function character() {
-			return $this->belongsTo(Character::class, 'character');
+			return $this->belongsTo(Character::class, 'character_id');
 		}
 		
 		public function enchantment() {
-			return $this->belongsTo(Enchantment::class, 'enchantment');
+			return $this->belongsTo(Enchantment::class, 'enchantment_id');
 		}
 		
 		public static function tidy($character) {
@@ -30,15 +30,15 @@
 					
 					$stacked = [];
 					
-					foreach($character->relations['inventory'] as $stack) if($stack->slot == $slot) {
+					foreach($character->inventory as $stack) if($stack->slot->id == $slot) {
 						
-						if($stack->relations['item']->stackable) {
-							if(array_key_exists($stack->item, $stacked)) {
+						if($stack->item->stackable) {
+							if(array_key_exists($stack->item->id, $stacked)) {
 
 								$stacked[$stack->item]->amount += $stack->amount;
 								$stack->delete();
 
-							} else $stacked[$stack->item] = $stack;
+							} else $stacked[$stack->item->id] = $stack;
 						}
 
 					}
@@ -93,7 +93,7 @@
 		protected $with = ['items'];
 		
 		public function items() {
-			return $this->hasMany(Item::class, 'type')->without('type');
+			return $this->hasMany(Item::class, 'type_id')->without(['type']);
 		}
 		
 	}
@@ -110,7 +110,7 @@
 		protected $with = ['type'];
 		
 		public function type() {
-			return $this->belongsTo(ItemType::class, 'type');
+			return $this->belongsTo(ItemType::class, 'type_id')->without(['items']);
 		}
 		
 	}

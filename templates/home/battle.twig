@@ -6,12 +6,12 @@
 			<p class='right feedback'></p>
 			<div class='participants'>
 				<div class='row'>
-					{% for enemy in battle.relations.enemies if enemy.health() > 0 %}
+					{% for enemy in battle.enemies if enemy.health() > 0 %}
 
 						<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
-							<p>{{enemy.name() }} [lvl: {{enemy.relations.npc.level }}]</p>
+							<p>{{enemy.name() }} [lvl: {{enemy.npc.level }}]</p>
 							<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
-							{{ icon('npc/' ~ enemy.relations.npc.name)|raw }}
+							{{ icon('npc/' ~ enemy.npc.name)|raw }}
 						</div>
 
 					{% endfor %}
@@ -19,12 +19,12 @@
 			</div>
 			<div class='participants'>
 				<div class='row'>
-					{% for char in battle.relations.characters %}
+					{% for char in battle.characters %}
 
 						<div class='participant {% if battle.active == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
 							<p>{{char.name }} [lvl: {{char.level() }}]</p>
 							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
-							{{ icon('class/' ~ char.relations.clazz.name)|raw }}
+							{{ icon('class/' ~ char.clazz.name)|raw }}
 						</div>
 
 					{% endfor %}
@@ -48,7 +48,7 @@
 		
 		{% else %}
 		
-			{{ battle.relations.active.name }}' turn
+			{{ battle.active.name }}' turn
 
 		{% endif %}
 	</div>

@@ -10,16 +10,16 @@
 
 	<div class='col'>
 	<div class='row'>
-		{% for character in account.relations.characters %}
+		{% for character in account.characters %}
 			
 			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
 				<h4>{{ character.name }}</h4>
 				<small>
-					<p>{{ character.relations.race.name}} {{ character.relations.clazz.name }}</p>
+					<p>{{ character.race.name}} {{ character.clazz.name }}</p>
 					<p>Level {{ character.level() }}</p>
 					<p>{{ character.birth|age }}</p>
 				</small>
-				{{ icon("class/" ~ character.relations.clazz.name)|raw }}
+				{{ icon("class/" ~ character.clazz.name)|raw }}
 			</div>
 
 		{% else %}
@@ -36,8 +36,8 @@
 	
 	<div class='col'>
 
-	{% if account.relations.selected %}
-		{% set stats = account.relations.selected.stats() %}
+	{% if account.selected %}
+		{% set stats = account.selected.stats() %}
 
 			<div class='stats ml-5'>
 				{% for stat in stats.keys %}

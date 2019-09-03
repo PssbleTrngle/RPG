@@ -27,10 +27,8 @@
 	]);
 
 	class BaseModel extends Model {
-   		
-    	protected $primaryKey = 'id';
+
    		public $timestamps = false;
-   		public $relations = [];
 		
 	}
 
@@ -44,14 +42,9 @@
 		
 	}
 
-	include_once 'item.php';
-	include_once 'battle.php';
-	include_once 'npc.php';
-	include_once 'character.php';	
-	include_once 'clazz.php';	
-	include_once 'skill.php';
-	include_once 'effect.php';		
-	include_once 'location.php';
+	foreach (glob("database/*.php") as $filename) {
+	    include_once $filename;
+	}
 
 	registerAll();
 
