@@ -8,6 +8,19 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	$app->get('/stats/users', function (Request $request, Response $response, array $args) {	
+
+		$json = [
+			"schemaVersion": 1,
+			"label": "Users",
+			"message": "1",
+			"color": "orange"
+		];
+
+		return json_encode($json);
+
+	});
+
 	$app->get('/logout', function (Request $request, Response $response, array $args) {		
 		unset($_SESSION['account']);
 		return $response->withRedirect($request->getParams()['next'] ?? '/');
