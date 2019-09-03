@@ -11,10 +11,10 @@
 	$app->get('/stats/users', function (Request $request, Response $response, array $args) {	
 
 		$json = [
-			"schemaVersion": 1,
-			"label": "Users",
-			"message": "1",
-			"color": "orange"
+			"schemaVersion" => 1,
+			"label" => "Users",
+			"message" => Account::all()->count(),
+			"color" => "orange"
 		];
 
 		return json_encode($json);
