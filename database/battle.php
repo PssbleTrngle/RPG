@@ -6,34 +6,34 @@
 		protected $with = ['enemies', 'characters', 'active', 'position'];
 		
 		public function active() {
-			return $this->belongsTo(Character::class, 'active')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
+			return $this->belongsTo(Character::class, 'active_id')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
 		
 		public function position() {
-			return $this->belongsTo(Position::class, 'position');
+			return $this->belongsTo(Position::class, 'position_id');
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle')->without(['battle', 'account']);
+			return $this->hasMany(Enemy::class, 'battle_id')->without(['battle', 'account']);
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'battle')->without(['battle', 'account']);
+			return $this->hasMany(Character::class, 'battle_id')->without(['battle', 'account']);
 		}
 		
 		private function end() {
 			global $capsule;
 			
-			foreach($this->relations['characters'] as $character) {
+			foreach($this->characters as $character) {
 				$character->battle = null;
 				$character->save();
 			
 				$capsule::table('character_skills')
-					->where('character', $character->id)
+					->where('character_id', $character->id)
 					->update(['nextUse' => 0]);
 			}
 			
-			foreach($this->relations['enemies'] as $enemy) {
+			foreach($this->enemies as $enemy) {
 				$enemy->delete();
 			}
 			
@@ -43,7 +43,7 @@
 		
 		public function win() {
 			
-			foreach($this->relations['characters'] as $character) {
+			foreach($this->characters as $character) {
 				$character->addLoot($this->getLoot());
 			}
 			
@@ -67,7 +67,7 @@
 
 				$this->refresh();
 
-				if($this->relations['characters']->count > 0 && $this->active == $character->id) $this->next($character->name.' ran away');
+				if($this->characters->count > 0 && $this->active == $character->id) $this->next($character->name.' ran away');
 				$this->save();
 				$this->refresh();
 			
@@ -77,7 +77,7 @@
 		
 		public function participants() {
 		
-			return $this->relations['characters']->toBase()->merge($this->relations['enemies']);
+			return $this->characters->toBase()->merge($this->enemies);
 			
 		}
 		
@@ -98,7 +98,7 @@
 			$this->save();
 			$count = $this->participants()->count();
 			
-			if($this->relations['characters']->count() == 0) {
+			if($this->characters->count() == 0) {
 				$this->end();
 				return true;
 			}
@@ -125,10 +125,10 @@
 		private function nextRound() {
 			global $capsule;
 			
-			foreach($this->relations['characters'] as $character) {
+			foreach($this->characters as $character) {
 			
 				$capsule::table('character_skills')
-					->where('character', $character->id)
+					->where('character_id', $character->id)
 					->where('nextUse', '>', 0)
 					->decrement('nextUse');
 				
@@ -182,7 +182,7 @@
 			if($npc && $enemy = $npc->createEnemy()) {
 				
 				$suffix = 'A';
-				foreach($this->relations['enemies'] as $other) if($other->npc == $npc->id) {
+				foreach($this->enemies as $other) if($other->npc == $npc->id) {
 				
 					if($other->suffix && ord($other->suffix) >= ord($suffix)) $suffix = chr(ord($other->suffix) + 1);
 					
@@ -200,12 +200,12 @@
 			$loot = [];
 			$loot['xp'] = 0;
 			$loot['items'] = [];
-			foreach($this->relations['enemies'] as $enemy) {
+			foreach($this->enemies as $enemy) {
 			
-				$npc = $enemy->relations['npc'];
+				$npc = $enemy->npc;
 				$loot['xp'] += pow(1.5, $npc->level - 1);
 				
-				foreach($npc->relations['loot'] as $item) {
+				foreach($npc->loot as $item) {
 					$inventory = new Stack;
 					$inventory->item = $item->id;
 					$inventory->amount = 1;
@@ -229,7 +229,7 @@
 		}
 		
 		public function battle() {
-			return $this->belongsTo(Battle::class, 'battle');
+			return $this->belongsTo(Battle::class, 'battle_id');
 		}
 		
 		public function canTakeTurn() {

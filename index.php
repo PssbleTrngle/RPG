@@ -8,13 +8,11 @@
 
 	session_start();
 
-	/* Used for Routing */
+	/**  Used for Routing */
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
-	$configuration = [
-		'settings' => [ 'displayErrorDetails' => true ],
-	];
+	$configuration = ['settings' => [ 'displayErrorDetails' => true ]];
 	$container = new \Slim\Container($configuration);
 	$app = new \Slim\App($container);
 
@@ -35,7 +33,7 @@
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
 			$status = Status::where('name', $status)->first();
-	        return $account !== false && $status && $account->status >= $status->id;
+	        return $account !== false && $status && $account->status->id >= $status->id;
 	    }));
 
 	    /*
@@ -85,13 +83,13 @@
 		$account = getAccount();
 		if($account) {
 		
-			$selected = $account->relations['selected'];
+			$selected = $account->selected;
 			if($selected) {
 
-				if($battle = $selected->relations['battle']) {
+				if($battle = $selected->battle) {
 					
 					$won = true;
-					foreach($battle->relations['enemies'] as $enemy)
+					foreach($battle->enemies as $enemy)
 						$won &= $enemy->health <= 0;
 					
 					if($won) $battle->win();
@@ -146,7 +144,7 @@
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
 	    	$account = Account::where('id', $_SESSION['account'])->first();
-			Stack::tidy($account->relations['selected']);
+			Stack::tidy($account->selected);
 			return $account;
 	    }
 	    return null;
@@ -198,7 +196,7 @@
 	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not logged in']);
 	            return $response->withRedirect('/login?next=' . $request->getUri()->getPath());
 	        }
-	        if ($account->status < $this->accessLevel) {
+	        if ($account->status->id < $this->accessLevel) {
 	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not allowed to do this']);
 	            return $this->view->render($response->withStatus(403), 'handlers/403.twig');
 	        }

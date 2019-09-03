@@ -6,7 +6,7 @@
 		{% for stack in character.itemIn(4) %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item().name }}</p>
 			</div>
@@ -24,7 +24,7 @@
 			{% if stack %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item().name }}</p>
 			</div>
@@ -38,7 +38,7 @@
 		{% for stack in character.itemIn(1) %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.relations.item.name)|raw }}</div>
+				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item().name }}</p>
 			</div>
