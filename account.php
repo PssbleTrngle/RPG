@@ -18,9 +18,9 @@
 		$username = $request->getParams()['username'];
 		$password = $request->getParams()['password'];
 		
-		$account = Account::where('username', '=', $username)->first();
+		$account = Account::where('username', $username)->first();
 		
-		if ($account != null && password_verify($password, $account->password_hash)) {
+		if ($account && password_verify($password, $account->password_hash)) {
 			$_SESSION['account'] = $account->id;
 			return $response->withRedirect($request->getParams()['next'] ?? '/');
 		} else {

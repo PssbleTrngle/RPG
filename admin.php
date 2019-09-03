@@ -31,7 +31,7 @@
 		foreach(NPC::all() as $npc) {
 			$log .= '<p>Loot for '.$npc->name.'</p>';
 			
-			foreach($npc->relations['loot'] as $item)
+			foreach($npc->loot as $item)
 				$log .= '<li>'.$item->name.'</li>';
 		}
 			

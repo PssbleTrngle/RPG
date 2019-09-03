@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 29, 2019 at 10:43 PM
--- Server version: 10.1.40-MariaDB-0ubuntu0.18.04.1
+-- Generation Time: Sep 03, 2019 at 12:56 PM
+-- Server version: 10.1.41-MariaDB-0ubuntu0.18.04.1
 -- PHP Version: 7.1.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -32,16 +32,16 @@ CREATE TABLE `account` (
   `id` int(11) NOT NULL,
   `username` varchar(40) NOT NULL,
   `password_hash` varchar(100) NOT NULL,
-  `status` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
   `birth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `selected` int(11) DEFAULT NULL
+  `selected_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `account`
 --
 
-INSERT INTO `account` (`id`, `username`, `password_hash`, `status`, `birth`, `selected`) VALUES
+INSERT INTO `account` (`id`, `username`, `password_hash`, `status_id`, `birth`, `selected_id`) VALUES
 (1, 'admin', '$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6', 100, '2019-07-10 16:46:30', 4),
 (2, 'user', '$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6', 1, '2019-05-20 08:21:49', NULL),
 (4, 'Luis', '$2y$10$wP5OEhJ.NjUZBOSpZ5KKbejZgxELrcuM/0NwA//JQrwTO0jYgntXu', 50, '2019-05-29 11:44:25', 2),
@@ -82,17 +82,17 @@ INSERT INTO `area` (`id`, `name`, `level`, `mapX`, `mapY`) VALUES
 
 CREATE TABLE `battle` (
   `id` int(11) NOT NULL,
-  `active` int(11) NOT NULL,
+  `active_id` int(11) NOT NULL,
   `round` int(11) NOT NULL DEFAULT '1',
   `message` text NOT NULL,
-  `position` int(11) NOT NULL
+  `position_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `battle`
 --
 
-INSERT INTO `battle` (`id`, `active`, `round`, `message`, `position`) VALUES
+INSERT INTO `battle` (`id`, `active_id`, `round`, `message`, `position_id`) VALUES
 (83, 3, 1, 'Groooover skipped\\n', 3),
 (102, 4, 1, '', 4);
 
@@ -104,25 +104,25 @@ INSERT INTO `battle` (`id`, `active`, `round`, `message`, `position`) VALUES
 
 CREATE TABLE `character` (
   `id` int(11) NOT NULL,
-  `race` int(11) NOT NULL,
-  `class` int(11) NOT NULL,
+  `race_id` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `health` int(11) NOT NULL,
   `xp` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `account` int(11) NOT NULL,
+  `account_id` int(11) NOT NULL,
   `birth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `battle` int(11) DEFAULT NULL
+  `battle_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `character`
 --
 
-INSERT INTO `character` (`id`, `race`, `class`, `name`, `health`, `xp`, `account`, `birth`, `battle`) VALUES
+INSERT INTO `character` (`id`, `race_id`, `class_id`, `name`, `health`, `xp`, `account_id`, `birth`, `battle_id`) VALUES
 (1, 1, 21, 'Tom', 600, 0, 1, '2019-05-03 15:47:17', NULL),
 (2, 2, 2, 'The Rock', 100, 0, 4, '2019-05-13 15:48:01', NULL),
 (3, 3, 111, 'Groooover', 80, 805, 5, '2019-05-20 08:25:24', NULL),
-(4, 4, 1, 'Kurt', 1000, 73003, 7, '2019-05-20 08:27:06', NULL),
+(4, 4, 1, 'Kurt', 90, 73004, 7, '2019-05-20 08:27:06', NULL),
 (5, 1, 23, 'Test Subject 24', 90, 0, 7, '2019-05-20 11:57:21', NULL),
 (6, 1, 3, 'HoyHoy', 1000, 0, 8, '2019-07-29 20:24:43', NULL),
 (7, 1, 2, 'Peter', 1000, 0, 8, '2019-07-29 20:31:40', NULL),
@@ -137,8 +137,8 @@ INSERT INTO `character` (`id`, `race`, `class`, `name`, `health`, `xp`, `account
 --
 
 CREATE TABLE `character_skills` (
-  `character` int(11) NOT NULL,
-  `skill` int(11) NOT NULL,
+  `character_id` int(11) NOT NULL,
+  `skill_id` int(11) NOT NULL,
   `nextUse` int(10) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -146,7 +146,7 @@ CREATE TABLE `character_skills` (
 -- Dumping data for table `character_skills`
 --
 
-INSERT INTO `character_skills` (`character`, `skill`, `nextUse`) VALUES
+INSERT INTO `character_skills` (`character_id`, `skill_id`, `nextUse`) VALUES
 (4, 101, 0),
 (3, 101, 0);
 
@@ -159,14 +159,14 @@ INSERT INTO `character_skills` (`character`, `skill`, `nextUse`) VALUES
 CREATE TABLE `class` (
   `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `stats` int(11) DEFAULT NULL
+  `stats_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `class`
 --
 
-INSERT INTO `class` (`id`, `name`, `stats`) VALUES
+INSERT INTO `class` (`id`, `name`, `stats_id`) VALUES
 (1, 'Apprentice', 12),
 (2, 'Warrior', 13),
 (3, 'Rogue', 14),
@@ -215,17 +215,17 @@ INSERT INTO `class` (`id`, `name`, `stats`) VALUES
 --
 
 CREATE TABLE `class_skills` (
-  `class` int(11) NOT NULL,
-  `skill` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL,
+  `skill_id` int(11) NOT NULL,
   `level` int(10) UNSIGNED NOT NULL,
-  `teacher` int(11) DEFAULT NULL
+  `teacher_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `class_skills`
 --
 
-INSERT INTO `class_skills` (`class`, `skill`, `level`, `teacher`) VALUES
+INSERT INTO `class_skills` (`class_id`, `skill_id`, `level`, `teacher_id`) VALUES
 (1, 3, 0, NULL),
 (1, 500, 3, NULL);
 
@@ -239,7 +239,7 @@ CREATE TABLE `dungeon` (
   `id` int(11) NOT NULL,
   `name` varchar(40) NOT NULL,
   `level` int(11) NOT NULL,
-  `location` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
   `floors` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -247,7 +247,7 @@ CREATE TABLE `dungeon` (
 -- Dumping data for table `dungeon`
 --
 
-INSERT INTO `dungeon` (`id`, `name`, `level`, `location`, `floors`) VALUES
+INSERT INTO `dungeon` (`id`, `name`, `level`, `location_id`, `floors`) VALUES
 (1, 'Some Crypt', 1, 0, 5),
 (2, 'A big hole', 10, 0, 10);
 
@@ -258,8 +258,8 @@ INSERT INTO `dungeon` (`id`, `name`, `level`, `location`, `floors`) VALUES
 --
 
 CREATE TABLE `dungeon_npc` (
-  `dungeon` int(11) NOT NULL,
-  `npc` int(11) NOT NULL,
+  `dungeon_id` int(11) NOT NULL,
+  `npc_id` int(11) NOT NULL,
   `minFloor` int(11) NOT NULL,
   `maxFloor` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -268,7 +268,7 @@ CREATE TABLE `dungeon_npc` (
 -- Dumping data for table `dungeon_npc`
 --
 
-INSERT INTO `dungeon_npc` (`dungeon`, `npc`, `minFloor`, `maxFloor`) VALUES
+INSERT INTO `dungeon_npc` (`dungeon_id`, `npc_id`, `minFloor`, `maxFloor`) VALUES
 (1, 1, 1, 2),
 (2, 2, 2, 4);
 
@@ -310,8 +310,8 @@ CREATE TABLE `enchantment` (
 CREATE TABLE `enemy` (
   `id` int(11) NOT NULL,
   `health` int(11) NOT NULL,
-  `battle` int(11) DEFAULT NULL,
-  `npc` int(11) NOT NULL,
+  `battle_id` int(11) DEFAULT NULL,
+  `npc_id` int(11) NOT NULL,
   `suffix` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -319,7 +319,7 @@ CREATE TABLE `enemy` (
 -- Dumping data for table `enemy`
 --
 
-INSERT INTO `enemy` (`id`, `health`, `battle`, `npc`, `suffix`) VALUES
+INSERT INTO `enemy` (`id`, `health`, `battle_id`, `npc_id`, `suffix`) VALUES
 (56, 20, 83, 1, 'A'),
 (76, 20, 102, 1, 'A');
 
@@ -330,8 +330,8 @@ INSERT INTO `enemy` (`id`, `health`, `battle`, `npc`, `suffix`) VALUES
 --
 
 CREATE TABLE `enemy_effects` (
-  `enemy` int(11) NOT NULL,
-  `effect` int(11) NOT NULL
+  `enemy_id` int(11) NOT NULL,
+  `effect_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -400,10 +400,10 @@ INSERT INTO `evolution` (`level`, `from`, `to`) VALUES
 
 CREATE TABLE `inventory` (
   `id` int(11) NOT NULL,
-  `character` int(11) NOT NULL,
-  `item` int(11) NOT NULL,
-  `slot` int(11) NOT NULL,
-  `enchantment` int(11) DEFAULT NULL,
+  `character_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `slot_id` int(11) NOT NULL,
+  `enchantment_id` int(11) DEFAULT NULL,
   `amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -411,11 +411,12 @@ CREATE TABLE `inventory` (
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`id`, `character`, `item`, `slot`, `enchantment`, `amount`) VALUES
+INSERT INTO `inventory` (`id`, `character_id`, `item_id`, `slot_id`, `enchantment_id`, `amount`) VALUES
 (1, 4, 1, 1, NULL, 51),
 (2, 4, 2, 1, NULL, 1),
 (3, 4, 2, 1, NULL, 1),
-(19, 3, 1, 1, NULL, 5);
+(19, 3, 1, 1, NULL, 5),
+(40, 4, 1, 4, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -426,7 +427,7 @@ INSERT INTO `inventory` (`id`, `character`, `item`, `slot`, `enchantment`, `amou
 CREATE TABLE `item` (
   `id` int(11) NOT NULL,
   `name` varchar(40) NOT NULL,
-  `type` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
   `stackable` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -434,7 +435,7 @@ CREATE TABLE `item` (
 -- Dumping data for table `item`
 --
 
-INSERT INTO `item` (`id`, `name`, `type`, `stackable`) VALUES
+INSERT INTO `item` (`id`, `name`, `type_id`, `stackable`) VALUES
 (1, 'Health Potion', 2, 1),
 (2, 'Rusty Blade', 3, 0);
 
@@ -469,7 +470,7 @@ INSERT INTO `itemtype` (`id`, `name`) VALUES
 CREATE TABLE `location` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `area` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL,
   `mapX` int(11) NOT NULL,
   `mapY` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -478,7 +479,7 @@ CREATE TABLE `location` (
 -- Dumping data for table `location`
 --
 
-INSERT INTO `location` (`id`, `name`, `area`, `mapX`, `mapY`) VALUES
+INSERT INTO `location` (`id`, `name`, `area_id`, `mapX`, `mapY`) VALUES
 (1, 'Starter Town', 1, 0, 0),
 (2, 'Big City', 1, 1, 13),
 (11, 'Pirate Bar', 2, 0, 0),
@@ -495,14 +496,14 @@ CREATE TABLE `npc` (
   `level` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `maxHealth` int(11) NOT NULL,
-  `rank` int(11) NOT NULL
+  `rank_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `npc`
 --
 
-INSERT INTO `npc` (`id`, `level`, `name`, `maxHealth`, `rank`) VALUES
+INSERT INTO `npc` (`id`, `level`, `name`, `maxHealth`, `rank_id`) VALUES
 (1, 1, 'Angry Bees', 20, 1),
 (2, 10, 'Drake', 180, 1),
 (3, 5, 'Eye', 8, 1),
@@ -515,8 +516,8 @@ INSERT INTO `npc` (`id`, `level`, `name`, `maxHealth`, `rank`) VALUES
 --
 
 CREATE TABLE `npc_loot` (
-  `npc` int(11) NOT NULL,
-  `item` int(11) NOT NULL,
+  `npc_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
   `chance` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -524,7 +525,7 @@ CREATE TABLE `npc_loot` (
 -- Dumping data for table `npc_loot`
 --
 
-INSERT INTO `npc_loot` (`npc`, `item`, `chance`) VALUES
+INSERT INTO `npc_loot` (`npc_id`, `item_id`, `chance`) VALUES
 (1, 1, 100);
 
 -- --------------------------------------------------------
@@ -535,8 +536,8 @@ INSERT INTO `npc_loot` (`npc`, `item`, `chance`) VALUES
 
 CREATE TABLE `position` (
   `id` int(11) NOT NULL,
-  `location` int(11) NOT NULL DEFAULT '1',
-  `dungeon` int(11) DEFAULT NULL,
+  `location_id` int(11) NOT NULL DEFAULT '1',
+  `dungeon_id` int(11) DEFAULT NULL,
   `floor` int(11) DEFAULT NULL,
   `attempts` int(11) DEFAULT NULL,
   `foundStairs` tinyint(4) NOT NULL
@@ -546,11 +547,11 @@ CREATE TABLE `position` (
 -- Dumping data for table `position`
 --
 
-INSERT INTO `position` (`id`, `location`, `dungeon`, `floor`, `attempts`, `foundStairs`) VALUES
+INSERT INTO `position` (`id`, `location_id`, `dungeon_id`, `floor`, `attempts`, `foundStairs`) VALUES
 (1, 1, NULL, NULL, NULL, 0),
 (2, 41, NULL, NULL, NULL, 0),
 (3, 1, 1, 1, 7, 1),
-(4, 1, 1, 3, 2, 0),
+(4, 1, 1, 3, 3, 0),
 (5, 1, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
@@ -566,14 +567,14 @@ CREATE TABLE `race` (
   `resistance` int(11) NOT NULL,
   `agility` int(11) NOT NULL,
   `skin` varchar(6) NOT NULL,
-  `stats` int(11) NOT NULL
+  `stats_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `race`
 --
 
-INSERT INTO `race` (`id`, `name`, `strength`, `resistance`, `agility`, `skin`, `stats`) VALUES
+INSERT INTO `race` (`id`, `name`, `strength`, `resistance`, `agility`, `skin`, `stats_id`) VALUES
 (1, 'Human', 10, 10, 10, 'ffcfa3', 1),
 (2, 'Troll', 12, 15, 3, '', 1),
 (3, 'Nymph', 5, 8, 17, '669619', 1),
@@ -710,8 +711,8 @@ INSERT INTO `status` (`id`, `name`) VALUES
 --
 ALTER TABLE `account`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `status` (`status`),
-  ADD KEY `selected` (`selected`);
+  ADD KEY `status` (`status_id`),
+  ADD KEY `selected` (`selected_id`);
 
 --
 -- Indexes for table `area`
@@ -724,25 +725,25 @@ ALTER TABLE `area`
 --
 ALTER TABLE `battle`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `active` (`active`),
-  ADD KEY `position` (`position`);
+  ADD KEY `active` (`active_id`),
+  ADD KEY `position` (`position_id`);
 
 --
 -- Indexes for table `character`
 --
 ALTER TABLE `character`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `race` (`race`),
-  ADD KEY `class` (`class`),
-  ADD KEY `battle` (`battle`),
-  ADD KEY `character_ibfk_3` (`account`);
+  ADD KEY `race` (`race_id`),
+  ADD KEY `class` (`class_id`),
+  ADD KEY `battle` (`battle_id`),
+  ADD KEY `character_ibfk_3` (`account_id`);
 
 --
 -- Indexes for table `character_skills`
 --
 ALTER TABLE `character_skills`
-  ADD KEY `character` (`character`),
-  ADD KEY `skill` (`skill`);
+  ADD KEY `character` (`character_id`),
+  ADD KEY `skill` (`skill_id`);
 
 --
 -- Indexes for table `class`
@@ -750,29 +751,29 @@ ALTER TABLE `character_skills`
 ALTER TABLE `class`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `stats` (`stats`);
+  ADD KEY `stats` (`stats_id`);
 
 --
 -- Indexes for table `class_skills`
 --
 ALTER TABLE `class_skills`
-  ADD KEY `class` (`class`),
-  ADD KEY `skill` (`skill`),
-  ADD KEY `teacher` (`teacher`);
+  ADD KEY `class` (`class_id`),
+  ADD KEY `skill` (`skill_id`),
+  ADD KEY `teacher` (`teacher_id`);
 
 --
 -- Indexes for table `dungeon`
 --
 ALTER TABLE `dungeon`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `location` (`location`);
+  ADD KEY `location` (`location_id`);
 
 --
 -- Indexes for table `dungeon_npc`
 --
 ALTER TABLE `dungeon_npc`
-  ADD KEY `dungeon` (`dungeon`),
-  ADD KEY `npc` (`npc`);
+  ADD KEY `dungeon` (`dungeon_id`),
+  ADD KEY `npc` (`npc_id`);
 
 --
 -- Indexes for table `effect`
@@ -791,15 +792,15 @@ ALTER TABLE `enchantment`
 --
 ALTER TABLE `enemy`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `battle` (`battle`),
-  ADD KEY `npc` (`npc`);
+  ADD KEY `battle` (`battle_id`),
+  ADD KEY `npc` (`npc_id`);
 
 --
 -- Indexes for table `enemy_effects`
 --
 ALTER TABLE `enemy_effects`
-  ADD KEY `effect` (`effect`),
-  ADD KEY `enemy` (`enemy`);
+  ADD KEY `effect` (`effect_id`),
+  ADD KEY `enemy` (`enemy_id`);
 
 --
 -- Indexes for table `evolution`
@@ -813,17 +814,17 @@ ALTER TABLE `evolution`
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `item` (`item`),
-  ADD KEY `slot` (`slot`),
-  ADD KEY `enchantment` (`enchantment`),
-  ADD KEY `inventory_ibfk_1` (`character`);
+  ADD KEY `item` (`item_id`),
+  ADD KEY `slot` (`slot_id`),
+  ADD KEY `enchantment` (`enchantment_id`),
+  ADD KEY `inventory_ibfk_1` (`character_id`);
 
 --
 -- Indexes for table `item`
 --
 ALTER TABLE `item`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type`);
+  ADD KEY `type` (`type_id`);
 
 --
 -- Indexes for table `itemtype`
@@ -836,36 +837,36 @@ ALTER TABLE `itemtype`
 --
 ALTER TABLE `location`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `area` (`area`);
+  ADD KEY `area` (`area_id`);
 
 --
 -- Indexes for table `npc`
 --
 ALTER TABLE `npc`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `rank` (`rank`);
+  ADD KEY `rank` (`rank_id`);
 
 --
 -- Indexes for table `npc_loot`
 --
 ALTER TABLE `npc_loot`
-  ADD KEY `npc` (`npc`),
-  ADD KEY `loot` (`item`);
+  ADD KEY `npc` (`npc_id`),
+  ADD KEY `loot` (`item_id`);
 
 --
 -- Indexes for table `position`
 --
 ALTER TABLE `position`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `location` (`location`),
-  ADD KEY `dungeon` (`dungeon`);
+  ADD KEY `location` (`location_id`),
+  ADD KEY `dungeon` (`dungeon_id`);
 
 --
 -- Indexes for table `race`
 --
 ALTER TABLE `race`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `stats` (`stats`);
+  ADD KEY `stats` (`stats_id`);
 
 --
 -- Indexes for table `rank`
@@ -911,7 +912,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `battle`
 --
 ALTER TABLE `battle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT for table `character`
@@ -923,13 +924,13 @@ ALTER TABLE `character`
 -- AUTO_INCREMENT for table `enemy`
 --
 ALTER TABLE `enemy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `npc`
@@ -951,60 +952,60 @@ ALTER TABLE `stats`
 -- Constraints for table `account`
 --
 ALTER TABLE `account`
-  ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`status`) REFERENCES `status` (`id`),
-  ADD CONSTRAINT `account_ibfk_2` FOREIGN KEY (`selected`) REFERENCES `character` (`id`);
+  ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`),
+  ADD CONSTRAINT `account_ibfk_2` FOREIGN KEY (`selected_id`) REFERENCES `character` (`id`);
 
 --
 -- Constraints for table `battle`
 --
 ALTER TABLE `battle`
-  ADD CONSTRAINT `battle_ibfk_1` FOREIGN KEY (`active`) REFERENCES `character` (`id`),
-  ADD CONSTRAINT `battle_ibfk_2` FOREIGN KEY (`position`) REFERENCES `position` (`id`);
+  ADD CONSTRAINT `battle_ibfk_1` FOREIGN KEY (`active_id`) REFERENCES `character` (`id`),
+  ADD CONSTRAINT `battle_ibfk_2` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`);
 
 --
 -- Constraints for table `character`
 --
 ALTER TABLE `character`
-  ADD CONSTRAINT `character_ibfk_1` FOREIGN KEY (`race`) REFERENCES `race` (`id`),
-  ADD CONSTRAINT `character_ibfk_2` FOREIGN KEY (`class`) REFERENCES `class` (`id`),
-  ADD CONSTRAINT `character_ibfk_3` FOREIGN KEY (`account`) REFERENCES `account` (`id`),
-  ADD CONSTRAINT `character_ibfk_4` FOREIGN KEY (`battle`) REFERENCES `battle` (`id`);
+  ADD CONSTRAINT `character_ibfk_1` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`),
+  ADD CONSTRAINT `character_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`),
+  ADD CONSTRAINT `character_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
+  ADD CONSTRAINT `character_ibfk_4` FOREIGN KEY (`battle_id`) REFERENCES `battle` (`id`);
 
 --
 -- Constraints for table `character_skills`
 --
 ALTER TABLE `character_skills`
-  ADD CONSTRAINT `character_skills_ibfk_1` FOREIGN KEY (`character`) REFERENCES `character` (`id`),
-  ADD CONSTRAINT `character_skills_ibfk_2` FOREIGN KEY (`skill`) REFERENCES `skill` (`id`);
+  ADD CONSTRAINT `character_skills_ibfk_1` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`),
+  ADD CONSTRAINT `character_skills_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`);
 
 --
 -- Constraints for table `class_skills`
 --
 ALTER TABLE `class_skills`
-  ADD CONSTRAINT `class_skills_ibfk_1` FOREIGN KEY (`class`) REFERENCES `class` (`id`),
-  ADD CONSTRAINT `class_skills_ibfk_2` FOREIGN KEY (`skill`) REFERENCES `skill` (`id`),
-  ADD CONSTRAINT `class_skills_ibfk_3` FOREIGN KEY (`teacher`) REFERENCES `npc` (`id`);
+  ADD CONSTRAINT `class_skills_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`),
+  ADD CONSTRAINT `class_skills_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`),
+  ADD CONSTRAINT `class_skills_ibfk_3` FOREIGN KEY (`teacher_id`) REFERENCES `npc` (`id`);
 
 --
 -- Constraints for table `dungeon_npc`
 --
 ALTER TABLE `dungeon_npc`
-  ADD CONSTRAINT `dungeon_npc_ibfk_1` FOREIGN KEY (`npc`) REFERENCES `npc` (`id`),
-  ADD CONSTRAINT `dungeon_npc_ibfk_2` FOREIGN KEY (`dungeon`) REFERENCES `dungeon` (`id`);
+  ADD CONSTRAINT `dungeon_npc_ibfk_1` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`),
+  ADD CONSTRAINT `dungeon_npc_ibfk_2` FOREIGN KEY (`dungeon_id`) REFERENCES `dungeon` (`id`);
 
 --
 -- Constraints for table `enemy`
 --
 ALTER TABLE `enemy`
-  ADD CONSTRAINT `enemy_ibfk_1` FOREIGN KEY (`npc`) REFERENCES `npc` (`id`),
-  ADD CONSTRAINT `enemy_ibfk_2` FOREIGN KEY (`battle`) REFERENCES `battle` (`id`);
+  ADD CONSTRAINT `enemy_ibfk_1` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`),
+  ADD CONSTRAINT `enemy_ibfk_2` FOREIGN KEY (`battle_id`) REFERENCES `battle` (`id`);
 
 --
 -- Constraints for table `enemy_effects`
 --
 ALTER TABLE `enemy_effects`
-  ADD CONSTRAINT `enemy_effects_ibfk_1` FOREIGN KEY (`effect`) REFERENCES `effect` (`id`),
-  ADD CONSTRAINT `enemy_effects_ibfk_2` FOREIGN KEY (`enemy`) REFERENCES `enemy` (`id`);
+  ADD CONSTRAINT `enemy_effects_ibfk_1` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`),
+  ADD CONSTRAINT `enemy_effects_ibfk_2` FOREIGN KEY (`enemy_id`) REFERENCES `enemy` (`id`);
 
 --
 -- Constraints for table `evolution`
@@ -1017,35 +1018,35 @@ ALTER TABLE `evolution`
 -- Constraints for table `inventory`
 --
 ALTER TABLE `inventory`
-  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`character`) REFERENCES `character` (`id`),
-  ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`item`) REFERENCES `item` (`id`),
-  ADD CONSTRAINT `inventory_ibfk_3` FOREIGN KEY (`slot`) REFERENCES `slot` (`id`),
-  ADD CONSTRAINT `inventory_ibfk_4` FOREIGN KEY (`enchantment`) REFERENCES `enchantment` (`id`);
+  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`),
+  ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
+  ADD CONSTRAINT `inventory_ibfk_3` FOREIGN KEY (`slot_id`) REFERENCES `slot` (`id`),
+  ADD CONSTRAINT `inventory_ibfk_4` FOREIGN KEY (`enchantment_id`) REFERENCES `enchantment` (`id`);
 
 --
 -- Constraints for table `item`
 --
 ALTER TABLE `item`
-  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`type`) REFERENCES `itemtype` (`id`);
+  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `itemtype` (`id`);
 
 --
 -- Constraints for table `location`
 --
 ALTER TABLE `location`
-  ADD CONSTRAINT `location_ibfk_1` FOREIGN KEY (`area`) REFERENCES `area` (`id`);
+  ADD CONSTRAINT `location_ibfk_1` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
 -- Constraints for table `npc`
 --
 ALTER TABLE `npc`
-  ADD CONSTRAINT `npc_ibfk_1` FOREIGN KEY (`rank`) REFERENCES `rank` (`id`);
+  ADD CONSTRAINT `npc_ibfk_1` FOREIGN KEY (`rank_id`) REFERENCES `rank` (`id`);
 
 --
 -- Constraints for table `npc_loot`
 --
 ALTER TABLE `npc_loot`
-  ADD CONSTRAINT `npc_loot_ibfk_1` FOREIGN KEY (`item`) REFERENCES `item` (`id`),
-  ADD CONSTRAINT `npc_loot_ibfk_2` FOREIGN KEY (`npc`) REFERENCES `npc` (`id`);
+  ADD CONSTRAINT `npc_loot_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
+  ADD CONSTRAINT `npc_loot_ibfk_2` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`);
 
 --
 -- Constraints for table `position`
@@ -1057,7 +1058,7 @@ ALTER TABLE `position`
 -- Constraints for table `race`
 --
 ALTER TABLE `race`
-  ADD CONSTRAINT `race_ibfk_1` FOREIGN KEY (`stats`) REFERENCES `stats` (`id`);
+  ADD CONSTRAINT `race_ibfk_1` FOREIGN KEY (`stats_id`) REFERENCES `stats` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

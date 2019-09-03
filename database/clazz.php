@@ -32,11 +32,11 @@
 		}
 		
 		public function skills() {
-			return $this->belongsToMany(Skill::class, 'class_skills', 'class', 'skill');
+			return $this->belongsToMany(Skill::class, 'class_skills', 'class_id', 'skill_id');
 		}
 		
 		public function stats() {
-			return $this->belongsTo(Stats::class, 'stats');
+			return $this->belongsTo(Stats::class, 'stats_id');
 		}
 	
 	}
