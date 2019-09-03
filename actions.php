@@ -44,15 +44,15 @@
 				return ['success' => false, 'message' => 'Name not available'];
 
 			$clazz = Clazz::find($clazz);
-			if(!$clazz && !$clazz->relations['evolvesFrom']->first())
+			if(!$clazz && !$clazz->evolvesFrom->first())
 				return ['success' => false, 'message' => 'Not a starter class'];
 
 			$character = new Character;
 			$character->name = $name;
-			$character->race = 1;
-			$character->class = $clazz->id;
+			$character->race_id = 1;
+			$character->class_id = $clazz->id;
 			$character->health = 1000;
-			$character->account = $account->id;
+			$character->account_id = $account->id;
 
 			$character->save();
 			return ['redirect' => '/profile'];
@@ -81,7 +81,7 @@
 		$account = getAccount();
 		
 		if($to && $account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 			if($character)
 				return ['success' => $character->evolve($to)];
 		}
@@ -96,7 +96,7 @@
 		$account = getAccount();
 		
 		if($skill && $account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 			if($character)
 				return ['success' => $character->learn($skill)];
 		}
@@ -111,7 +111,7 @@
 		$account = getAccount();
 		
 		if($id && $account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 			
 			if($character)
 				return ['success' => $character->travel($id)];
@@ -126,11 +126,11 @@
 		$account = getAccount();
 		
 		if($account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 
-			if($character && !$character->relations['battle']) {
+			if($character && !$character->battle) {
 				
-				$dungeon = $character->relations['position']->relations['dungeon'];
+				$dungeon = $character->position->dungeon;
 			   	if($dungeon) {
 				
 					$action = $args['option'];
@@ -160,9 +160,9 @@
 		$skillID = $args['skill'] ?? null;
 			
 		if($account && $selected) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 
-			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
 
 				$skill = $character->skills()
 					->where('id', '=', $skillID)
@@ -172,8 +172,8 @@
 				if($skillID && $skill) {
 					
 					switch($selected['type']) {
-						case 'character': $target = $battle->relations['characters']; break;
-						case 'enemy': $target = $battle->relations['enemies']; break;
+						case 'character': $target = $battle->characters; break;
+						case 'enemy': $target = $battle->enemies; break;
 					}
 					
 					if(isset($target) && $target) {
@@ -211,9 +211,9 @@
 		$account = getAccount();
 			
 		if($account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 
-			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
 				
 				$message = $battle->next($character->name.' skipped');
 				return ['success' => $message !== false, 'message' => $message];
@@ -231,9 +231,9 @@
 		$account = getAccount();
 			
 		if($account) {
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 
-			if($character && ($battle = $character->relations['battle']) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
 				
 				$message = $battle->run($character);
 				return ['success' => $message !== false, 'message' => $message];
@@ -252,11 +252,11 @@
 			
 		if($account) {
 			
-			$character = $account->relations['selected'];
+			$character = $account->selected;
 			$stack = $args['stack'] ?? null;
 			
 
-			if($character && ($stack = Stack::find($stack)) && !$character->relations['battle']) {
+			if($character && ($stack = Stack::find($stack)) && !$character->battle) {
 				
 				$message = $stack->take($character);
 				return ['success' => $message !== false, 'message' => $message];
