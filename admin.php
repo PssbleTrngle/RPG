@@ -18,6 +18,13 @@
 
 	}, 'admin');
 	
+	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
+		
+		$log = json_encode(Item::find(1)->type);
+		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		
+	})->add(new NeedsAuthentication($container['view'], 'admin'));
+	
 	$app->get('/admin/validate', function (Request $request, Response $response, array $args) {
 		
 		$level = $request->getParams()['level'] ?? 0b11111111;
@@ -31,7 +38,7 @@
 		foreach(NPC::all() as $npc) {
 			$log .= '<p>Loot for '.$npc->name.'</p>';
 			
-			foreach($npc->relations['loot'] as $item)
+			foreach($npc->loot as $item)
 				$log .= '<li>'.$item->name.'</li>';
 		}
 			

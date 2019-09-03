@@ -27,8 +27,7 @@
 	]);
 
 	class BaseModel extends Model {
-   		
-    	protected $primaryKey = 'id';
+
    		public $timestamps = false;
 		
 	}

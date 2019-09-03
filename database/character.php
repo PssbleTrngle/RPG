@@ -5,7 +5,7 @@
 		protected $table = 'status';
 		
 		public function accounts() {
-			return $this->hasMany(Account::class, 'status');
+			return $this->hasMany(Account::class, 'status_id');
 		}
 	
 	}
@@ -16,15 +16,15 @@
 		protected $with = ['status', 'characters', 'selected'];
 		
 		public function status() {
-			return $this->belongsTo(Status::class, 'status');
+			return $this->belongsTo(Status::class, 'status_id');
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'account')->without(['account']);
+			return $this->hasMany(Character::class, 'account_id')->without(['account']);
 		}
 		
 		public function selected() {
-			return $this->belongsTo(Character::class, 'selected')->without(['account']);
+			return $this->belongsTo(Character::class, 'selected_id')->without(['account']);
 		}
 		
 		public function select($character) {
@@ -52,7 +52,7 @@
 		protected $with = ['stats'];
 		
 		public function stats() {
-			return $this->belongsTo(Stats::class, 'stats');
+			return $this->belongsTo(Stats::class, 'stats_id');
 		}
 		
 	}
@@ -63,7 +63,7 @@
 		protected $with = ['clazz', 'race', 'position', 'battle', 'inventory', 'account'];
 		
 		public function race() {
-			return $this->belongsTo(Race::class, 'race');
+			return $this->belongsTo(Race::class, 'race_id');
 		}
 		
 		public function addLoot($loot) {
@@ -102,15 +102,15 @@
 		}
 		
 		public function clazz() {
-			return $this->belongsTo(Clazz::class, 'class');
+			return $this->belongsTo(Clazz::class, 'class_id');
 		}
 		
 		public function account() {
-			return $this->belongsTo(Account::class, 'account')->without('characters');
+			return $this->belongsTo(Account::class, 'account_id')->without(['characters']);
 		}
 		
 		public function inventory() {
-			return $this->hasMany(Stack::class, 'character')->without('character');
+			return $this->hasMany(Stack::class, 'character_id')->without(['character']);
 		}
 		
 		public function stats() {
@@ -200,7 +200,7 @@
 		}
 		
 		public function skills() {		
-			return $this->belongsToMany(Skill::class, 'character_skills', 'character', 'skill')
+			return $this->belongsToMany(Skill::class, 'character_skills', 'character_id', 'skill_id')
                 ->as('usage')
     			->withPivot('nextUse');
 		}

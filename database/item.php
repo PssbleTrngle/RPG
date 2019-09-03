@@ -6,19 +6,19 @@
 		protected $with = ['item', 'slot', 'character', 'enchantment'];
 		
 		public function item() {
-			return $this->belongsTo(Item::class, 'item');
+			return $this->belongsTo(Item::class, 'item_id');
 		}
 		
 		public function slot() {
-			return $this->belongsTo(Slot::class, 'slot');
+			return $this->belongsTo(Slot::class, 'slot_id');
 		}
 		
 		public function character() {
-			return $this->belongsTo(Character::class, 'character');
+			return $this->belongsTo(Character::class, 'character_id');
 		}
 		
 		public function enchantment() {
-			return $this->belongsTo(Enchantment::class, 'enchantment');
+			return $this->belongsTo(Enchantment::class, 'enchantment_id');
 		}
 		
 		public static function tidy($character) {
@@ -93,7 +93,7 @@
 		protected $with = ['items'];
 		
 		public function items() {
-			return $this->hasMany(Item::class, 'type')->without('type');
+			return $this->hasMany(Item::class, 'type_id')->without(['type']);
 		}
 		
 	}
@@ -109,8 +109,8 @@
 		protected $table = 'item';
 		protected $with = ['type'];
 		
-		public function type() {
-			return $this->belongsTo(ItemType::class, 'type');
+		public function type_object() {
+			return $this->belongsTo(ItemType::class, 'type_id')->without(['items']);
 		}
 		
 	}

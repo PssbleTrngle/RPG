@@ -6,11 +6,11 @@
 		protected $with = ['location', 'dungeon'];
 		
 		public function location() {
-			return $this->belongsTo(Location::class, 'location');
+			return $this->belongsTo(Location::class, 'location_id');
 		}
 		
 		public function dungeon() {
-			return $this->belongsTo(Dungeon::class, 'dungeon');
+			return $this->belongsTo(Dungeon::class, 'dungeon_id');
 		}
 		
 	}
@@ -21,11 +21,11 @@
 		protected $with = ['dungeons', 'area'];
 		
 		public function area() {
-			return $this->belongsTo(Area::class, 'area');
+			return $this->belongsTo(Area::class, 'area_id');
 		}
 		
 		public function dungeons() {
-			return $this->hasMany(Dungeon::class, 'location')->without('location');
+			return $this->hasMany(Dungeon::class, 'location_id')->without(['location']);
 		}
 		
 	}
@@ -36,7 +36,7 @@
 		protected $with = ['locations'];
 		
 		public function locations() {
-			return $this->hasMany(Location::class, 'area')->without(['area']);
+			return $this->hasMany(Location::class, 'area_id')->without(['area']);
 		}
 		
 	}
@@ -47,11 +47,11 @@
 		protected $with = ['location', 'npcs'];
 		
 		public function location() {
-			return $this->belongsTo(Location::class, 'location');
+			return $this->belongsTo(Location::class, 'location_id');
 		}
 		
 		public function npcs() {
-			return $this->belongsToMany(Skill::class, 'dungeon_npc', 'dungeon', 'npc')
+			return $this->belongsToMany(Skill::class, 'dungeon_npc', 'dungeon_id', 'npc_id')
                 ->as('floor')
     			->withPivot('maxFloor')
     			->withPivot('minFloor');

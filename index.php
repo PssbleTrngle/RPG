@@ -85,13 +85,13 @@
 		$account = getAccount();
 		if($account) {
 		
-			$selected = $account->relations['selected'];
+			$selected = $account->selected;
 			if($selected) {
 
-				if($battle = $selected->relations['battle']) {
+				if($battle = $selected->battle) {
 					
 					$won = true;
-					foreach($battle->relations['enemies'] as $enemy)
+					foreach($battle->enemies as $enemy)
 						$won &= $enemy->health <= 0;
 					
 					if($won) $battle->win();
@@ -146,7 +146,7 @@
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
 	    	$account = Account::where('id', $_SESSION['account'])->first();
-			Stack::tidy($account->relations['selected']);
+			Stack::tidy($account->selected);
 			return $account;
 	    }
 	    return null;

@@ -59,11 +59,11 @@
 		}
 		
 		public function npc() {
-			return $this->belongsTo(NPC::class, 'npc');
+			return $this->belongsTo(NPC::class, 'npc_id');
 		}
 		
 		public function effects() {
-			return $this->belongsToMany(Effect::class, 'enemy', 'effect');
+			return $this->belongsToMany(Effect::class, 'enemy_id', 'effect_id');
 		}
 	}
 
@@ -79,12 +79,12 @@
 		protected $with = ['loot', 'rank'];
 		
 		public function loot() {
-			return $this->belongsToMany(Item::class, 'npc_loot', 'npc', 'item')
+			return $this->belongsToMany(Item::class, 'npc_loot', 'npc_id', 'item_id')
     			->withPivot('chance');
 		}
 		
 		public function rank() {
-			return $this->belongsTo(Rank::class, 'rank');
+			return $this->belongsTo(Rank::class, 'rank_id');
 		}
 		
 		public function createEnemy() {

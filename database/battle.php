@@ -6,19 +6,19 @@
 		protected $with = ['enemies', 'characters', 'active', 'position'];
 		
 		public function active() {
-			return $this->belongsTo(Character::class, 'active')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
+			return $this->belongsTo(Character::class, 'active_id')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
 		
 		public function position() {
-			return $this->belongsTo(Position::class, 'position');
+			return $this->belongsTo(Position::class, 'position_id');
 		}
 		
 		public function enemies() {
-			return $this->hasMany(Enemy::class, 'battle')->without(['battle', 'account']);
+			return $this->hasMany(Enemy::class, 'battle_id')->without(['battle', 'account']);
 		}
 		
 		public function characters() {
-			return $this->hasMany(Character::class, 'battle')->without(['battle', 'account']);
+			return $this->hasMany(Character::class, 'battle_id')->without(['battle', 'account']);
 		}
 		
 		private function end() {
@@ -29,7 +29,7 @@
 				$character->save();
 			
 				$capsule::table('character_skills')
-					->where('character', $character->id)
+					->where('character_id', $character->id)
 					->update(['nextUse' => 0]);
 			}
 			
@@ -128,7 +128,7 @@
 			foreach($this->characters as $character) {
 			
 				$capsule::table('character_skills')
-					->where('character', $character->id)
+					->where('character_id', $character->id)
 					->where('nextUse', '>', 0)
 					->decrement('nextUse');
 				
@@ -229,7 +229,7 @@
 		}
 		
 		public function battle() {
-			return $this->belongsTo(Battle::class, 'battle');
+			return $this->belongsTo(Battle::class, 'battle_id');
 		}
 		
 		public function canTakeTurn() {
