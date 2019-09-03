@@ -5,6 +5,7 @@
 	include_once "config.php";
 	include_once "database/database.php";
 	include_once "database/validation.php";
+	include_once "localisation.php";
 
 	session_start();
 
@@ -30,10 +31,14 @@
 	        return $_SERVER['REQUEST_URI'];
 	    }));
 
-
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
+		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
 			$status = Status::where('name', $status)->first();
 	        return $account !== false && $status && $account->status->id >= $status->id;
+	    }));
+
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('format', function ($key, $vars = []) {
+	    	if(is_string($vars)) $vars = [ $vars ];
+			return format($key, $vars);
 	    }));
 
 	    /*
@@ -71,7 +76,7 @@
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
 	        $age = round(abs($time - time()) / 24 / 60 / 60);
-			return $age.' Day'.($age > 1 ? 's' : '');
+	        return format('time.'.($age > 1 ? 'days' : 'day'), [ $age ]);
 	    }));
 
 	    return $view;

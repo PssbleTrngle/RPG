@@ -6,7 +6,7 @@
 
 {% block content %}
 	
-	<h1>Welcome <a class='highlight mb-4'>{{ account.username }}</a>!</h1>
+	<h1>{{ format('message.welcome', "<span class='highlight mb-4'>" ~ account.username ~ "</span>")|raw }}</h1>
 
 	<div class='col'>
 	<div class='row'>
@@ -43,7 +43,7 @@
 				{% for stat in stats.keys %}
 					<table>
 					<tr>
-						<td class='stat'>{{ stat }}:</td>
+						<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
 						<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
 					</tr>
 					</table>
