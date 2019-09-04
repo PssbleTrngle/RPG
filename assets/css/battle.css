@@ -5,7 +5,7 @@
 	background-color: #666;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
 	background-size: cover;
-	border-radius: 10px;
+	/* border-radius: 10px; */
 	margin-bottom: 15px;
 	color: #FFF;
 	
@@ -39,7 +39,7 @@
 }
 
 .healthbar {
-	border-radius: 5px;
+	/* border-radius: 5px; */
 	height: 10px;	
 	width: 80%;
 	margin: 4px auto;
@@ -47,7 +47,7 @@
 }
 
 .healthbar > div {
-	border-radius: 5px;
+	/* border-radius: 5px; */
 	height: 100%;
 	background-color: var(--red);
 }

@@ -16,7 +16,7 @@
 				{% set boss = floor == position.dungeon.floors %}
 
 				<div class='floor {% if floor == position.floor %}current{% endif %} {% if boss %}last{% endif %}'>
-					<p class='center'>{% if boss %}<i class="fas fa-skull"></i>{% else %}{{ floor }}{% endif %}</p>
+					<p class='center'>{% if boss %}<i class="fas fa-skull"></i>{% else %}{{ floor|roman }}{% endif %}</p>
 				</div>
 			{% endif %}
 
