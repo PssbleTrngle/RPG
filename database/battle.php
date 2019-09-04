@@ -60,14 +60,14 @@
 		
 		public function run($character) {
 			
-			if($this->active == $character->id) {
+			if($this->active_id == $character->id) {
 				
 				$character->battle_id = null;
 				$character->save();
 
 				$this->refresh();
 
-				if($this->characters->count > 0 && $this->active == $character->id) $this->next($character->name.' ran away');
+				if($this->characters->count > 0 && $this->active_id == $character->id) $this->next($character->name.' ran away');
 				$this->save();
 				$this->refresh();
 			

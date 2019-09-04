@@ -33,7 +33,7 @@
 
 		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
 			$status = Status::where('name', $status)->first();
-	        return $account !== false && $status && $account->status->id >= $status->id;
+	        return $status && $account->status->id >= $status->id;
 	    }));
 
 		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('roman', function ($number) {
@@ -44,6 +44,10 @@
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('format', function ($key, $vars = []) {
 	    	if(is_string($vars)) $vars = [ $vars ];
 			return format($key, $vars);
+	    }));
+
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('styles', function () {
+			return glob("assets/css/*.css");
 	    }));
 
 	    /*

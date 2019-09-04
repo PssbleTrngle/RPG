@@ -1,8 +1,8 @@
 .battlefield {
 
-	width: calc(100vw - 280px);
+	width: 100%;
 	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
-	background-color: #666;
+	background-color: #0005;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
 	background-size: cover;
 	/* border-radius: 10px; */

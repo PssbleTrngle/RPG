@@ -233,7 +233,7 @@
 		if($account) {
 			$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->battle) && ($battle->active_id == $character->id)) {
 				
 				$message = $battle->run($character);
 				return ['success' => $message !== false, 'message' => $message];

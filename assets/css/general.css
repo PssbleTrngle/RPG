@@ -46,6 +46,8 @@
 
 .center { text-align: center; margin: auto; }
 .right { text-align: right; float: right; }
+.bottom { vertical-align: bottom; }
+.top { vertical-align: top }
 
 .navbar-link.active {
 
@@ -266,12 +268,6 @@ img.icon {
 	transition: background-color 0.1s linear, opacity 0.1s linear;
 }
 
-footer {
-	margin-top: 10px;
-	color: white;
-	padding: 5px;
-}
-
 button {
 	
 	border: none;
@@ -281,6 +277,15 @@ button {
 	
 }
 
+table {
+    border: none;
+    border-collapse: collapse;
+}
+
+td {
+    border: none;
+}
+
 form {
 	margin: 0;
 }
@@ -288,25 +293,25 @@ form {
 input {
 	width: calc(100% - 100px);
 	padding: 10px;
-	border: var(--gold) 2px solid;
+	border: none;
+	outline: none;
 }
 
-input:first-child {
-	border-top-left-radius: 7px;
-	border-bottom-left-radius: 7px;
+input[type=text], input[type=password] {
+	box-shadow: 2px 2px 2px #000D inset;
 }
 
-input:last-child {
-	border-top-right-radius: 7px;
-	border-bottom-right-radius: 7px;
+input:focus {
+	box-shadow: none;
 }
 
 input[type=submit] {
+	box-shadow: 0 3px 2px #000A;
 	background: var(--gold-light);
-	border-color: var(--gold);
 }
 
 input[type=submit]:hover {
+	box-shadow: 0 2px 2px #000A;
 	background: var(--gold);
 }
 
@@ -317,26 +322,17 @@ input.grow {
 	background-color: var(--gold-light);
 }
 
-@keyframes slide-up {
-	from	{
-		margin-top: 30px;
-	}
-	to {
-		padding-bottom: 30px;
-	}
+@keyframes slide-down {
+	from {}
+	to 	 {	transform: translate(0, 50px); }
 }
 
-.login {
-	
-	background-color: var(--gold-light-light);
-	width: 100%;
-	max-width: 500px;
-	min-height: 260px;
-	/* border-radius: 10px; */
+.logins {
+	background-color: #4A4A40;
 	padding: 8px 0;
-	
-	animation: slide-up 0.5s forwards cubic-bezier(0, 0, 0.52, 1.49);
-	
+	filter: drop-shadow(0 10px 8px #000E);
+	width: 100%;
+	animation: slide-down 0.5s forwards cubic-bezier(0, 0, 0.52, 1.49);
 }
 
 .login:focus {
