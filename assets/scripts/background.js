@@ -10,8 +10,9 @@ function moveBG(x, y) {
 
 $(window).mousemove(function(e) {
 
-	let x = e.clientX * -0.02;
-	let y = e.clientY * -0.02;
+	let factor = 0.01;
+	let x = e.clientX * -1 * factor;
+	let y = e.clientY * -1 * factor;
 
 	if(!inital_position) inital_position = {x, y};
 

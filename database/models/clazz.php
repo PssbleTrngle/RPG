@@ -1,7 +1,7 @@
 <?php
 
 	class Clazz extends BaseModel {
-   		
+
 		protected $table = 'class';
 		protected $with = ['skills', 'stats'];
 		
@@ -38,6 +38,12 @@
 		public function stats() {
 			return $this->belongsTo(Stats::class, 'stats_id');
 		}
+
+   		function name() {
+
+   			return format('class'.$this->name);
+
+   		}
 	
 	}
 	

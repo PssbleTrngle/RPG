@@ -8,49 +8,44 @@
 	
 	<h1>{{ format('message.welcome', "<span class='highlight mb-4'>" ~ account.username ~ "</span>")|raw }}</h1>
 
-	<div class='col'>
-	<div class='row'>
-		{% for character in account.characters %}
-			
-			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
-				<h4>{{ character.name }}</h4>
-				<small>
-					<p>{{ character.race.name}} {{ character.clazz.name }}</p>
-					<p>Level {{ character.level() }}</p>
-					<p>{{ character.birth|age }}</p>
-				</small>
-				{{ icon("class/" ~ character.clazz.name)|raw }}
-			</div>
-
-		{% else %}
-			
-			<a href='profile/create'>
-				<div class='character-panel create'>
-					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+	<div class='character-row big'>
+			{% for character in account.characters %}
+				
+				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+					<h4>{{ character.name }}</h4>
+					<small>
+						<p>{{ format('race.' ~ character.race.name) }} {{ format('class.' ~ character.clazz.name) }}</p>
+						<p>Level {{ character.level() }}</p>
+						<p>{{ character.birth|age }}</p>
+					</small>
+					{{ icon("class/" ~ character.clazz.name)|raw }}
 				</div>
-			</a>
 
-		{% endfor %}
-	</div>
-	</div>
-	
-	<div class='col'>
+			{% else %}
+				
+				<a href='profile/create'>
+					<div class='character-panel create'>
+						<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+					</div>
+				</a>
 
-	{% if account.selected %}
-		{% set stats = account.selected.stats() %}
+			{% endfor %}
+		
+		<div>
+			{% if account.selected %}
+				{% set stats = account.selected.stats() %}
 
-			<div class='stats ml-5'>
-				{% for stat in stats.keys %}
-					<table>
-					<tr>
-						<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
-						<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
-					</tr>
+					<table class='stats ml-5'>
+						{% for stat in stats.keys %}
+							<tr>
+								<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+								<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+							</tr>
+						{% endfor %}
 					</table>
-				{% endfor %}
-			</div>
-					
-	{% endif %}
+							
+			{% endif %}
+		</div>
 	</div>
 
 {% endblock %}

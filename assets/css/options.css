@@ -1,34 +1,27 @@
-.options {
-
-	padding: 5px;
-	display: table-row;
-	
-}
-
-.options.vertical > .option {
-	
-	float: initial;
-	margin-right: 0;
-	margin-top: 8px;
-		
-}
-	
-
 .option {
 
-	user-select: none;
 	width: 100px;
 	text-align: center;
 	cursor: pointer;
 	padding: 10px;
-	margin-right: 8px;
-	float: left;
+	margin-bottom: 6px;
 	border: var(--gold) 2px solid;
 	
 }
 
+.options.horizontal {
+
+	display: table-row;
+	padding: 5px;
+	
+}
+
+.options.horizontal > .option {
+	display: table-cell;		
+}
+
 .option.disabled {
-	border-color: #444;	
+	border-color: #444;
 }
 
 .option.disabled:hover {
@@ -41,7 +34,7 @@
 }
 
 .option.back {
-	display:none;
+	display: none;
 	width: 60px;
 }
 
@@ -52,4 +45,5 @@
 
 .option:hover {
 	background-color: var(--gold-light);
+	border-color: var(--gold-light);
 }

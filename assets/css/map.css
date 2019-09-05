@@ -51,6 +51,18 @@
 	background-color: var(--gold);
 }
 
+.dungeon-top {
+	--top: 30%;
+	--right: 15%;
+	--left: 15%;
+	--width: 15px;
+
+	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
+	padding: 7px 0;
+	color: #FFF;
+	background-color: #22221E;
+}
+
 .dungeon {
 	width: 400px;	
 }

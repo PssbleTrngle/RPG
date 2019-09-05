@@ -12,5 +12,38 @@
 		"resistance": "Resistance",
 		"agility": "Agility",
 		"luck": "Luck"
+	},
+	"class": {
+		"apprentice": "Apprentice",
+		"warrior": "Warrior",
+		"rogue": "Rogue",
+		"wild": "Wild",
+		"knight": "Knight",
+		"shaman": "Shaman",
+		"ranger": "Ranger",
+		"mage": "Mage",
+		"alchemist": "Alchemist",
+		"tamer": "Tamer",
+		"berserk": "Berserk",
+		"assassin": "Assassin",
+		"traveller": "Traveller",
+		"fighter": "Fighter",
+		"reaper": "Reaper",
+		"swift": "Swift",
+		"focused": "Focused",
+		"guardian": "Guardian",
+		"fallen": "Fallen",
+		"kamikaze": "Kamikaze",
+		"hunter": "Hunter",
+		"beast": "Beast",
+		"infused": "Infused",
+		"elementalist": "Elementalist",
+		"sage": "Sage"
+	},
+	"race": {
+		"human": "Human",
+		"troll": "Troll",
+		"nymph": "Nymph",
+		"shade": "Shade"
 	}
 }

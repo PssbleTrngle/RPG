@@ -13,11 +13,12 @@
 
 			$json = json_decode(file_get_contents($file), true);
 
-			foreach(explode('.', $key) as $subKey) {
+			foreach(explode('.', strtolower($key)) as $subKey) {
 				if(array_key_exists($subKey, $json))
 					$json = $json[$subKey];
 
-				else if($lang != $default) return format($key, $vars, true);
+				else if(!$d) return format($key, $vars, true);
+				else return '???';
 			}
 
 			if($vars)

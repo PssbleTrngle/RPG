@@ -1,10 +1,14 @@
+.inventory {
+	display: table;
+}
+
 .slot {
 
+	display: table-cell;
 	--size: 75px;
 	
 	cursor: pointer;
 	margin-right: 5px;
-	float: left;
 	width: var(--size);
 	transition: transform 0.2s linear;
 	
@@ -12,10 +16,6 @@
 
 .slot:last-child {
 	margin-right: 0;
-}
-
-.inventory {
-	display: table-row;
 }
 
 .inventory.loot > .slot {
