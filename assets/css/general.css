@@ -1,21 +1,7 @@
 * {
+	transition: background-color 0.1s linear, opacity 0.1s linear;
 	font-family: 'Roboto Slab', serif;
-}
-
-:root {
-	
-	--red: #d62828;
-	--green: #65d628;
-	--red-light: #ed5a5a;
-	--green-light: #82db51;
-	
-	--gold-dark: #bd851c;
-	--gold: #e2a126;
-	--gold-light: #f2b748;
-	--gold-light-light: #f2c56f;
-	
-	--marg: 10px;
-	
+	user-select: none;
 }
 
 .row {
@@ -38,15 +24,15 @@
 }
 
 .glow {
-	filter: drop-shadow(0 0 5px var(--gold-light));
+	filter: drop-shadow(0 0 5px var(--highlight));
 }
 
 .glow-2 {
-	filter: drop-shadow(0 0 8px var(--gold-light)) drop-shadow(0 0 8px var(--gold-light));
+	filter: drop-shadow(0 0 8px var(--highlight)) drop-shadow(0 0 8px var(--highlight));
 }
 
 .glow-3 {
-	filter: drop-shadow(0 0 5px var(--gold-light)) drop-shadow(0 0 5px var(--gold-light)) drop-shadow(0 0 5px var(--gold-light));
+	filter: drop-shadow(0 0 5px var(--highlight)) drop-shadow(0 0 5px var(--highlight)) drop-shadow(0 0 5px var(--highlight));
 }
 
 html {
@@ -62,12 +48,12 @@ body {
 }
 
 .highlight {
-	color: var(--gold);
+	color: var(--highlight-dark);
 }
 
 .highlight-glow {
-	color: var(--gold);
-	text-shadow: 0 0 4px var(--gold-light);
+	color: var(--highlight-dark);
+	text-shadow: 0 0 4px var(--highlight);
 }
 
 .text-red {
@@ -79,11 +65,11 @@ body {
 }
 
 .text-white {
-	color: #FFF;
+	color: var(--white);
 }
 
 .text-black {
-	color: #000;
+	color: var(--black);
 }
 
 p, a, td {
@@ -213,15 +199,11 @@ img.icon {
 	width: calc(100% - 20px * 2);
 	max-width: 1000px;
 	margin: 0 auto;
-	background-color: #66665A;
+	background-color: var(--bg);
 	/* background-image: linear-gradient(transparent 80%, #0008); */
 	box-shadow: 0 3px 8px #000D;
 	display: table;
 	
-}
-
-* {
-	transition: background-color 0.1s linear, opacity 0.1s linear;
 }
 
 button {
@@ -263,22 +245,22 @@ input:focus {
 
 input[type=submit] {
 	box-shadow: 0 3px 2px #000A;
-	background: var(--gold-light);
+	background: var(--highlight);
 }
 
 input[type=submit]:hover {
 	box-shadow: 0 2px 2px #000A;
-	background: var(--gold);
+	background: var(--highlight-dark);
 }
 
 input.grow {
 	width: initial;
 	min-width: 100px;
 	max-width: 500px;
-	background-color: var(--gold-light);
+	background-color: var(--highlight);
 }
 
-@keyframes slide-down {
+@keyframes slide-up {
 	from {}
 	to 	 {	transform: translate(0, 50px); }
 }
@@ -288,7 +270,7 @@ input.grow {
 	padding: 8px 0;
 	filter: drop-shadow(0 10px 8px #000E);
 	width: 100%;
-	animation: slide-down 0.5s forwards cubic-bezier(0, 0, 0.52, 1.49);
+	animation: slide-up 0.5s forwards cubic-bezier(0, 0, 0.52, 1.49);
 }
 
 .login:focus {

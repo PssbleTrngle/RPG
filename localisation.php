@@ -1,11 +1,23 @@
 <?php
 
 	$default = 'en';
-	$lang = 'de';
+
+	function getLang() {
+		global $default;
+		
+		if(isset($_SESSION['lang'])) return $_SESSION['lang'];
+		return $default;
+
+	}
+
+	function setLang($lang) {
+		$_SESSION['lang'] = $lang;
+		return true;
+	}
 
 	function format($key, $vars, $d = false) {
 		global $default;
-		global $lang;
+		$lang = getLang();
 
 		$file = 'lang/'.($d ? $default : $lang).'.json';
 

@@ -5,7 +5,7 @@
 	cursor: pointer;
 	padding: 10px;
 	margin-bottom: 6px;
-	border: var(--gold) 2px solid;
+	border: var(--highlight-dark) 2px solid;
 	
 }
 
@@ -44,6 +44,6 @@
 }
 
 .option:hover {
-	background-color: var(--gold-light);
-	border-color: var(--gold-light);
+	background-color: var(--highlight);
+	border-color: var(--highlight);
 }

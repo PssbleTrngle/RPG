@@ -1,0 +1,19 @@
+{
+	"message": {
+		"welcome": "Welcome $1!"
+	},
+	"stat": {
+		"wisdom": "Wisdom",
+		"strength": "Strength",
+		"resistance": "Resistance",
+		"agility": "Agility",
+		"luck": "Luck"
+	},
+	"character": "$2$1",
+	"race": {
+		"human": ".exe",
+		"troll": ".mp4",
+		"nymph": ".txt",
+		"shade": ".iso"
+	}
+}

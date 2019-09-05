@@ -30,7 +30,7 @@
 }
 
 .participant.selected {
-	 filter: drop-shadow(0 0 4px var(--gold-light));
+	 filter: drop-shadow(0 0 4px var(--highlight));
 }
 
 .participant.active {

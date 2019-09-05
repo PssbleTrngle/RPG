@@ -13,6 +13,7 @@
 		"agility": "Agility",
 		"luck": "Luck"
 	},
+	"character": "$1 $2",
 	"class": {
 		"apprentice": "Apprentice",
 		"warrior": "Warrior",

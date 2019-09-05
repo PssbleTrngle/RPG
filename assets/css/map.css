@@ -4,7 +4,7 @@
 	width: 100%;
 	max-width: 800px;
 	
-	border: 3px solid var(--gold);
+	border: 3px solid var(--highlight-dark);
 	/* border-radius: 20px; */
 	
 	box-shadow: 0 0 20px 0 rgba(0,0,0,0.5) inset;
@@ -28,9 +28,9 @@
 }
 
 .map-part.selected {
-	background-color: var(--gold-light);	
-	border-color: var(--gold);	
-	box-shadow: 0 0 15px 0 var(--gold-light);
+	background-color: var(--highlight);	
+	border-color: var(--highlight-dark);	
+	box-shadow: 0 0 15px 0 var(--highlight);
 }
 
 .map > .back {
@@ -40,15 +40,15 @@
 	height: 40px;
 	margin: 5px;
 	
-	background-color: var(--gold-light);
-	border: 2px var(--gold) solid;
+	background-color: var(--highlight);
+	border: 2px var(--highlight-dark) solid;
 	color: #ffffff;
 	font-size: 22px;
 	opacity: 0;
 }
 
 .map > .back:hover {
-	background-color: var(--gold);
+	background-color: var(--highlight-dark);
 }
 
 .dungeon-top {
@@ -83,7 +83,7 @@
 }
 
 .floor.current {
-	background-color: var(--gold);
+	background-color: var(--highlight-dark);
 }
 
 .floor:first-child {

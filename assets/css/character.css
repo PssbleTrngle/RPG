@@ -9,7 +9,7 @@
 	display: table-cell;
 	
 	cursor: pointer;
-	border: 3px var(--gold) solid;
+	border: 3px var(--highlight-dark) solid;
 	
 	background-color: #0003;
 	box-shadow: 5px 5px 20px 0 inset #0006;
@@ -19,7 +19,7 @@
 }
 
 .character-panel:hover {
-	border-color: var(--gold-light);
+	border-color: var(--highlight);
 }
 
 @keyframes bounce {
@@ -33,12 +33,12 @@
 	transition: transform 0.1s linear;
 }
 
-.character-row.small .icon {
+.character-row.small .character-panel .icon {
 	height: 100px;
 	width: 100px;
 }
 
-.character-row.big .icon {
+.character-row.big .character-panel .icon {
 	height: 200px;
 	width: 200px;
 }
@@ -49,8 +49,8 @@
 
 .character-panel.selected {
 
-	background-color: var(--gold-light);
-	box-shadow: 0 0 15px 0 var(--gold-light);
+	background-color: var(--highlight);
+	box-shadow: 0 0 15px 0 var(--highlight);
 	
 }
 
@@ -67,7 +67,7 @@
 	height: 100%;
 	width: 600px;
 	
-	border: 3px solid var(--gold);
+	border: 3px solid var(--highlight-dark);
 	/* border-radius: 20px; */
 	
 	box-shadow: 0 0 15px 0 rgba(0,0,0,0.3) inset;
@@ -76,12 +76,8 @@
 
 .classes > .info-class {
 	position: absolute;
-	background-color: var(--gold);
+	background-color: var(--highlight-dark);
 	text-align: center;
-}
-
-.stat:first-child {
-	padding-right: 40px;
 }
 
 .profile-icon {
@@ -105,12 +101,9 @@
 	
 }
 
-.inventory-btn {
-	background-image: url('../img/icon/chest.png');
-}
-
-.learn {
-	background-image: url('../img/icon/skills.png');
+.dungeon-btn {
+	width: 100px;
+	height: 100px;
 }
 
 .learnable-skills {
@@ -121,7 +114,7 @@
 }
 
 .learnable-skill {
-	background-color: var(--gold);
+	background-color: var(--highlight-dark);
 	transition: transform 0.2s ease-in-out;
 	box-shadow: 3px 1px 5px #0008;
 	overflow: visible;
@@ -134,10 +127,18 @@
 
 .cost {
 	width: 10%;
-	background-color: var(--gold-light-light);
+	background-color: var(--highlight-light);
 }
 
 .learnable-skill > td {
 	padding: 7px 15px;
 	cursor: pointer;
+}
+
+.stat {
+	padding: 4px 0;
+}
+
+.stat:first-child {
+	padding-right: 40px;
 }

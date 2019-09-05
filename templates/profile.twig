@@ -14,7 +14,7 @@
 				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
 					<h4>{{ character.name }}</h4>
 					<small>
-						<p>{{ format('race.' ~ character.race.name) }} {{ format('class.' ~ character.clazz.name) }}</p>
+						<p>{{ format('character', [ format('race.' ~ character.race.name), format('class.' ~ character.clazz.name) ]) }}</p>
 						<p>Level {{ character.level() }}</p>
 						<p>{{ character.birth|age }}</p>
 					</small>
@@ -32,19 +32,40 @@
 			{% endfor %}
 		
 		<div>
-			{% if account.selected %}
-				{% set stats = account.selected.stats() %}
 
-					<table class='stats ml-5'>
-						{% for stat in stats.keys %}
-							<tr>
-								<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
-								<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
-							</tr>
-						{% endfor %}
-					</table>
-							
-			{% endif %}
+			<div class='ml-5'>
+				<div class='row'>
+					<a href='/'><div class='profile-btn fade dungeon-btn'>{{ icon('icon/dungeon')|raw }}</div></a>
+					<div class='top'>
+						<div class='profile-btn fade' data-window='lang-window'>{{ icon('icon/lang')|raw }}</div>
+					</div>
+				</div>
+
+				{% if account.selected %}
+					{% set stats = account.selected.stats() %}
+
+						<table class='stats'>
+							{% for stat in stats.keys %}
+								<tr>
+									<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+									<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+								</tr>
+							{% endfor %}
+						</table>
+								
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class='window' id='lang-window'>
+		<div class='row'>
+			{% for index, lang in langs() %}
+
+				{% if index > 0 and index % 8 == 0 %}</div><div class='row'>{% endif %}
+				<div class='lang' data-action='language/{{ lang }}'>{{ lang|lower }}</div>
+
+			{% endfor %}
 		</div>
 	</div>
 

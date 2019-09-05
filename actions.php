@@ -32,6 +32,13 @@
 
 	};
 
+	registerAction('/language/{lang}', function($args) {
+
+		$lang = $args['lang'];		
+		return ['success' => setLang($lang)];
+
+	});
+
 	registerAction('/character/create', function($args) {
 
 		$account = getAccount();

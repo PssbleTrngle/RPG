@@ -20,8 +20,8 @@
 
 .inventory.loot > .slot {
 
-	/* background-color: var(--gold-light); */
-	filter: drop-shadow(0 0 4px var(--gold-light)) drop-shadow(0 0 4px var(--gold-light)) drop-shadow(0 0 4px var(--gold-light));
+	/* background-color: var(--highlight); */
+	filter: drop-shadow(0 0 4px var(--highlight)) drop-shadow(0 0 4px var(--highlight)) drop-shadow(0 0 4px var(--highlight));
 	
 }
 

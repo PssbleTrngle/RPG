@@ -27,6 +27,10 @@
 	    $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
 	    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('langs', function () {
+	        return ['en', 'de', 'fr', 'it', 'cyber'];
+	    }));
+
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('uri', function () {
 	        return $_SERVER['REQUEST_URI'];
 	    }));
@@ -47,7 +51,10 @@
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('styles', function () {
-			return glob("assets/css/*.css");
+	    	$lang = getLang();
+	    	$general = glob("assets/css/*.css");
+	    	$lang = glob("assets/css/$lang/*.css");
+			return array_merge($general, $lang);
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
