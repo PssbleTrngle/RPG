@@ -132,3 +132,32 @@
 .learn {
 	background-image: url('../img/icon/skills.png');
 }
+
+.learnable-skills {
+	--hover-left: -10px;
+
+	margin-left: calc(-1* var(--hover-left));
+	border-spacing:0 5px;
+	border-collapse: separate;
+	width: calc(100% + var(--hover-left));
+}
+
+.learnable-skill {
+	background-color: var(--gold-dark);
+	transition: transform 0.2s ease-in-out;
+	overflow: visible;
+}
+
+.learnable-skill:hover {
+	transform: translate(var(--hover-left), 0);
+}
+
+.cost {
+	width: 10%;
+	background-color: var(--gold);
+}
+
+.learnable-skill > td {
+	padding: 7px 15px;
+	cursor: pointer;
+}

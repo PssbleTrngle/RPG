@@ -1,62 +1,5 @@
 <?php
 
-	class Status extends BaseModel {
-		
-		protected $table = 'status';
-		
-		public function accounts() {
-			return $this->hasMany(Account::class, 'status_id');
-		}
-	
-	}
-
-	class Account extends BaseModel {
-   		
-		protected $table = 'account';
-		protected $with = ['status', 'characters', 'selected'];
-		
-		public function status() {
-			return $this->belongsTo(Status::class, 'status_id');
-		}
-		
-		public function characters() {
-			return $this->hasMany(Character::class, 'account_id')->without(['account']);
-		}
-		
-		public function selected() {
-			return $this->belongsTo(Character::class, 'selected_id')->without(['account']);
-		}
-		
-		public function select($character) {
-			if(is_numeric($character)) $character = Character::find($character);
-			
-			$do = false;
-			
-			if($character)
-				foreach($this->characters as $char)
-					$do = $do || $char->id == $character->id;
-			
-			if($do) {
-				$this->selected_id = $character->id;
-				$this->save();
-			}
-			
-			return $do;
-		}
-	
-	}
-
-	class Race extends BaseModel {
-   		
-		protected $table = 'race';
-		protected $with = ['stats'];
-		
-		public function stats() {
-			return $this->belongsTo(Stats::class, 'stats_id');
-		}
-		
-	}
-
 	class Character extends Participant {
    		
 		protected $table = 'character';
@@ -82,7 +25,7 @@
 		}
 
 		public function learn($skill) {
-			if(is_numeric($skill)) $skill = Skill::find($skill);
+			if(!$skill) return false;
 			global $capsule;
 
 			if($skill) {
@@ -122,8 +65,8 @@
 		}
 		
 		public function itemIn($slot) {
-		
-			if(is_numeric($slot)) $slot = Slot::find($slot);
+			if(is_string($slot)) $slot = Slot::where('name', $slot)->first();
+			if(!$slot) return false;
 			return $this->inventory->where('slot_id', '=', $slot->id);
 			
 		}
@@ -134,7 +77,7 @@
 		}
 		
 		public function travel($location) {
-			if(is_numeric($location)) $location = Location::find($location);
+			if(!$location) return false;
 			
 			if($location && $location->level <= $this->level()) {
 				
@@ -176,7 +119,7 @@
 		}
 		
 		public function evolve($to) {
-			if(is_numeric($to)) $to = Clazz::find($to);
+			if(!$to) return false;
 			
 			if($to) {
 				foreach($this->canEvolveTo() as $can)

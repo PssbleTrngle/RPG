@@ -22,8 +22,9 @@
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 		<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
 		
-		<script src='/assets/scripts/ajax.js'></script>
-		<script src='/assets/scripts/elements.js'></script>
+		{% for file in scripts() %}
+			<script src='{{ file }}'></script>
+		{% endfor %}
 		
 	</head>
 	<body>

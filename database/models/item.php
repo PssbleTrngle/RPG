@@ -22,7 +22,7 @@
 		}
 		
 		public static function tidy($character) {
-			if(is_numeric($character)) $character = Character::find($character);
+			if(!$character) return false;
 			
 			if($character) {
 			
@@ -52,7 +52,7 @@
 		}
 		
 		public function take($character) {
-			if(is_numeric($character)) $character = Character::find($character);
+			if(!$character) return false;
 			
 			if($character) {			
 				if($this->character->id == $character->id) {

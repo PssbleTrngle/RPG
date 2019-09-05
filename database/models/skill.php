@@ -19,7 +19,7 @@
 		}
 		
 		public function timeout($character) {
-			if(is_numeric($character)) $character = Character::find($character);
+			if(!$character) return false;
 			global $capsule;
 			
 			if($character) {

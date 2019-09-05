@@ -50,6 +50,10 @@
 			return glob("assets/css/*.css");
 	    }));
 
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
+			return glob("assets/scripts/*.js");
+	    }));
+
 	    /*
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 

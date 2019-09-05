@@ -42,7 +42,7 @@
 		
 	}
 
-	foreach (glob("database/*.php") as $filename) {
+	foreach (glob("database/models/*.php") as $filename) {
 	    include_once $filename;
 	}
 

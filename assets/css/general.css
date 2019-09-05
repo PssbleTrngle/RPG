@@ -9,6 +9,7 @@
 	--red-light: #ed5a5a;
 	--green-light: #82db51;
 	
+	--gold-dark: #bd851c;
 	--gold: #e2a126;
 	--gold-light: #f2b748;
 	--gold-light-light: #f2c56f;
@@ -45,7 +46,8 @@
 }
 
 .center { text-align: center; margin: auto; }
-.right { text-align: right; float: right; }
+.right { text-align: right; }
+.left { text-align: left; }
 .bottom { vertical-align: bottom; }
 .top { vertical-align: top }
 
@@ -89,12 +91,16 @@
 	filter: drop-shadow(0 0 5px var(--gold-light)) drop-shadow(0 0 5px var(--gold-light)) drop-shadow(0 0 5px var(--gold-light));
 }
 
-body, html {
-	
-	margin: 0;
+html {
 	padding: 0;
-	background-color: #333;
-		
+	margin: 0;
+	overflow-y: hidden;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	margin-top: -10px;
 }
 
 .highlight {
@@ -122,7 +128,7 @@ body, html {
 	color: #000;
 }
 
-p {
+p, a, td {
 	margin: 0;
 	cursor: default;
 }
@@ -229,11 +235,15 @@ img.icon {
 }
 
 .box {
-	--box-marg: 10px;
-	width: calc(100% - var(--box-marg) * 2);
-	height: calc(100% - var(--box-marg) * 2);
-	margin: var(--box-marg);
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding-top: 20px;
 	position: relative;
+	background-image: url('../img/bg.png');
+	box-shadow: 0 -30vh 30vh #000A inset;
+	background-repeat: all;
+	background-size: calc(1462px * 0.3) calc(1520px * 0.3);
 }
 
 .container {
@@ -242,7 +252,6 @@ img.icon {
 	width: calc(100% - 20px * 2);
 	max-width: 1000px;
 	margin: 0 auto;
-	margin-top: 10px;
 	background-color: #66665A;
 	/* background-image: linear-gradient(transparent 80%, #0008); */
 	box-shadow: 0 3px 8px #000D;
