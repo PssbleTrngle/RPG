@@ -90,10 +90,27 @@
 	class ItemType extends BaseModel {
    		
 		protected $table = 'itemtype';
-		protected $with = ['items'];
+		protected $with = ['items', 'parents'];
 		
 		public function items() {
 			return $this->hasMany(Item::class, 'type_id')->without(['type']);
+		}
+		
+		public function parents() {
+			return $this->belongsToMany(ItemType::class, 'itemtype_relations', 'child', 'parent');
+		}
+
+		public function anchestors() {
+
+			$anchestors = [];
+
+			foreach($this->parents as $parent) {
+				$anchestors[] = $parent;
+				$anchestors = array_merge($anchestors, $parent->anchestors());
+			}
+
+			return $anchestors;
+
 		}
 		
 	}
@@ -108,9 +125,49 @@
    		
 		protected $table = 'item';
 		protected $with = ['type'];
+
+		public function color() {
+			return '#8a4722';
+		}
+
+		public function icon() {
+
+			$name = $this->type->name;
+
+			foreach ($this->types() as $type)
+				if($type->icon) return $this->table.'/'.$type->name.'/'.$name;
+
+			return $this->table.'/'.$name;
+		}
 		
 		public function type() {
 			return $this->belongsTo(ItemType::class, 'type_id')->without(['items']);
+		}
+
+		public function hasType($type) {
+			foreach ($this->types as $has)
+				if($has->id == $type->id)
+					return true;
+			return false;
+		}
+
+		public function types() {
+
+			$types = $this->type->anchestors();
+			$types[] = $this->type;
+
+			return array_reverse($types);
+
+		}
+	
+		public static function registerAll() {
+			
+			foreach(['Rusty'] as $cent => $rank)
+				foreach(['Blade', 'Bow', 'Florett', 'Maze', 'Nunchuck', 'Sceptre', 'Wand', 'Battlestaff', 'Club', 'Dagger', 'Hammer'] as $i => $weapon) {
+					$type = ItemType::where('name', $weapon)->first() ?? ItemType::find(3);
+					static::register(['id' => (100 * ($cent + 1)) + $i, 'name' => $rank.' '.$weapon, 'type_id' => $type->id, 'stackable' => 0]);
+			}
+			
 		}
 		
 	}
@@ -122,29 +179,13 @@
 		function accept(Item $item) {
 			return $functions[$this->id]($item);			
 		}
-		
-		public static $functions = array();
-		public static function register($request, $function) {
-			
-			if(!Slot::find($request['id'])) {
-			
-				$model = new Slot;
-				foreach($request as $key => $param)
-					$model->$key = $request[$key];
-				$model->save();
-			
-			}
-			
-			$functions[$request['id']] = $function;
-		
-		}
 	
 		public static function registerAll() {
 			
-			Slot::register(['id' => 1, 'name' => "Inventory"], function($item) { return true; });			
-			Slot::register(['id' => 2, 'name' => "Left Hand"], function($item) { return false; });
-			Slot::register(['id' => 3, 'name' => "Right Hand"], function($item) { return false; });
-			Slot::register(['id' => 4, 'name' => "Loot"], function($item) { return false; });
+			static::register(['id' => 1, 'name' => "Inventory"], ['fits' => function($item) { return true; }]);
+			static::register(['id' => 2, 'name' => "Left Hand"], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 3, 'name' => "Right Hand"], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 4, 'name' => "Loot"], ['fits' => function($item) { return false; }]);
 			
 		}
 		

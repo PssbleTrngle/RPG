@@ -2,11 +2,10 @@
 
 	{% if character.itemIn('loot').count > 0 %}
 		<div class='inventory loot'>
-		<h2 class='center'>Loot</h2>
 		{% for stack in character.itemIn('loot') %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
+				<div>{{ stack.item|icon|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item.name }}</p>
 			</div>
@@ -24,7 +23,7 @@
 			{% if stack %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
+				<div>{{ stack.item|icon|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item.name }}</p>
 			</div>
@@ -38,12 +37,31 @@
 		{% for stack in character.itemIn('inventory') %}
 
 			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
+				<div>{{ stack.item|icon|raw }}</div>
 				<p>{{ stack.amount }}x</p>
 				<p>{{ stack.item.name }}</p>
 			</div>
 
 		{% endfor %}
 	</div>
+
+	{% for stack in character.inventory %}
+
+		<div class='item-popup center' data-item='{{ stack.id }}'>
+
+				<h3>{{ stack.item.name }}</h3>
+				{% for key, type in stack.item.types() %}
+
+					{% if key > 0 %}
+						<p><small>{{ type.name }}</small></p>
+					{% else %}
+						<p>{{ type.name }}</p>
+					{% endif %}
+
+				{% endfor %}
+
+		</div>
+
+	{% endfor %}
 	 
 </div>

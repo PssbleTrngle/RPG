@@ -5,17 +5,12 @@
 .slot {
 
 	display: table-cell;
-	--size: 75px;
 	
 	cursor: pointer;
 	margin-right: 5px;
-	width: var(--size);
+	width: 65px;
 	transition: transform 0.2s linear;
 	
-}
-
-.slot:last-child {
-	margin-right: 0;
 }
 
 .inventory.loot > .slot {
@@ -46,4 +41,16 @@
 .slot:hover {
 	transform: scale(1.15, 1.15);
 }
-	
+
+
+.slot.active {
+	transform: scale(1.2, 1.2);
+}
+
+.item-popup {
+	display: none;
+}
+
+.item-popup.active {
+	display: block;
+}

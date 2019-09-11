@@ -66,27 +66,21 @@
 		    or return the 'missing.png' image 
 	    */
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path) {
+			return createIcon($path);
+	    }));
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object) {
+
+	    	if(method_exists($object, 'icon')) {
+	    		if(method_exists($object, 'color')) {
+	    			$color = $object->color();
+	    			if($color) return createIcon($object->icon(), $color);
+	    		} 
+	    		return createIcon($object->icon());
+	    	}
 			
-			$path = strtolower(str_replace(' ', '_', $path));
-			$img = 'missing.png';
-			
-			if(endsWith($path, '/random')) {
-				
-				$dir = str_replace('/random', '', $path);
-				
-				$all = scandir('assets/img/'.$dir);
-				$all = array_filter($all, function($val) use($all) {
-					return endsWith($val, '.png') || endsWith($val, '.svg');
-				});			
-				
-				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
-				
-			}
-			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
-			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
-							
-	        $html = "<img class='icon' src='/assets/img/$img'></img>";			
-			return $html;
+			return createIcon();
+
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('account', function () {
@@ -214,6 +208,38 @@
 	        }
 	    }
 	    return $returnValue;
+	}
+
+	function createIcon($path = null, $color = null) {
+		$img = 'missing.png';
+		
+		if($path) {
+			$path = strtolower(str_replace(' ', '_', $path));
+			if(endsWith($path, '/random')) {
+				
+				$dir = str_replace('/random', '', $path);
+				
+				$all = scandir('assets/img/'.$dir);
+				$all = array_filter($all, function($val) use($all) {
+					return endsWith($val, '.png') || endsWith($val, '.svg');
+				});			
+				
+				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
+				
+			}
+			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
+			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
+		}
+		
+		$img = '/assets/img/'.$img;
+
+		if($color) {
+			$style = "mask-image: url($img); -webkit-mask-image: url($img); background-color: $color;";
+			$colored = "<div class='colored' style='$style'></div>";
+		}
+
+        $icon = "<img class='icon' src='$img'></img>";			
+		return '<div class=\'icon-container\'>'.$icon.($colored ?? '').'</div>';
 	}
 
 	/* Used by pages requiring a certain status like admin or betatester */
