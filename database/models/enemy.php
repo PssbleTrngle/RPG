@@ -5,6 +5,10 @@
 		protected $table = 'enemy';
 		protected $with = ['npc', 'battle'];
 		
+		public function icon() {
+			return $this->npc->icon();
+		}
+		
 		public function name() {
 			return $this->npc->name .' '. $this->suffix;
 		}

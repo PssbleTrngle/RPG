@@ -18,7 +18,7 @@
 						<p>Level {{ character.level() }}</p>
 						<p>{{ character.birth|age }}</p>
 					</small>
-					{{ icon("class/" ~ character.clazz.name)|raw }}
+					{{ character|icon|raw }}
 				</div>
 
 			{% else %}

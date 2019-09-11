@@ -11,7 +11,7 @@
 						<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
 							<p>{{enemy.name() }} [lvl: {{enemy.npc.level }}]</p>
 							<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
-							{{ icon('npc/' ~ enemy.npc.name)|raw }}
+							{{ enemy|icon|raw }}
 						</div>
 
 					{% endfor %}
@@ -24,7 +24,7 @@
 						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
 							<p>{{char.name }} [lvl: {{char.level() }}]</p>
 							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
-							{{ icon('class/' ~ char.clazz.name)|raw }}
+							{{ char|icon|raw }}
 						</div>
 
 					{% endfor %}

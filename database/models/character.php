@@ -5,6 +5,10 @@
 		protected $table = 'character';
 		protected $with = ['clazz', 'race', 'position', 'battle', 'inventory', 'account'];
 		
+		public function icon() {
+			return $this->clazz->icon();
+		}
+		
 		public function race() {
 			return $this->belongsTo(Race::class, 'race_id');
 		}

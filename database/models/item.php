@@ -87,6 +87,17 @@
 		
 	}
 
+	class Rarity extends BaseModel {
+   		
+		protected $table = 'rarity';
+		protected $with = ['items'];
+		
+		public function items() {
+			return $this->hasMany(Item::class, 'rarity_id')->without(['rarity']);
+		}
+		
+	}
+
 	class ItemType extends BaseModel {
    		
 		protected $table = 'itemtype';
@@ -124,10 +135,10 @@
 	class Item extends BaseModel {
    		
 		protected $table = 'item';
-		protected $with = ['type'];
+		protected $with = ['type', 'rarity'];
 
 		public function color() {
-			return '#8a4722';
+			return $this->rarity->color;
 		}
 
 		public function icon() {
@@ -142,6 +153,10 @@
 		
 		public function type() {
 			return $this->belongsTo(ItemType::class, 'type_id')->without(['items']);
+		}
+		
+		public function rarity() {
+			return $this->belongsTo(Rarity::class, 'rarity_id')->without(['items']);
 		}
 
 		public function hasType($type) {
@@ -162,10 +177,14 @@
 	
 		public static function registerAll() {
 			
-			foreach(['Rusty'] as $cent => $rank)
+			foreach(['Rusty', 'Sharp'] as $cent => $rank)
 				foreach(['Blade', 'Bow', 'Florett', 'Maze', 'Nunchuck', 'Sceptre', 'Wand', 'Battlestaff', 'Club', 'Dagger', 'Hammer'] as $i => $weapon) {
-					$type = ItemType::where('name', $weapon)->first() ?? ItemType::find(3);
-					static::register(['id' => (100 * ($cent + 1)) + $i, 'name' => $rank.' '.$weapon, 'type_id' => $type->id, 'stackable' => 0]);
+
+					$rarity = Rarity::where('name', $rank)->first();
+					if($rarity) {
+						$type = ItemType::where('name', $weapon)->first() ?? ItemType::find(3);
+						static::register(['id' => (100 * ($cent + 1)) + $i, 'name' => $rank.' '.$weapon, 'rarity_id' => $rarity->id, 'type_id' => $type->id, 'stackable' => 0]);
+					}
 			}
 			
 		}

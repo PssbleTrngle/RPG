@@ -25,7 +25,7 @@
 
 						<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
 							<h3>{{ format('class.' ~ evolution.name) }}</h3>
-							{{ icon("class/" ~ evolution.name|lower)|raw }}
+							{{ evolution|icon|raw }}
 						</div>
 
 					{% endfor %}
