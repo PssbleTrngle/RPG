@@ -9,9 +9,13 @@ jQuery.fn.flicker = function() {
 	let original = target.text();
 
 	if(original && original.length > 0) {
-		let scrambled = original.split('').reverse().join('');
-		target.text(scrambled);
-		window.setTimeout(function() { target.text(original); }, 200);
+
+		if(!target[0].reversed) {
+			let scrambled = original.split('').reverse().join('');
+			target.text(scrambled);
+			target[0].reversed = true;
+			window.setTimeout(function() { target.text(original); target[0].reversed = false; }, 200);
+		}
 	}
 
 };
