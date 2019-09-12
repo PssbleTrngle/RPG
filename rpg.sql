@@ -43,7 +43,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'admin','$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6',100,'2019-07-10 16:46:30',4),(2,'user','$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6',1,'2019-05-20 08:21:49',NULL),(4,'Luis','$2y$10$wP5OEhJ.NjUZBOSpZ5KKbejZgxELrcuM/0NwA//JQrwTO0jYgntXu',50,'2019-05-29 11:44:25',2),(5,'DerDruide','$2y$10$I9UzxQjPAfDPNqODmh7y/embo.A8YqWMK91Xq2zHXkCV.U3avgAWq',50,'2019-05-29 11:44:28',3),(6,'GoodThor','$2y$10$OZHCNrEud4cL99M.Nvs4V.yue5iq6fm.WIeeTvhCb8OsD30Ck6Q1m',1,'2019-07-10 18:53:18',NULL),(7,'tester','$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y',1,'2019-07-28 22:22:24',4),(8,'xxx_darkoverlord_xxx','$2y$10$jnClTKPXbjNTtDBDyuu7oObN/9jfLBfK0Z1s0sOWwSDYwfRg1wmRK',100,'2019-07-29 17:23:20',NULL);
+INSERT INTO `account` VALUES (1,'admin','$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6',100,'2019-07-10 16:46:30',4),(2,'user','$2y$10$zSSTHduqltm3mIxIdsGvduwYn2oWd0aNS5QPCams6z084S8956kt6',1,'2019-05-20 08:21:49',NULL),(4,'Luis','$2y$10$wP5OEhJ.NjUZBOSpZ5KKbejZgxELrcuM/0NwA//JQrwTO0jYgntXu',50,'2019-05-29 11:44:25',2),(5,'DerDruide','$2y$10$I9UzxQjPAfDPNqODmh7y/embo.A8YqWMK91Xq2zHXkCV.U3avgAWq',50,'2019-05-29 11:44:28',3),(6,'GoodThor','$2y$10$OZHCNrEud4cL99M.Nvs4V.yue5iq6fm.WIeeTvhCb8OsD30Ck6Q1m',1,'2019-07-10 18:53:18',NULL),(7,'tester','$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y',50,'2019-09-12 06:41:40',4),(8,'xxx_darkoverlord_xxx','$2y$10$jnClTKPXbjNTtDBDyuu7oObN/9jfLBfK0Z1s0sOWwSDYwfRg1wmRK',100,'2019-07-29 17:23:20',NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `battle` (
   KEY `position` (`position_id`),
   CONSTRAINT `battle_ibfk_1` FOREIGN KEY (`active_id`) REFERENCES `character` (`id`),
   CONSTRAINT `battle_ibfk_2` FOREIGN KEY (`position_id`) REFERENCES `position` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `character` (
 
 LOCK TABLES `character` WRITE;
 /*!40000 ALTER TABLE `character` DISABLE KEYS */;
-INSERT INTO `character` VALUES (1,1,21,'Tom',600,0,1,'2019-05-03 15:47:17',NULL),(2,2,2,'The Rock',100,0,4,'2019-05-13 15:48:01',NULL),(3,3,111,'Groooover',50,807,5,'2019-05-20 08:25:24',NULL),(4,4,1,'Kurt',90,73004,7,'2019-05-20 08:27:06',NULL),(5,1,23,'Test Subject 24',90,0,7,'2019-05-20 11:57:21',NULL),(6,1,3,'HoyHoy',1000,0,8,'2019-07-29 20:24:43',NULL),(7,1,2,'Peter',1000,0,8,'2019-07-29 20:31:40',NULL),(8,1,1,'Kim',1000,0,8,'2019-07-29 20:32:42',NULL),(9,1,2,'Troy',1000,0,8,'2019-07-29 20:42:17',NULL),(10,1,4,'Timo',1000,0,8,'2019-07-29 20:42:36',NULL);
+INSERT INTO `character` VALUES (1,1,21,'Tom',600,0,1,'2019-05-03 15:47:17',NULL),(2,2,2,'The Rock',100,0,4,'2019-05-13 15:48:01',NULL),(3,3,111,'Groooover',50,807,5,'2019-05-20 08:25:24',NULL),(4,4,1,'Kurt',75,73005,7,'2019-05-20 08:27:06',NULL),(5,1,23,'Test Subject 24',90,0,7,'2019-05-20 11:57:21',NULL),(6,1,3,'HoyHoy',1000,0,8,'2019-07-29 20:24:43',NULL),(7,1,2,'Peter',1000,0,8,'2019-07-29 20:31:40',NULL),(8,1,1,'Kim',1000,0,8,'2019-07-29 20:32:42',NULL),(9,1,2,'Troy',1000,0,8,'2019-07-29 20:42:17',NULL),(10,1,4,'Timo',1000,0,8,'2019-07-29 20:42:36',NULL);
 /*!40000 ALTER TABLE `character` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,6 +183,7 @@ CREATE TABLE `class` (
   `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `stats_id` int(11) DEFAULT NULL,
+  `start_weapon_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `stats` (`stats_id`)
@@ -195,7 +196,7 @@ CREATE TABLE `class` (
 
 LOCK TABLES `class` WRITE;
 /*!40000 ALTER TABLE `class` DISABLE KEYS */;
-INSERT INTO `class` VALUES (1,'Apprentice',12),(2,'Warrior',13),(3,'Rogue',14),(4,'Wild',15),(21,'Knight',16),(22,'Shaman',17),(23,'Ranger',18),(24,'Mage',19),(25,'Alchemist',20),(26,'Tamer',1),(27,'Berserk',1),(28,'Assassin',1),(29,'Traveller',1),(30,'Fighter',1),(100,'Reaper',1),(101,'Swift',1),(102,'Focused',1),(103,'Guardian',1),(104,'Fallen',1),(105,'Kamikaze',1),(106,'Hunter',1),(107,'Beast',1),(108,'Infused',1),(109,'Elementalist',1),(110,'Sage',1),(111,'Druid',1),(112,'Necromancer',1),(113,'Driven',1),(114,'Bard',1),(400,'Wizard',1),(401,'Touched',1),(402,'Spirit',1),(403,'Gate',1),(404,'Narrator',1),(405,'Fate',1),(406,'Death',1),(407,'Wind',1),(408,'Seal',1),(409,'Truth',1),(410,'Pain',1);
+INSERT INTO `class` VALUES (1,'Apprentice',12,106),(2,'Warrior',13,100),(3,'Rogue',14,110),(4,'Wild',15,109),(21,'Knight',16,NULL),(22,'Shaman',17,NULL),(23,'Ranger',18,NULL),(24,'Mage',19,NULL),(25,'Alchemist',20,NULL),(26,'Tamer',1,NULL),(27,'Berserk',1,NULL),(28,'Assassin',1,NULL),(29,'Traveller',1,NULL),(30,'Fighter',1,NULL),(100,'Reaper',1,NULL),(101,'Swift',1,NULL),(102,'Focused',1,NULL),(103,'Guardian',1,NULL),(104,'Fallen',1,NULL),(105,'Kamikaze',1,NULL),(106,'Hunter',1,NULL),(107,'Beast',1,NULL),(108,'Infused',1,NULL),(109,'Elementalist',1,NULL),(110,'Sage',1,NULL),(111,'Druid',1,NULL),(112,'Necromancer',1,NULL),(113,'Driven',1,NULL),(114,'Bard',1,NULL),(400,'Wizard',1,NULL),(401,'Touched',1,NULL),(402,'Spirit',1,NULL),(403,'Gate',1,NULL),(404,'Narrator',1,NULL),(405,'Fate',1,NULL),(406,'Death',1,NULL),(407,'Wind',1,NULL),(408,'Seal',1,NULL),(409,'Truth',1,NULL),(410,'Pain',1,NULL);
 /*!40000 ALTER TABLE `class` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,7 +353,7 @@ CREATE TABLE `enemy` (
   KEY `npc` (`npc_id`),
   CONSTRAINT `enemy_ibfk_1` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`),
   CONSTRAINT `enemy_ibfk_2` FOREIGN KEY (`battle_id`) REFERENCES `battle` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -442,7 +443,7 @@ CREATE TABLE `inventory` (
   CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
   CONSTRAINT `inventory_ibfk_3` FOREIGN KEY (`slot_id`) REFERENCES `slot` (`id`),
   CONSTRAINT `inventory_ibfk_4` FOREIGN KEY (`enchantment_id`) REFERENCES `enchantment` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +452,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (1,4,103,1,NULL,1),(19,4,1,1,NULL,8),(45,4,210,2,NULL,1);
+INSERT INTO `inventory` VALUES (1,4,103,1,NULL,1),(19,4,1,1,NULL,9),(45,4,210,2,NULL,1);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -470,9 +471,8 @@ CREATE TABLE `item` (
   `rarity_id` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `itemtype_ibfk_1` (`type_id`),
-  CONSTRAINT `itemtype_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `itemtype` (`id`),
-  CONSTRAINT `itemtype_ibfk_2` FOREIGN KEY (`rarity_id`) REFERENCES `rarity` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=211 DEFAULT CHARSET=utf8;
+  CONSTRAINT `itemtype_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `itemtype` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -481,7 +481,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'Health Potion',2,1,1),(100,'Rusty Blade',3,0,2),(101,'Rusty Bow',3,0,2),(102,'Rusty Florett',3,0,2),(103,'Rusty Maze',12,0,2),(104,'Rusty Nunchuck',3,0,2),(105,'Rusty Sceptre',8,0,2),(106,'Rusty Wand',11,0,2),(107,'Rusty Battlestaff',9,0,2),(108,'Rusty Club',14,0,2),(109,'Rusty Dagger',10,0,2),(110,'Rusty Hammer',13,0,2),(200,'Sharp Blade',3,0,3),(201,'Sharp Bow',3,0,3),(202,'Sharp Florett',3,0,3),(203,'Sharp Maze',12,0,3),(204,'Sharp Nunchuck',3,0,3),(205,'Sharp Sceptre',8,0,3),(206,'Sharp Wand',11,0,3),(207,'Sharp Battlestaff',9,0,3),(208,'Sharp Club',14,0,3),(209,'Sharp Dagger',10,0,3),(210,'Sharp Hammer',13,0,3);
+INSERT INTO `item` VALUES (1,'health_potion',2,1,1),(2,'honey',1,1,1),(3,'poison',2,1,1),(100,'blade',7,0,2),(101,'bow',16,0,2),(102,'florett',17,0,2),(103,'maze',12,0,2),(104,'nunchuck',15,0,2),(105,'sceptre',8,0,2),(106,'wand',11,0,2),(107,'battlestaff',9,0,2),(108,'club',14,0,2),(109,'dagger',10,0,2),(110,'hammer',13,0,2),(200,'blade',7,0,3),(201,'bow',16,0,3),(202,'florett',17,0,3),(203,'maze',12,0,3),(204,'nunchuck',15,0,3),(205,'sceptre',8,0,3),(206,'wand',11,0,3),(207,'battlestaff',9,0,3),(208,'club',14,0,3),(209,'dagger',10,0,3),(210,'hammer',13,0,3),(300,'blade',7,0,6),(301,'bow',16,0,6),(302,'florett',17,0,6),(303,'maze',12,0,6),(304,'nunchuck',15,0,6),(305,'sceptre',8,0,6),(306,'wand',11,0,6),(307,'battlestaff',9,0,6),(308,'club',14,0,6),(309,'dagger',10,0,6),(310,'hammer',13,0,6);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,7 +498,7 @@ CREATE TABLE `itemtype` (
   `icon` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -507,7 +507,7 @@ CREATE TABLE `itemtype` (
 
 LOCK TABLES `itemtype` WRITE;
 /*!40000 ALTER TABLE `itemtype` DISABLE KEYS */;
-INSERT INTO `itemtype` VALUES (1,'Object',0),(2,'Potion',1),(3,'Weapon',1),(4,'Shield',0),(5,'Armor',1),(6,'Two-Handed',0),(7,'Sword',0),(8,'Sceptre',0),(9,'Battlestaff',0),(10,'Dagger',0),(11,'Wand',0),(12,'Maze',0),(13,'Hammer',0),(14,'Club',0);
+INSERT INTO `itemtype` VALUES (1,'Object',0),(2,'Potion',1),(3,'Weapon',1),(4,'Shield',0),(5,'Armor',1),(6,'Two-Handed',0),(7,'Blade',0),(8,'Sceptre',0),(9,'Battlestaff',0),(10,'Dagger',0),(11,'Wand',0),(12,'Maze',0),(13,'Hammer',0),(14,'Club',0),(15,'Nunchuck',0),(16,'Bow',0),(17,'Florett',0);
 /*!40000 ALTER TABLE `itemtype` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -534,7 +534,7 @@ CREATE TABLE `itemtype_relations` (
 
 LOCK TABLES `itemtype_relations` WRITE;
 /*!40000 ALTER TABLE `itemtype_relations` DISABLE KEYS */;
-INSERT INTO `itemtype_relations` VALUES (6,3),(9,6),(14,6),(10,3),(13,6),(12,3),(8,3),(7,3),(11,6);
+INSERT INTO `itemtype_relations` VALUES (6,3),(9,6),(14,6),(10,3),(13,6),(12,3),(8,3),(7,3),(11,6),(16,6),(15,3),(17,3);
 /*!40000 ALTER TABLE `itemtype_relations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -583,7 +583,7 @@ CREATE TABLE `npc` (
   PRIMARY KEY (`id`),
   KEY `rank` (`rank_id`),
   CONSTRAINT `npc_ibfk_1` FOREIGN KEY (`rank_id`) REFERENCES `rank` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -592,7 +592,7 @@ CREATE TABLE `npc` (
 
 LOCK TABLES `npc` WRITE;
 /*!40000 ALTER TABLE `npc` DISABLE KEYS */;
-INSERT INTO `npc` VALUES (1,1,'Angry Bees',20,1),(2,10,'Drake',180,1),(3,5,'Eye',8,1),(4,15,'Skull',16,1);
+INSERT INTO `npc` VALUES (1,1,'angry_bees',20,1),(2,10,'drake',180,1),(3,5,'eye',8,1),(4,15,'skull',16,1),(5,1,'slime',30,1);
 /*!40000 ALTER TABLE `npc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -620,7 +620,7 @@ CREATE TABLE `npc_loot` (
 
 LOCK TABLES `npc_loot` WRITE;
 /*!40000 ALTER TABLE `npc_loot` DISABLE KEYS */;
-INSERT INTO `npc_loot` VALUES (1,1,100);
+INSERT INTO `npc_loot` VALUES (1,2,100);
 /*!40000 ALTER TABLE `npc_loot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -651,7 +651,7 @@ CREATE TABLE `position` (
 
 LOCK TABLES `position` WRITE;
 /*!40000 ALTER TABLE `position` DISABLE KEYS */;
-INSERT INTO `position` VALUES (1,1,NULL,NULL,NULL,0),(2,41,NULL,NULL,NULL,0),(3,1,1,1,0,0),(4,1,1,3,4,0),(5,1,NULL,NULL,NULL,0);
+INSERT INTO `position` VALUES (1,1,NULL,NULL,NULL,0),(2,41,NULL,NULL,NULL,0),(3,1,1,1,0,0),(4,1,1,3,5,0),(5,1,NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `position` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -722,7 +722,7 @@ CREATE TABLE `rarity` (
   `name` varchar(20) DEFAULT NULL,
   `color` varchar(6) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -731,7 +731,7 @@ CREATE TABLE `rarity` (
 
 LOCK TABLES `rarity` WRITE;
 /*!40000 ALTER TABLE `rarity` DISABLE KEYS */;
-INSERT INTO `rarity` VALUES (1,'None',NULL),(2,'Rusty','8a4722'),(3,'Sharp','a18f85');
+INSERT INTO `rarity` VALUES (1,'None',NULL),(2,'Rusty','8a4722'),(3,'Sharp','a18f85'),(6,'Royal','ba7713');
 /*!40000 ALTER TABLE `rarity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -773,6 +773,7 @@ DROP TABLE IF EXISTS `slot`;
 CREATE TABLE `slot` (
   `id` int(11) NOT NULL,
   `name` varchar(10) NOT NULL,
+  `space` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -783,7 +784,7 @@ CREATE TABLE `slot` (
 
 LOCK TABLES `slot` WRITE;
 /*!40000 ALTER TABLE `slot` DISABLE KEYS */;
-INSERT INTO `slot` VALUES (1,'Inventory'),(2,'Left Hand'),(3,'Right Hand'),(4,'Loot');
+INSERT INTO `slot` VALUES (1,'Inventory',20),(2,'Left Hand',1),(3,'Right Hand',1),(4,'Loot',20);
 /*!40000 ALTER TABLE `slot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -848,4 +849,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-11 23:20:02
+-- Dump completed on 2019-09-12 17:51:39

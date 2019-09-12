@@ -2,10 +2,10 @@
 	Handles the background moving with the mouse
 */
 
-let inital_position = undefined;
+window.inital_position = undefined;
 
 function moveBG(x, y) {
-	$('.box').css({ 'background-position' : (x - inital_position.x) + 'px ' + (y - inital_position.y) + 'px' });
+	$('.box').css({ 'background-position' : (x - window.inital_position.x) + 'px ' + (y - window.inital_position.y) + 'px' });
 }
 
 $(window).mousemove(function(e) {
@@ -14,7 +14,7 @@ $(window).mousemove(function(e) {
 	let x = e.clientX * -1 * factor;
 	let y = e.clientY * -1 * factor;
 
-	if(!inital_position) inital_position = {x, y};
+	if(!window.inital_position) window.inital_position = {x, y};
 
 	moveBG(x, y);
 

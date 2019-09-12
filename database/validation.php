@@ -16,6 +16,7 @@
 		$out .= validateClasses($debug_level);
 		$out .= validateRaces($debug_level);
 		$out .= validateBattles($debug_level);
+		$out .= validateAccounts($debug_level);
 		
 		return $out;
 	}
@@ -41,6 +42,15 @@
 			return $removed.' battles removed';
 		else if(hasLevel($debug_level, 0))
 			return 'all battles correct';
+
+	}
+
+	function validateAccounts($debug_level) {
+
+		foreach (Account::all() as $account) {
+			
+		}
+		return '';
 
 	}
 

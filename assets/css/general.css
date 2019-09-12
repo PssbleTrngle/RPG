@@ -200,7 +200,7 @@ img.icon {
 	position: relative;
 	background-image: url('../img/bg.png');
 	box-shadow: 0 -30vh 30vh #000A inset;
-	background-repeat: all;
+	background-repeat: repeat;
 	background-size: calc(1462px * var(--factor)) calc(1520px * var(--factor));
 }
 
