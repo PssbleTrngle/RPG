@@ -10,7 +10,7 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
-	function registerAction($url, $func, $status = null) {
+	function registerAction($url, $func, $status = 'user') {
 		global $app;
 		global $container;
 
@@ -20,7 +20,7 @@
 				foreach($request->getParams() as $key => $value)
 					$args[$key] = $value;
 
-				$answer = $func($args);
+				$answer = $func($args, getAccount());
 				return json_encode($answer);
 
 			});
@@ -32,20 +32,19 @@
 
 	};
 
-	registerAction('/language/{lang}', function($args) {
+	registerAction('/language/{lang}', function($args, $account) {
 
 		$lang = $args['lang'];		
 		return ['success' => setLang($lang)];
 
 	});
 
-	registerAction('/character/create', function($args) {
+	registerAction('/character/create', function($args, $account) {
 
-		$account = getAccount();
 		$clazz = $args['class'];
 		$name = $args['name'];
 		
-		if($clazz && $account && $name) {
+		if($clazz && $name) {
 
 			if(Character::where('name', $name)->first())
 				return ['success' => false, 'message' => 'Name not available'];
@@ -70,24 +69,22 @@
 
 	});
 
-	registerAction('/character/select/{id}', function($args) {
+	registerAction('/character/select/{id}', function($args, $account) {
 
 		$id = $args['id'];
-		$account = getAccount();
 		
-		if($id && $account)
+		if($id)
 			return ['success' => $account->select($id)];
 		
 		return ['success' => false];
 
 	});
 
-	registerAction('/character/evolve', function ($args) {
+	registerAction('/character/evolve', function($args, $account) {
 		
 		$to = $args['to'] ?? null;
-		$account = getAccount();
 		
-		if($to && $account) {
+		if($to) {
 			$character = $account->selected;
 			if($character)
 				return ['success' => $character->evolve($to)];
@@ -97,12 +94,11 @@
 		
 	});
 
-	registerAction('/character/learn/{skill}', function ($args) {
+	registerAction('/character/learn/{skill}', function($args, $account) {
 		
 		$skill = $args['skill'] ?? null;
-		$account = getAccount();
 		
-		if($skill && $account) {
+		if($skill) {
 			$character = $account->selected;
 			if($character)
 				return ['success' => $character->learn($skill)];
@@ -112,12 +108,11 @@
 		
 	});
 
-	registerAction('/character/travel', function ($args) {
+	registerAction('/character/travel', function($args, $account) {
 		
 		$id = $args['id'] ?? null;
-		$account = getAccount();
 		
-		if($id && $account) {
+		if($id) {
 			$character = $account->selected;
 			
 			if($character)
@@ -128,45 +123,38 @@
 		
 	}); 
 
-	registerAction('/dungeon/{option}', function ($args) {
+	registerAction('/dungeon/{option}', function($args, $account) {
 		
-		$account = getAccount();
-		
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && !$character->battle) {
+		if($character && !$character->battle) {
+			
+			$dungeon = $character->position->dungeon;
+		   	if($dungeon) {
+			
+				$action = $args['option'];
 				
-				$dungeon = $character->position->dungeon;
-			   	if($dungeon) {
-				
-					$action = $args['option'];
-					
-					switch($action) {
-						case 'search': return ['success' => $dungeon->search($character)];
-						case 'leave': return ['success' => $dungeon->leave($character)];
-						case 'down': return ['success' => $dungeon->down($character)];
-						default: return ['success' => false, 'message' => "'$action' is not a valid action"];
-					}
+				switch($action) {
+					case 'search': return ['success' => $dungeon->search($character)];
+					case 'leave': return ['success' => $dungeon->leave($character)];
+					case 'down': return ['success' => $dungeon->down($character)];
+					default: return ['success' => false, 'message' => "'$action' is not a valid action"];
 				}
-				
-				return ['success' => false, 'message' => 'You are not in a dungeon'];
 			}
-
-			return ['success' => false, 'message' => 'You are in a battle'];
+			
+			return ['success' => false, 'message' => 'You are not in a dungeon'];
 		}
 
-		return ['success' => false, 'message' => 'You are not logged in'];
+		return ['success' => false, 'message' => 'You are in a battle'];
 		
 	});
 
-	registerAction('/battle/skill', function ($args) {
+	registerAction('/battle/skill', function($args, $account) {
 		
-		$account = getAccount();
 		$selected = $args['target'] ?? null;
 		$skillID = $args['skill'] ?? null;
 			
-		if($account && $selected) {
+		if($selected) {
 			$character = $account->selected;
 
 			if($character && ($battle = $character->battle) && ($battle->active->id == $character->id)) {
@@ -209,23 +197,19 @@
 			return ['success' => false, 'message' => 'It\' not your turn'];
 
 		}
+
 		return ['success' => false, 'message' => 'Choose a target'];
 		
 	});
 
-	registerAction('/battle/skip', function ($args) {
-		
-		$account = getAccount();
+	registerAction('/battle/skip', function($args, $account) {
 			
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
-				
-				$message = $battle->next($character->name.' skipped');
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+			
+			$message = $battle->next($character->name.' skipped');
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		
@@ -233,19 +217,14 @@
 		
 	});
 
-	registerAction('/battle/run', function ($args) {
-		
-		$account = getAccount();
+	registerAction('/battle/run', function($args, $account) {
 			
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active_id == $character->id)) {
-				
-				$message = $battle->run($character);
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($battle = $character->battle) && ($battle->active_id == $character->id)) {
+			
+			$message = $battle->run($character);
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		
@@ -253,22 +232,16 @@
 		
 	});
 
-	registerAction('/inventory/take', function ($args) {
+	registerAction('/inventory/take', function($args, $account) {
+			
+		$character = $account->selected;
+		$stack = $args['stack'] ?? null;
 		
-		$account = getAccount();
-			
-		if($account) {
-			
-			$character = $account->selected;
-			$stack = $args['stack'] ?? null;
-			
 
-			if($character && ($stack = Stack::find($stack)) && !$character->battle) {
-				
-				$message = $stack->take($character);
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
+			
+			$message = $stack->take($character);
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		

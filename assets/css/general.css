@@ -208,7 +208,7 @@ img.icon {
 
 	padding: 15px;
 	width: calc(100% - 20px * 2);
-	max-width: 1000px;
+	max-width: 1100px;
 	margin: 0 auto;
 	background-color: var(--bg);
 	/* background-image: linear-gradient(transparent 80%, #0008); */
@@ -277,7 +277,7 @@ input.grow {
 }
 
 .logins {
-	background-color: #4A4A40;
+	background-color: var(--alternate-bg);
 	padding: 8px 0;
 	filter: drop-shadow(0 10px 8px #000E);
 	width: 100%;

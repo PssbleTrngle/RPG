@@ -10,8 +10,8 @@
 	<div class='character-row'>
 	{% for class in classes %}
 		<div class='character-panel' id='{{ class.id }}' style='float: left;'>
-			<h5>{{ class.name }}</h5>
-			{{ icon('class/' ~ class.name|lower, ['#ffffff'])|raw }}
+			<h5>{{ class.name() }}</h5>
+			{{ icon('class/' ~ class.name()|lower, ['#ffffff'])|raw }}
 		</div>
 	{% endfor %}
 	</div>
@@ -26,7 +26,7 @@ $(window).ready(function() {
 	
     var nodes = new vis.DataSet([
 		{% for class in classes %}
-       		{id: {{ class.id }}, label: '{{ class.name }}'},
+       		{id: {{ class.id }}, label: '{{ class.name() }}'},
 		{% endfor %}
     ]);
 	

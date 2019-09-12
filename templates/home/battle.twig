@@ -22,7 +22,7 @@
 					{% for char in battle.characters %}
 
 						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
-							<p>{{char.name }} [lvl: {{char.level() }}]</p>
+							<p>{{char.name() }} [lvl: {{char.level() }}]</p>
 							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
 							{{ char|icon|raw }}
 						</div>
@@ -43,20 +43,20 @@
 					<div class='option' data-action='battle/run'>Run</div>
 
 					{% for skill in character.skills().get() %}
-					<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name }}</div>
+					<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name() }}</div>
 					{% endfor %}
 				</div>
 			
 			{% else %}
 			
-				{{ battle.active.name }}' turn
+				{{ battle.active.name() }}' turn
 
 			{% endif %}
 		</div>
 
 	</div>
 	
-	<div class='mb-2'>
+	<div class='mt-2'>
 		{% for line in battle.message|split('\\n') %}
 		<p>{{ line }}</p>	
 		{% endfor %}

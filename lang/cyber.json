@@ -1,13 +1,16 @@
 {
 	"message": {
-		"welcome": "Welcome $1!"
+		"welcome": "Welcome $1!",
+		"learn": "Generate new functions",
+		"evolve_1": "You've gathered enough user experiece",
+		"evolve_2": "Choose an upgrade"
 	},
 	"stat": {
-		"wisdom": "Wisdom",
-		"strength": "Strength",
-		"resistance": "Resistance",
-		"agility": "Agility",
-		"luck": "Luck"
+		"wisdom": "Complexity",
+		"strength": "Power",
+		"resistance": "Safety",
+		"agility": "Speed",
+		"luck": "RNG"
 	},
 	"character": "$2$1",
 	"race": {
@@ -15,5 +18,16 @@
 		"troll": ".mp4",
 		"nymph": ".txt",
 		"shade": ".iso"
+	},
+	"item": {
+		"weapon": {
+			"bow": "Blaster",
+			"florett": "Saber"
+		}
+	},
+	"rarity": {
+		"rusty": "Binary",
+		"sharp": "Hex",
+		"royal": "Laser"
 	}
 }

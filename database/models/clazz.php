@@ -3,7 +3,7 @@
 	class Clazz extends BaseModel {
 
 		protected $table = 'class';
-		protected $with = ['skills', 'stats'];
+		protected $with = ['skills', 'stats', 'starting_weapon'];
 		
 		public function evolvesTo() {
 			return $this->belongsToMany(Clazz::class, 'evolution', 'from', 'to')
@@ -35,15 +35,13 @@
 			return $this->belongsToMany(Skill::class, 'class_skills', 'class_id', 'skill_id');
 		}
 		
+		public function starting_weapon() {
+			return $this->belongsTo(Item::class, 'starting_weapon_id');
+		}
+		
 		public function stats() {
 			return $this->belongsTo(Stats::class, 'stats_id');
 		}
-
-   		function name() {
-
-   			return format('class'.$this->name);
-
-   		}
 	
 	}
 	

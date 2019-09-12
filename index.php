@@ -6,6 +6,7 @@
 	include_once "database/database.php";
 	include_once "database/validation.php";
 	include_once "localisation.php";
+	include_once "helper.php";
 
 	session_start();
 
@@ -35,13 +36,11 @@
 	        return $_SERVER['REQUEST_URI'];
 	    }));
 
-		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('hasStatus', function ($account, $status) {
-			$status = Status::where('name', $status)->first();
-	        return $status && $account->status->id >= $status->id;
-	    }));
-
 		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('roman', function ($number) {
-			if(is_numeric($number)) return toRoman($number);
+			if(is_numeric($number)) {
+				if(getLang() == 'cyber') return '0x'.str_pad(decbin($number), 4, '0', STR_PAD_LEFT);
+				return toRoman($number);
+			}
 			return '?';
 	    }));
 
@@ -58,15 +57,18 @@
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
-			return glob("assets/scripts/*.js");
+	    	$lang = getLang();
+	    	$general = glob("assets/scripts/*.js");
+	    	$lang = glob("assets/scripts/$lang/*.js");
+			return array_merge($general, $lang);
 	    }));
 
 	    /*
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
 	    */
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path) {
-			return createIcon($path);
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null) {
+			return createIcon($path, $color);
 	    }));
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object) {
@@ -99,29 +101,12 @@
 	/* The Home page, acting as the game screen */
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
-		$account = getAccount();
-		if($account) {
-		
-			$selected = $account->selected;
-			if($selected) {
+		$selected = getAccount()->selected;
 
-				if($battle = $selected->battle) {
-					
-					$won = true;
-					foreach($battle->enemies as $enemy)
-						$won &= $enemy->health <= 0;
-					
-					if($won) $battle->win();
-				
-				}
-				
-				return $this->view->render($response, 'home.twig', []);
+		if($selected)
+			return $this->view->render($response, 'home.twig', []);
 
-			}
-
-			return $response->withRedirect('/profile');
-
-		}
+		return $response->withRedirect('/profile');
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
@@ -160,15 +145,6 @@
 	include_once 'admin.php';
 	include_once 'account.php';
 
-	function getAccount() {
-	    if (isset($_SESSION['account'])) {
-	    	$account = Account::where('id', $_SESSION['account'])->first();
-			Stack::tidy($account->selected);
-			return $account;
-	    }
-	    return null;
-	}
-
 	$container['notFoundHandler'] = function ($container) {
 	    return function (Request $request, Response $response) use ($container) {
 	        return $container->view->render($response->withStatus(404), 'handlers/404.twig');
@@ -185,90 +161,6 @@
             return $container['view']->render($container['response']->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
         };
     };
-
-	function endsWith($haystack, $needle) {
-		$length = strlen($needle);
-		if ($length == 0) {
-			return true;
-		}
-
-		return (substr($haystack, -$length) === $needle);
-	}
-
-	function toRoman($number) {
-	    $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
-	    $returnValue = '';
-	    while ($number > 0) {
-	        foreach ($map as $roman => $int) {
-	            if($number >= $int) {
-	                $number -= $int;
-	                $returnValue .= $roman;
-	                break;
-	            }
-	        }
-	    }
-	    return $returnValue;
-	}
-
-	function createIcon($path = null, $color = null) {
-		$img = 'missing.png';
-		
-		if($path) {
-			$path = strtolower(str_replace(' ', '_', $path));
-			if(endsWith($path, '/random')) {
-				
-				$dir = str_replace('/random', '', $path);
-				
-				$all = scandir('assets/img/'.$dir);
-				$all = array_filter($all, function($val) use($all) {
-					return endsWith($val, '.png') || endsWith($val, '.svg');
-				});			
-				
-				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
-				
-			}
-			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
-			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
-		}
-		
-		$img = '/assets/img/'.$img;
-
-		if($color) {
-			$style = "mask-image: url($img); -webkit-mask-image: url($img); background-color: $color;";
-			$colored = "<div class='colored' style='$style'></div>";
-		}
-
-        $icon = "<img class='icon' src='$img'></img>";			
-		return '<div class=\'icon-container\'>'.$icon.($colored ?? '').'</div>';
-	}
-
-	/* Used by pages requiring a certain status like admin or betatester */
-	class NeedsAuthentication {
-	    private $view;
-	    private $accessLevel;
-	    private $post;
-
-	    public function __construct(\Slim\Views\Twig $view, $accessLevel, $post = false) {
-	        $this->view = $view;
-	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
-	        $this->accessLevel = $status->id;
-	        $this->post = $post;
-	    }
-	    public function __invoke($request, $response, $next) {
-			
-			$account = getAccount();
-			
-	        if ($account == null) {
-	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not logged in']);
-	            return $response->withRedirect('/login?next=' . $request->getUri()->getPath());
-	        }
-	        if ($account->status->id < $this->accessLevel) {
-	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not allowed to do this']);
-	            return $this->view->render($response->withStatus(403), 'handlers/403.twig');
-	        }
-	        return $next($request, $response);
-	    }
-	}
 
 	$app->run();
 ?>

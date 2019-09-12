@@ -1,0 +1,16 @@
+{% set evolutions = character.canEvolveTo() %}	
+{% if evolutions.count() %}
+
+	<p class='center mt-2'>{{ format('message.evolve_1') }}</p>
+	<h3 class='center mb-3'>{{ format('message.evolve_2') }}</h3>
+	<div class='character-row'>
+		{% for evolution in evolutions %}
+
+			<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
+				<h3>{{ evolution.name() }}</h3>
+				{{ evolution|icon|raw }}
+			</div>
+
+		{% endfor %}
+	</div>
+{% endif %}

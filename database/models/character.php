@@ -70,9 +70,14 @@
 		
 		public function itemIn($slot) {
 			if(is_string($slot)) $slot = Slot::where('name', $slot)->first();
-			if(!$slot) return false;
-			return $this->inventory->where('slot_id', '=', $slot->id);
+
+			if($slot) {
+				$items = $this->inventory->where('slot_id', '=', $slot->id);
+				if($slot->space == 1) return $items->first();
+				return $items;
+			}
 			
+			return false;			
 		}
 		
 		public function isSelected() {
@@ -154,6 +159,10 @@
 		
 		public function maxHealth() {
 			return 100;	
+		}
+
+		public function name() {
+			return format('character', [$this->race->name(), $this->clazz->name()]);
 		}
 		
 	}

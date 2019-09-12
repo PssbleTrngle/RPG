@@ -8,6 +8,15 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	function getAccount() {
+	    if (isset($_SESSION['account'])) {
+	    	$account = Account::where('id', $_SESSION['account'])->first();
+			Stack::tidy($account->selected);
+			return $account;
+	    }
+	    return null;
+	}
+
 	$app->get('/stats/users', function (Request $request, Response $response, array $args) {	
 
 		$json = [

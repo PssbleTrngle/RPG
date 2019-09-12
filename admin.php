@@ -56,11 +56,17 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
-	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {
-		
-		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'betatest'));
+	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
+		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
+	})->add(new NeedsAuthentication($container['view'], 'betatester'));
+
+	$app->get('/admin/items', function (Request $request, Response $response, array $args) {		
+		return $this->view->render($response, 'admin/list.twig', ['objects' => Item::all()]);		
+	})->add(new NeedsAuthentication($container['view'], 'betatester'));
+
+	$app->get('/admin/npcs', function (Request $request, Response $response, array $args) {		
+		return $this->view->render($response, 'admin/list.twig', ['objects' => NPC::all()]);		
+	})->add(new NeedsAuthentication($container['view'], 'betatester'));
 
 	$app->get('/admin/level', function (Request $request, Response $response, array $args) {
 		

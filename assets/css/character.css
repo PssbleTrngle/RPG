@@ -43,7 +43,7 @@
 	width: 200px;
 }
 
-.character-panel > .icon:hover {
+.character-panel .icon:hover {
 	transform: scale(1.1, 1.1);
 }
 

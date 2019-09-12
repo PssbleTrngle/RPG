@@ -15,8 +15,33 @@
 		
 		$out .= validateClasses($debug_level);
 		$out .= validateRaces($debug_level);
+		$out .= validateBattles($debug_level);
 		
 		return $out;
+	}
+
+	function validateBattles($debug_level) {
+
+		$removed = 0;
+
+		foreach(Battle::all() as $battle) {
+			
+			$won = true;
+			foreach($battle->enemies as $enemy)
+				$won &= $enemy->health <= 0;
+			
+			if($won) {
+				$battle->win();
+				$removed++;
+			}
+		
+		}
+
+		if($remove > 0 && hasLevel($debug_level, 1))
+			return $removed.' battles removed';
+		else if(hasLevel($debug_level, 0))
+			return 'all battles correct';
+
 	}
 
 	function validateRaces($debug_level) {

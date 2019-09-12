@@ -1,16 +1,16 @@
 .inventory {
-	display: table;
+	text-align: center;
+}
+
+.slot, .slot-icon {	
+	display: inline-block;
+	margin: 0 5px;
+	width: 65px;
 }
 
 .slot {
-
-	display: table-cell;
-	
 	cursor: pointer;
-	margin-right: 5px;
-	width: 65px;
 	transition: transform 0.2s linear;
-	
 }
 
 .inventory.loot > .slot {

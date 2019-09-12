@@ -143,12 +143,18 @@
 
 		public function icon() {
 
-			$name = $this->type->name;
-
 			foreach ($this->types() as $type)
-				if($type->icon) return $this->table.'/'.$type->name.'/'.$name;
+				if($type->icon) return $this->table.'/'.$type->name.'/'.$this->name;
 
-			return $this->table.'/'.$name;
+			return $this->table.'/'.$this->name;
+		}
+		
+		public function name() {
+
+			$name = format(implode('.', explode('/', $this->icon())));
+			if($this->color()) return format('item.weapon.format', [$name, $this->rarity->name()]);
+
+			return $name;
 		}
 		
 		public function type() {
@@ -177,13 +183,13 @@
 	
 		public static function registerAll() {
 			
-			foreach(['Rusty', 'Sharp'] as $cent => $rank)
+			foreach(Rarity::whereNotNull('color')->get() as $cent => $rank)
 				foreach(['Blade', 'Bow', 'Florett', 'Maze', 'Nunchuck', 'Sceptre', 'Wand', 'Battlestaff', 'Club', 'Dagger', 'Hammer'] as $i => $weapon) {
 
 					$rarity = Rarity::where('name', $rank)->first();
 					if($rarity) {
 						$type = ItemType::where('name', $weapon)->first() ?? ItemType::find(3);
-						static::register(['id' => (100 * ($cent + 1)) + $i, 'name' => $rank.' '.$weapon, 'rarity_id' => $rarity->id, 'type_id' => $type->id, 'stackable' => 0]);
+						static::register(['id' => (100 * ($cent + 1)) + $i, 'name' => strtolower($weapon), 'rarity_id' => $rarity->id, 'type_id' => $type->id, 'stackable' => 0]);
 					}
 			}
 			
@@ -201,10 +207,10 @@
 	
 		public static function registerAll() {
 			
-			static::register(['id' => 1, 'name' => "Inventory"], ['fits' => function($item) { return true; }]);
-			static::register(['id' => 2, 'name' => "Left Hand"], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 3, 'name' => "Right Hand"], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 4, 'name' => "Loot"], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 1, 'name' => "Inventory", 'space' => 20], ['fits' => function($item) { return true; }]);
+			static::register(['id' => 2, 'name' => "Left Hand", 'space' => 1], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 3, 'name' => "Right Hand", 'space' => 1], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 4, 'name' => "Loot", 'space' => 20], ['fits' => function($item) { return false; }]);
 			
 		}
 		

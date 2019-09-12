@@ -43,6 +43,11 @@
 			
 			return $do;
 		}
+
+		public function hasStatus($status) {
+			if(is_string($status)) $status = Status::where('name', $status)->first();
+	        return $status && $this->status->id >= $status->id;
+		}
 	
 	}
 		

@@ -60,7 +60,7 @@
 	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
 	padding: 7px 0;
 	color: #FFF;
-	background-color: #22221E;
+	background-color: var(--alternate-bg);
 }
 
 .dungeon {
@@ -68,7 +68,7 @@
 }
 
 .floors {
-	border: 5px #22221E solid;
+	border: 5px var(--alternate-bg) solid;
 }
 
 .floor {
@@ -78,7 +78,7 @@
 	background-color: #0006;
 	background-image: linear-gradient(to top, transparent 70%, #0007);
 	position: relative;
-	border-top: 3px #22221E solid;
+	border-top: 3px var(--alternate-bg) solid;
 	
 }
 

@@ -45,5 +45,39 @@
 		"troll": "Troll",
 		"nymph": "Nymphen",
 		"shade": "Schatten"
+	},
+	"npc": {
+		"angry_bees": "Erzürnte Bienen",
+		"drake": "Erpel",
+		"eye": "Schwebendes Auge",
+		"skull": "Schwebender Schädel",
+		"slime": "Stinknormaler Schleim"
+	},
+	"item": {
+		"honey": "Honigwabe",
+		"weapon": {
+			"format": "$2$1",
+			"blade": " Klinge",
+			"bow": "r Bogen",
+			"florett": "s Florett",
+			"maze": "r Morgenstern",
+			"nunchuck": " Nunchucks",
+			"sceptre": "s Zepter",
+			"wand": "r Stab",
+			"battlestaff": "r Kampfstab",
+			"club": " Keule",
+			"dagger": "r Dolch",
+			"hammer": "r Hammer"
+		},
+		"potion": {
+			"health_potion": "Lebenselexir",
+			"poison": "Gift"
+
+		}
+	},
+	"rarity": {
+		"rusty": "Rostige",
+		"sharp": "Scharfe",
+		"royal": "Königliche"
 	}
 }

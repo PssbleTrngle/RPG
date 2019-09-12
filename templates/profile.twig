@@ -12,9 +12,9 @@
 			{% for character in account.characters %}
 				
 				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
-					<h4>{{ character.name }}</h4>
+					<h4>{{ character.name() }}</h4>
 					<small>
-						<p>{{ format('character', [ format('race.' ~ character.race.name), format('class.' ~ character.clazz.name) ]) }}</p>
+						<p>{{ character.name()}}</p>
 						<p>Level {{ character.level() }}</p>
 						<p>{{ character.birth|age }}</p>
 					</small>

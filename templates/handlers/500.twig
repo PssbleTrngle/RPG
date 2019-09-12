@@ -7,7 +7,7 @@
 	<h1>Internal Server Error</h1>
 	<p>Some gremlin seems to have sabotaged us</p>
 	
-	{% if true or account().status().name|lower == 'admin' %}
+	{% if account().hasStatus('admin') %}
 	<br><br>
 	<small>
 		{% for line in error|split('\n') %}

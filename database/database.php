@@ -33,13 +33,17 @@
 		public static $functions = [];
 
 		public static function register($request, $functions = []) {
+
+			$update = false;
 			
 			$id = $request['id'];
 			$model = static::find($id) ?? new static;
 			
-			foreach($request as $key => $param)
-				$model->$key = $request[$key];
-			$model->save();			
+			if($update) {
+				foreach($request as $key => $param)
+					$model->$key = $request[$key];
+				$model->save();	
+			}		
 		
 			foreach($functions as $key => $function) {
 				if(!array_key_exists($key, static::$functions))
@@ -55,6 +59,10 @@
 
 		public function color() {
 			return null;
+		}
+		
+		public function name() {
+			return format($this->table.'.'.$this->name);
 		}
 		
 	}

@@ -10,7 +10,7 @@
 		}
 		
 		public function name() {
-			return $this->npc->name .' '. $this->suffix;
+			return $this->npc->name() .' '. $this->suffix;
 		}
 
 		public function stats() {

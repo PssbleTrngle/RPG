@@ -4,7 +4,10 @@
 		"days": "$1 Days"
 	},
 	"message": {
-		"welcome": "Welcome $1!"
+		"welcome": "Welcome $1!",
+		"learn": "Learn new skills",
+		"evolve_1": "You're experience has brought you far, but this is where your paths part",
+		"evolve_2": "Choose an specialization"
 	},
 	"stat": {
 		"wisdom": "Wisdom",
@@ -46,5 +49,45 @@
 		"troll": "Troll",
 		"nymph": "Nymph",
 		"shade": "Shade"
+	},
+	"npc": {
+		"angry_bees": "Angry Bees",
+		"drake": "Drake",
+		"eye": "Floating Eye",
+		"skull": "Floating Skull",
+		"slime": "Generic Slime"
+	},
+	"item": {
+		"honey": "Honey Comb",
+		"weapon": {
+			"format": "$2 $1",
+			"blade": "Blade",
+			"bow": "Bow",
+			"florett": "Florett",
+			"maze": "Maze",
+			"nunchuck": "Nunchuck",
+			"sceptre": "Sceptre",
+			"wand": "Wand",
+			"battlestaff": "Battlestaff",
+			"club": "Club",
+			"dagger": "Dagger",
+			"hammer": "Hammer"
+		},
+		"potion": {
+			"health_potion": "Health Potion",
+			"poison": "Poison"
+
+		}
+	},
+	"rarity": {
+		"rusty": "Rusty",
+		"sharp": "Sharp",
+		"royal": "Royal"
+	},
+	"skill": {
+		"pulse": "Pulse",
+		"glow": "Glow"
+	},
+	"dungeon": {
 	}
 }

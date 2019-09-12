@@ -14,24 +14,8 @@
 	
 	<div class='row w-100'>
 		<div class='top w-66'>
-		
-			{% set evolutions = character.canEvolveTo() %}	
-			{% if evolutions.count() %}
 
-				<p class='center'>You're experience has brought you far, but this is where your paths part</p>
-				<h3 class='center mb-4'>Choose an specialization</h3>
-				<div class='character-row'>
-					{% for evolution in evolutions %}
-
-						<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
-							<h3>{{ format('class.' ~ evolution.name) }}</h3>
-							{{ evolution|icon|raw }}
-						</div>
-
-					{% endfor %}
-				</div>
-			{% endif %}
-
+			{% include 'home/evolve.twig' with {'character': character} %}
 
 			{% set pos = character.position %}
 			{% if pos.dungeon.exists %}

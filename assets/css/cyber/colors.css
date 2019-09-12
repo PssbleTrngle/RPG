@@ -1,21 +1,15 @@
 :root {
 	
 	--bg: #222;
-
-	--red: #d62828;
-	--green: #65d628;
-	--red-light: #ed5a5a;
-	--green-light: #82db51;
+	--alternate-bg: #000;
 	
 	--highlight-dark: #1fbfb7;
 	--highlight: #2ee8df;
 	--highlight-light: #42fff6;
 	
-	--marg: 10px;
-	
 }
 
 * {
 	color: white;
-	font-family: 'Comfortaa', cursive;
+	font-family: 'Share Tech Mono', monospace;
 }
