@@ -6,9 +6,9 @@
 
 {% block content %}
 	
-	{% if character.battle.exists %}
+	{% if character.participant.battle.exists %}
 
-		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
+		{% include 'home/battle.twig' with {'battle': character.participant.battle, 'character': character} %}
 	
 	{% else %}
 	

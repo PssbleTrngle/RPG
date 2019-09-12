@@ -6,11 +6,11 @@
 			<p class='right feedback'></p>
 			<div class='participants'>
 				<div class='row'>
-					{% for enemy in battle.enemies if enemy.health() > 0 %}
+					{% for enemy in battle.enemies() if enemy.participant.health() > 0 or enemy.participant.died %}
 
-						<div class='participant' data-id='{{ enemy.id }}' data-type='enemy'>
+						<div class='participant {% if enemy.participant.died %}died{% endif %}' id='{{ enemy.participant.id }}'>
 							<p>{{enemy.name() }} [lvl: {{enemy.npc.level }}]</p>
-							<div class='healthbar' data-amount='{{ enemy.health() / enemy.maxHealth() }}'></div>
+							<div class='healthbar' data-amount='{{ enemy.participant.health() / enemy.participant.maxHealth() }}'></div>
 							{{ enemy|icon|raw }}
 						</div>
 
@@ -19,11 +19,11 @@
 			</div>
 			<div class='participants'>
 				<div class='row'>
-					{% for char in battle.characters %}
+					{% for char in battle.characters() %}
 
-						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' data-id='{{ char.id }}' data-type='character'>
-							<p>{{char.name() }} [lvl: {{char.level() }}]</p>
-							<div class='healthbar' data-amount='{{ char.health() / char.maxHealth() }}'></div>
+						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' id='{{ char.participant.id }}'>
+							<p>{{ char.name() }} [lvl: {{char.level() }}]</p>
+							<div class='healthbar' data-amount='{{ char.participant.health() / char.participant.maxHealth() }}'></div>
 							{{ char|icon|raw }}
 						</div>
 
@@ -70,10 +70,7 @@
 		
 		$('.participant').click(function() {
 			
-			window.params.target = {
-				'id': $(this).attr('data-id'),
-				'type': $(this).attr('data-type')
-			};
+			window.params.target = $(this).attr('id');
 			
 			sendAction('battle/skill');
 			

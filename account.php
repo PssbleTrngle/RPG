@@ -10,9 +10,12 @@
 
 	function getAccount() {
 	    if (isset($_SESSION['account'])) {
+
 	    	$account = Account::where('id', $_SESSION['account'])->first();
 			Stack::tidy($account->selected);
+
 			return $account;
+
 	    }
 	    return null;
 	}

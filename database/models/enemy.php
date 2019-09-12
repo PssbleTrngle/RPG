@@ -1,9 +1,9 @@
 <?php
 
-	class Enemy extends Participant {
+	class Enemy extends BaseModel {
    		
 		protected $table = 'enemy';
-		protected $with = ['npc', 'battle'];
+		protected $with = ['npc', 'participant'];
 		
 		public function icon() {
 			return $this->npc->icon();
@@ -14,36 +14,27 @@
 		}
 
 		public function stats() {
-
 			return Stats::find(1);
-
-		}
-
-		public function addEffect($effect) {
-			global $capsule;
-
-			$capule::table('enemy_effects')->insert(['enemy' => $this->id, 'effect' => $effect->id]);
-			$this->refresh();			
-			
 		}
 		
-		public function takeTurn($battle) {
+		public function takeTurn() {
 			
-			if($battle && ($characters = $battle->characters)) {
+			if($this->battle) {
 				
-				if(rand(1, 100) < (100 * option('call_chance'))  && $battle->enemies->where('health', '>', '0')->count() < option('max_enemies')) {
+				if(rand(1, 100) < (100 * option('call_chance'))
+					&& $this->battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
 					
-					$position = $battle->position;
+					$position = $this->battle->position;
 					
 					$called = $position->dungeon->getNPC($position->floor);
-					$battle->addNPC($called);
+					$this->battle->addNPC($called);
 					$called->save();
 					
 					return $this->name().' called for help';
 					
 				} else {
 					
-					$target = $characters->random();
+					$target = $this->characters()->random();
 					$damage = 5;
 					
 					$target->damage($damage);
@@ -68,6 +59,10 @@
 		
 		public function effects() {
 			return $this->belongsToMany(Effect::class, 'enemy_id', 'effect_id');
+		}
+
+		public function participant() {
+			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 	}
 

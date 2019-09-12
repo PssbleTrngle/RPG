@@ -1,9 +1,9 @@
 <?php
 
-	class Character extends Participant {
+	class Character extends BaseModel {
    		
 		protected $table = 'character';
-		protected $with = ['clazz', 'race', 'position', 'battle', 'inventory', 'account'];
+		protected $with = ['clazz', 'race', 'position', 'inventory', 'account'];
 		
 		public function icon() {
 			return $this->clazz->icon();
@@ -86,9 +86,8 @@
 		}
 		
 		public function travel($location) {
-			if(!$location) return false;
 			
-			if($location && $location->level <= $this->level()) {
+			if($location->level <= $this->level()) {
 				
 				if(!$this->battle) {
 				
@@ -98,8 +97,7 @@
 					
 				}
 				
-				return true;
-				
+				return true;				
 			}
 			
 			return false;
@@ -109,10 +107,8 @@
 			return floor(static::levelFrom($this->xp));
 		}
 		
-		public function requiredXp($level) {
-		
-			return 10 * $level;
-			
+		public function requiredXp($level) {		
+			return 10 * $level;			
 		}
 		
 		public function levelFrom($xp) {
@@ -161,8 +157,35 @@
 			return 100;	
 		}
 
-		public function name() {
+		public function description() {
 			return format('character', [$this->race->name(), $this->clazz->name()]);
+		}
+
+		public function name() {
+			return $this->name;
+		}
+
+		public function participant() {
+			return $this->belongsTo(Participant::class, 'participant_id');
+		}
+
+		public function createPosition() {
+
+			$position = new Position;
+			$position->id = $this->id;
+			$position->save();
+
+		}
+
+		public function createParticipant() {
+
+			$participant = new Participant;
+			$participant->health = $this->maxHealth();
+			$participant->save();
+			$participant->refresh();
+			$this->participant_id = $participant->id;
+			$this->save();
+
 		}
 		
 	}

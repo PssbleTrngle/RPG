@@ -13,6 +13,44 @@
 	
 }
 
+@keyframes join-battle {
+	from {
+		transform: scale(0, 0);
+	}
+	to {
+
+	}
+}
+
+@keyframes die {
+	30% {
+		transform: scale(0.7, 0.7) rotate(10deg);
+	}
+	70% {
+		transform: scale(0.6, 0.6) rotate(-10deg);
+	}
+	to {
+		transform: scale(0, 0) rotate(0deg);
+		opacity: 0;
+	}
+}
+
+.participant.joined {
+
+	animation: join-battle 1s forwards linear;
+	overflow: hidden;
+	pointer-events: none;
+
+}
+
+.participant.died {
+
+	animation: die 0.8s forwards linear;
+	overflow: hidden;
+	pointer-events: none; 
+
+}
+
 .participants {
 	color: #000;
 	padding: 40px;

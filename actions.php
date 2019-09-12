@@ -60,6 +60,9 @@
 			$character->health = 1000;
 			$character->account_id = $account->id;
 
+			$character->createPosition();
+			$character->createParticipant();
+
 			$character->save();
 			return ['redirect' => '/profile'];
 
@@ -151,44 +154,41 @@
 
 	registerAction('/battle/skill', function($args, $account) {
 		
-		$selected = $args['target'] ?? null;
+		$target = Participant::find($args['target'] ?? null);
 		$skillID = $args['skill'] ?? null;
 			
-		if($selected) {
+		if($target) {
 			$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active->id == $character->id)) {
+			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
 				$skill = $character->skills()
-					->where('id', '=', $skillID)
+					->where('id', $skillID)
 					->wherePivot('nextUse', '<=', 0)
 					->first();
 				
 				if($skillID && $skill) {
-					
-					switch($selected['type']) {
-						case 'character': $target = $battle->characters; break;
-						case 'enemy': $target = $battle->enemies; break;
-					}
-					
-					if(isset($target) && $target) {
 						
-						if(!$skill->affectDead)
-							$target = $target->where('health', '>', '0');
-							
-						if(!$skill->group)
-							$target = $target->where('id', $selected['id'])->first();
+					if($skill->group) {
+						if($target->character) $target = $battle->where('character', '!=', null);
+						else if($target->enemy) $target = $battle->where('enemy', '!=', null);
+					} else $target = collect([$target]);
 						
-						$message = $skill->apply($target, $character);
-						$battle->refresh();
-						
-						if($message) {
-							$skill->timeout($character);
-							$battle->next($message);
-						}
+					if(!$skill->affectDead)
+						$target = $target->where('health', '>', '0');
 
-						return ['success' => $message !== false, 'message' => $message];
-					} else return ['success' => false, 'message' => 'Choose a valid target'];
+					if(!$skill->group) $target = $target->first();
+					
+					$battle->prepareTurn();
+					$message = $skill->apply($target, $character);
+					$battle->refresh();
+					
+					if($message) {
+						$skill->timeout($character);
+						$battle->next($message);
+					}
+
+					return ['success' => $message !== false, 'message' => $message];
 				}
 
 				return ['success' => false, 'message' => 'Choose a skill'];
@@ -208,6 +208,7 @@
 
 		if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
 			
+			$battle->prepareTurn();
 			$message = $battle->next($character->name.' skipped');
 			return ['success' => $message !== false, 'message' => $message];
 
@@ -223,6 +224,7 @@
 
 		if($character && ($battle = $character->battle) && ($battle->active_id == $character->id)) {
 			
+			$battle->prepareTurn();
 			$message = $battle->run($character);
 			return ['success' => $message !== false, 'message' => $message];
 

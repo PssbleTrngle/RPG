@@ -45,17 +45,6 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
-	$app->post('/admin/post', function (Request $request, Response $response) {
-		
-		$args = $request->getParams()['args'] ?? null;
-		$action = $request->getParams()['action'] ?? null;
-		
-		if($action)
-			return $response->withRedirect('/'.$action, 307);
-		$this->view->render($response, 'post.twig', []);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
-
 	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'betatester'));

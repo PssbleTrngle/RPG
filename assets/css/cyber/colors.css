@@ -13,3 +13,7 @@
 	color: white;
 	font-family: 'Share Tech Mono', monospace;
 }
+
+input[type=text], input[type=password] {
+	background-color: #000;
+}

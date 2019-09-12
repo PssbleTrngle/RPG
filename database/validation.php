@@ -28,7 +28,7 @@
 		foreach(Battle::all() as $battle) {
 			
 			$won = true;
-			foreach($battle->enemies as $enemy)
+			foreach($battle->enemies() as $enemy)
 				$won &= $enemy->health <= 0;
 			
 			if($won) {
@@ -40,7 +40,7 @@
 
 		if($remove > 0 && hasLevel($debug_level, 1))
 			return $removed.' battles removed';
-		else if(hasLevel($debug_level, 0))
+		if($remove == 0 && hasLevel($debug_level, 0))
 			return 'all battles correct';
 
 	}
@@ -48,7 +48,17 @@
 	function validateAccounts($debug_level) {
 
 		foreach (Account::all() as $account) {
+
+			if($account->selected && $account->id != $account->selected->account_id) {
+				$account->selected_id = null;
+				$account->save();
+			}
 			
+			foreach($account->characters as $character) {
+				if(!$character->position) $character->createPosition();
+				if(!$character->participant) $character->createParticipant();
+			}
+
 		}
 		return '';
 
