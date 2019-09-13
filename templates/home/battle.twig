@@ -1,35 +1,50 @@
+{% macro participant(par) %}
+	
+	<div class='participant
+			{% if par.character.exists and par.battle.active.id == par.character.id %}active{% endif %}
+			{% if par.died %}died{% endif %}'
+			id='{{ par.id }}'>
+
+		<p>{{par.name() }} [lvl: {{ par.level() }}]</p>
+		<div class='healthbar' data-amount='{{ par.health() / par.maxHealth() }}'></div>
+
+		<div class='participant-icon'>{{ par|icon|raw }}</div>
+
+		{% for effect in par.effects %}
+			<div class='effect orbit' data-orbit='{{ par.id }}' data-orbit-find='.icon'>
+				{{ effect|icon|raw }}
+			</div>
+		{% endfor %}
+
+	</div>
+
+{% endmacro %}
+
+{% import _self as self %}
+
 <div class='battle'>
 
 	<div class='row'>
 		<div class='battlefield'>
 			<p class='right'>Round {{ battle.round }}</p>
 			<p class='right feedback'></p>
+
 			<div class='participants'>
-				<div class='row'>
-					{% for enemy in battle.enemies() if enemy.participant.health() > 0 or enemy.participant.died %}
+				{% for par in battle.enemies(true) if par.health() > 0 or par.died %}
 
-						<div class='participant {% if enemy.participant.died %}died{% endif %}' id='{{ enemy.participant.id }}'>
-							<p>{{enemy.name() }} [lvl: {{enemy.npc.level }}]</p>
-							<div class='healthbar' data-amount='{{ enemy.participant.health() / enemy.participant.maxHealth() }}'></div>
-							{{ enemy|icon|raw }}
-						</div>
+					{{ self.participant(par) }}
 
-					{% endfor %}
-				</div>
+				{% endfor %}
 			</div>
+
 			<div class='participants'>
-				<div class='row'>
-					{% for char in battle.characters() %}
+				{% for par in battle.characters(true) %}
 
-						<div class='participant {% if battle.active.id == char.id %}active{% endif %}' id='{{ char.participant.id }}'>
-							<p>{{ char.name() }} [lvl: {{char.level() }}]</p>
-							<div class='healthbar' data-amount='{{ char.participant.health() / char.participant.maxHealth() }}'></div>
-							{{ char|icon|raw }}
-						</div>
+					{{ self.participant(par) }}
 
-					{% endfor %}
-				</div>
+				{% endfor %}
 			</div>
+
 		</div>
 
 		<div class='pl-2 top'>

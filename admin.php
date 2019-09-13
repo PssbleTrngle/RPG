@@ -24,6 +24,14 @@
 		$this->view->render($response, 'admin/validate.twig', ['log' => validate($level)]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
+	
+	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
+		
+		$log = json_encode(getAccount()->selected->participant->battle->enemies()->first()->npc);
+
+		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		
+	});
 
 	$app->get('/admin/loot', function (Request $request, Response $response, array $args) {
 		

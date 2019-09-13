@@ -34,7 +34,7 @@
 
 		public static function register($request, $functions = []) {
 
-			$update = false;
+			$update = true;
 			
 			$id = $request['id'];
 			$model = static::find($id) ?? new static;

@@ -170,8 +170,8 @@
 				if($skillID && $skill) {
 						
 					if($skill->group) {
-						if($target->character) $target = $battle->where('character', '!=', null);
-						else if($target->enemy) $target = $battle->where('enemy', '!=', null);
+						if($target->character) $target = $battle->characters(true);
+						else if($target->enemy) $target = $battle->enemies(true);
 					} else $target = collect([$target]);
 						
 					if(!$skill->affectDead)

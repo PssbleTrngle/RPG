@@ -17,12 +17,14 @@
 			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
 		}
 
-		public function enemies() {
-			return $this->participants->where('enemy', '!=', null)->pluck('enemy');
+		public function enemies($asParticipants = false) {
+			$participants = $this->participants->where('enemy', '!=', null);
+			return $asParticipants ? $participants : $participants->pluck('enemy');
 		}
 
-		public function characters() {
-			return $this->participants->where('character', '!=', null)->pluck('character');
+		public function characters($asParticipants = false) {
+			$participants = $this->participants->where('character', '!=', null);
+			return $asParticipants ? $participants : $participants->pluck('character');
 		}
 		
 		private function end() {

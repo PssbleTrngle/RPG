@@ -24,6 +24,7 @@
 	function validateBattles($debug_level) {
 
 		$removed = 0;
+		$removedParticipants = 0;
 
 		foreach(Battle::all() as $battle) {
 			
@@ -38,10 +39,25 @@
 		
 		}
 
+		foreach(Participant::all() as $participant) {
+			
+			if($participant->enemy_id && !$participant->battle) {
+				$participant->enemy->delete();
+				$participant->delete();
+				$removedParticipants++;
+			}
+		
+		}
+
 		if($remove > 0 && hasLevel($debug_level, 1))
 			return $removed.' battles removed';
 		if($remove == 0 && hasLevel($debug_level, 0))
 			return 'all battles correct';
+
+		if($removedParticipants > 0 && hasLevel($debug_level, 1))
+			return $removed.' participants removed';
+		if($removedParticipants == 0 && hasLevel($debug_level, 0))
+			return 'all participant correct';
 
 	}
 

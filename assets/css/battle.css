@@ -51,6 +51,10 @@
 
 }
 
+.effect {
+	width: 30px;
+}
+
 .participants {
 	color: #000;
 	padding: 40px;
@@ -63,6 +67,8 @@
 }
 
 .participant {
+	position: relative;
+	display: inline-block;
 	cursor: pointer;
 	width: 200px;
 }
@@ -71,7 +77,12 @@
 	 filter: drop-shadow(0 0 4px var(--highlight));
 }
 
-.participant.active {
+.participant-icon {
+	position: absolute;
+	z-index: 1;
+}
+
+.participant.active > .participant-icon {
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 

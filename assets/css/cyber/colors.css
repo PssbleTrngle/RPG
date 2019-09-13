@@ -17,3 +17,10 @@
 input[type=text], input[type=password] {
 	background-color: #000;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+	background-color: #000;
+}

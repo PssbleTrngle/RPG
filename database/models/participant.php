@@ -24,9 +24,13 @@
 		public function addEffect($effect) {
 			global $capsule;
 
-			$capule::table('participant_effects')->insert(['participant_id' => $this->id, 'effect_id' => $effect->id]);
-			$this->refresh();			
-			
+			if(!$this->effects->contains('id', $effect->id)) {
+				$capsule->table('participant_effects')->insert(['participant_id' => $this->id, 'effect_id' => $effect->id]);
+				$this->refresh();
+				return true;
+			}
+
+			return false;
 		}
 		
 		public function canTakeTurn() {
@@ -43,6 +47,14 @@
 		
 		public function name() {
 			return $this->parent()->name();
+		}
+		
+		public function level() {
+			return $this->parent()->level();
+		}
+		
+		public function icon() {
+			return $this->parent()->icon();
 		}
 
 		public function health() {

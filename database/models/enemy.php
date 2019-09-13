@@ -17,28 +17,34 @@
 			return Stats::find(1);
 		}
 		
+		public function level() {
+			return $this->npc->level;
+		}
+		
 		public function takeTurn() {
+
+			$battle = $this->participant->battle;
 			
-			if($this->battle) {
+			if($battle) {
 				
 				if(rand(1, 100) < (100 * option('call_chance'))
-					&& $this->battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
+					&& $battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
 					
-					$position = $this->battle->position;
+					$position = $battle->position;
 					
 					$called = $position->dungeon->getNPC($position->floor);
-					$this->battle->addNPC($called);
+					$battle->addNPC($called);
 					$called->save();
 					
 					return $this->name().' called for help';
 					
 				} else {
 					
-					$target = $this->characters()->random();
+					$target = $battle->characters(true)->random();
 					$damage = 5;
 					
 					$target->damage($damage);
-					return $this->name().' dealt '.$damage.' damage to '.$target->name;
+					return $this->name().' dealt '.$damage.' damage to '.$target->name();
 					
 				}
 				
