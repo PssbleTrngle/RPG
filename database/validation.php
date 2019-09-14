@@ -12,10 +12,26 @@
 
 	function validate($debug_level = 0b00) {
 		$out = "";
+
+		foreach(get_declared_classes() as $class) {
+			if(is_subclass_of($class, 'BaseModel') && method_exists($class, 'validate')) {
+				$corrected = 0;
+
+				foreach ($class::all() as $instance) {
+					if(!$instance->validate()) $corrected++;
+				}
+
+				if(hasLevel($debug_level, 1) && $corrected > 0) $out .= info($corrected.' '.$class.' not correct', 'red');
+				else if(hasLevel($debug_level, 0) && $corrected == 0) $out .= info('Every '.$class.' correct', 'green');
+
+			}
+		}
+
+		$out .= '<br>';
 		
 		$out .= validateClasses($debug_level);
 		$out .= validateRaces($debug_level);
-		
+
 		return $out;
 	}
 

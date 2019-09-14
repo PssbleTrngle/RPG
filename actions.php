@@ -10,7 +10,7 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
-	function registerAction($url, $func, $status = null) {
+	function registerAction($url, $func, $status = 'user') {
 		global $app;
 		global $container;
 
@@ -20,7 +20,7 @@
 				foreach($request->getParams() as $key => $value)
 					$args[$key] = $value;
 
-				$answer = $func($args);
+				$answer = $func($args, getAccount());
 				return json_encode($answer);
 
 			});
@@ -32,13 +32,19 @@
 
 	};
 
-	registerAction('/character/create', function($args) {
+	registerAction('/language/{lang}', function($args, $account) {
 
-		$account = getAccount();
+		$lang = $args['lang'];		
+		return ['success' => setLang($lang)];
+
+	});
+
+	registerAction('/character/create', function($args, $account) {
+
 		$clazz = $args['class'];
 		$name = $args['name'];
 		
-		if($clazz && $account && $name) {
+		if($clazz && $name) {
 
 			if(Character::where('name', $name)->first())
 				return ['success' => false, 'message' => 'Name not available'];
@@ -49,10 +55,13 @@
 
 			$character = new Character;
 			$character->name = $name;
-			$character->race = 1;
-			$character->class = $clazz->id;
+			$character->race_id = 1;
+			$character->class_id = $clazz->id;
 			$character->health = 1000;
-			$character->account = $account->id;
+			$character->account_id = $account->id;
+
+			$character->createPosition();
+			$character->createParticipant();
 
 			$character->save();
 			return ['redirect' => '/profile'];
@@ -63,24 +72,22 @@
 
 	});
 
-	registerAction('/character/select/{id}', function($args) {
+	registerAction('/character/select/{id}', function($args, $account) {
 
 		$id = $args['id'];
-		$account = getAccount();
 		
-		if($id && $account)
+		if($id)
 			return ['success' => $account->select($id)];
 		
 		return ['success' => false];
 
 	});
 
-	registerAction('/character/evolve', function ($args) {
+	registerAction('/character/evolve', function($args, $account) {
 		
 		$to = $args['to'] ?? null;
-		$account = getAccount();
 		
-		if($to && $account) {
+		if($to) {
 			$character = $account->selected;
 			if($character)
 				return ['success' => $character->evolve($to)];
@@ -90,27 +97,25 @@
 		
 	});
 
-	registerAction('/character/learn/{skill}', function ($args) {
+	registerAction('/character/learn/{skill}', function($args, $account) {
 		
-		$skill = $args['skill'] ?? null;
-		$account = getAccount();
+		$skill = Skill::find($args['skill'] ?? null);
+		$character = $account->selected;
 		
-		if($skill && $account) {
-			$character = $account->selected;
+		if($skill) {
 			if($character)
 				return ['success' => $character->learn($skill)];
 		}
 		
-		return ['success' => false];
+		return ['success' => false, 'message' => 'Not a valid skill'];
 		
 	});
 
-	registerAction('/character/travel', function ($args) {
+	registerAction('/character/travel', function($args, $account) {
 		
 		$id = $args['id'] ?? null;
-		$account = getAccount();
 		
-		if($id && $account) {
+		if($id) {
 			$character = $account->selected;
 			
 			if($character)
@@ -121,79 +126,69 @@
 		
 	}); 
 
-	registerAction('/dungeon/{option}', function ($args) {
+	registerAction('/dungeon/{option}', function($args, $account) {
 		
-		$account = getAccount();
-		
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && !$character->battle) {
+		if($character && !$character->battle) {
+			
+			$dungeon = $character->position->dungeon;
+		   	if($dungeon) {
+			
+				$action = $args['option'];
 				
-				$dungeon = $character->position->dungeon;
-			   	if($dungeon) {
-				
-					$action = $args['option'];
-					
-					switch($action) {
-						case 'search': return ['success' => $dungeon->search($character)];
-						case 'leave': return ['success' => $dungeon->leave($character)];
-						case 'down': return ['success' => $dungeon->down($character)];
-						default: return ['success' => false, 'message' => "'$action' is not a valid action"];
-					}
+				switch($action) {
+					case 'search': return ['success' => $dungeon->search($character)];
+					case 'leave': return ['success' => $dungeon->leave($character)];
+					case 'down': return ['success' => $dungeon->down($character)];
+					default: return ['success' => false, 'message' => "'$action' is not a valid action"];
 				}
-				
-				return ['success' => false, 'message' => 'You are not in a dungeon'];
 			}
-
-			return ['success' => false, 'message' => 'You are in a battle'];
+			
+			return ['success' => false, 'message' => 'You are not in a dungeon'];
 		}
 
-		return ['success' => false, 'message' => 'You are not logged in'];
+		return ['success' => false, 'message' => 'You are in a battle'];
 		
 	});
 
-	registerAction('/battle/skill', function ($args) {
+	registerAction('/battle/skill', function($args, $account) {
 		
-		$account = getAccount();
-		$selected = $args['target'] ?? null;
+		$target = Participant::find($args['target'] ?? null);
 		$skillID = $args['skill'] ?? null;
 			
-		if($account && $selected) {
+		if($target) {
 			$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
 				$skill = $character->skills()
-					->where('id', '=', $skillID)
+					->where('id', $skillID)
 					->wherePivot('nextUse', '<=', 0)
 					->first();
 				
 				if($skillID && $skill) {
-					
-					switch($selected['type']) {
-						case 'character': $target = $battle->characters; break;
-						case 'enemy': $target = $battle->enemies; break;
-					}
-					
-					if(isset($target) && $target) {
 						
-						if(!$skill->affectDead)
-							$target = $target->where('health', '>', '0');
-							
-						if(!$skill->group)
-							$target = $target->where('id', '=', $selected['id'])->first();
-							
-						$message = $skill->apply($target, $character);
-						$battle->refresh();
+					if($skill->group) {
+						if($target->character) $target = $battle->characters(true);
+						else if($target->enemy) $target = $battle->enemies(true);
+					} else $target = collect([$target]);
 						
-						if($message) {
-							$skill->timeout($character);
-							$battle->next($message);
-						}
+					if(!$skill->affectDead)
+						$target = $target->where('health', '>', '0');
 
-						return ['success' => $message !== false, 'message' => $message];
-					} else return ['success' => false, 'message' => 'Choose a valid target'];
+					if(!$skill->group) $target = $target->first();
+					
+					$battle->prepareTurn();
+					$message = $skill->apply($target, $character);
+					$battle->refresh();
+					
+					if($message) {
+						$skill->timeout($character);
+						$battle->next($message);
+					}
+
+					return ['success' => $message !== false, 'message' => $message];
 				}
 
 				return ['success' => false, 'message' => 'Choose a skill'];
@@ -202,23 +197,20 @@
 			return ['success' => false, 'message' => 'It\' not your turn'];
 
 		}
+
 		return ['success' => false, 'message' => 'Choose a target'];
 		
 	});
 
-	registerAction('/battle/skip', function ($args) {
-		
-		$account = getAccount();
+	registerAction('/battle/skip', function($args, $account) {
 			
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
-				
-				$message = $battle->next($character->name.' skipped');
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
+			
+			$battle->prepareTurn();
+			$message = $battle->next($character->name.' skipped');
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		
@@ -226,19 +218,15 @@
 		
 	});
 
-	registerAction('/battle/run', function ($args) {
-		
-		$account = getAccount();
+	registerAction('/battle/run', function($args, $account) {
 			
-		if($account) {
-			$character = $account->selected;
+		$character = $account->selected;
 
-			if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
-				
-				$message = $battle->run($character);
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
+			
+			$battle->prepareTurn();
+			$message = $battle->run($character);
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		
@@ -246,22 +234,16 @@
 		
 	});
 
-	registerAction('/inventory/take', function ($args) {
+	registerAction('/inventory/take', function($args, $account) {
+			
+		$character = $account->selected;
+		$stack = $args['stack'] ?? null;
 		
-		$account = getAccount();
-			
-		if($account) {
-			
-			$character = $account->selected;
-			$stack = $args['stack'] ?? null;
-			
 
-			if($character && ($stack = Stack::find($stack)) && !$character->battle) {
-				
-				$message = $stack->take($character);
-				return ['success' => $message !== false, 'message' => $message];
-
-			}
+		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
+			
+			$message = $stack->take($character);
+			return ['success' => $message !== false, 'message' => $message];
 
 		}
 		

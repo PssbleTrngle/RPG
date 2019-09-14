@@ -30,6 +30,41 @@
 
    		public $timestamps = false;
 		
+		public static $functions = [];
+
+		public static function register($request, $functions = []) {
+
+			$update = true;
+			
+			$id = $request['id'];
+			$model = static::find($id) ?? new static;
+			
+			if($update) {
+				foreach($request as $key => $param)
+					$model->$key = $request[$key];
+				$model->save();	
+			}		
+		
+			foreach($functions as $key => $function) {
+				if(!array_key_exists($key, static::$functions))
+					static::$functions[$key] = [];
+				static::$functions[$key][$id] = $function;
+			}
+		
+		}
+
+		public function icon() {
+			return $this->table.'/'.$this->name;
+		}
+
+		public function color() {
+			return false;
+		}
+		
+		public function name() {
+			return format($this->table.'.'.$this->name);
+		}
+		
 	}
 
 	function registerAll() {
@@ -42,7 +77,7 @@
 		
 	}
 
-	foreach (glob("database/*.php") as $filename) {
+	foreach (glob("database/models/*.php") as $filename) {
 	    include_once $filename;
 	}
 

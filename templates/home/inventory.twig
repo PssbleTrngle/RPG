@@ -1,49 +1,72 @@
+{% macro slot(stack, renderEmpty = false) %}
+
+	{% if stack %}
+		<div class='slot' id='{{ stack.id }}'>
+			<div>{{ stack.item|icon|raw }}</div>
+			<p>{{ stack.amount }}x</p>
+			<p>{{ stack.item.name() }}</p>
+		</div>
+	{% elseif renderEmpty %}
+		<div class='slot-text'>
+			<p>Empty</p>
+		</div>
+	{% endif %}
+
+{% endmacro %}
+
+{% import _self as inventory %}
+
 <div class='popup' data-popup='.inventory-btn' >
 
-	{% if character.itemIn(4).count > 0 %}
-		<div class='inventory loot'>
-		<h2 class='center'>Loot</h2>
-		{% for stack in character.itemIn(4) %}
+	{% if character.itemIn('loot').count > 0 %}
+		<div class='inventory loot mb-2'>
 
-			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
-				<p>{{ stack.amount }}x</p>
-				<p>{{ stack.item().name }}</p>
-			</div>
+			{% for stack in character.itemIn('loot') %}
+				{{ inventory.slot(stack) }}
+			{% endfor %}
 
-		{% endfor %}
 		</div>
 	{% endif %}
 
 	<div class='row h-4'></div>
 
-	<div class='inventory'>
-		{% for i in 2..3 %}
+	<div class='inventory mb-2'>
 
-			{% set stack = character.itemIn(i).first() %}
-			{% if stack %}
+		<div class='slot-icon mirror'>{{ icon('slot/hand')|raw }}</div>
 
-			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
-				<p>{{ stack.amount }}x</p>
-				<p>{{ stack.item().name }}</p>
-			</div>
-
-			{% endif %}
-
+		{% for side in ['left', 'right'] %}
+			{{ inventory.slot(character.itemIn(side ~ '_hand'), true) }}
 		{% endfor %}
+
+		<div class='slot-icon'>{{ icon('slot/hand')|raw }}</div>
+
 	</div>
 
-	<div class='inventory'>
-		{% for stack in character.itemIn(1) %}
+	<div class='inventory mb-2'>
 
-			<div class='slot' id='{{ stack.id }}'>
-				<div>{{ icon('item/' ~ stack.item.name)|raw }}</div>
-				<p>{{ stack.amount }}x</p>
-				<p>{{ stack.item().name }}</p>
-			</div>
-
+		{% for stack in character.itemIn('inventory') %}
+			{{ inventory.slot(stack) }}
 		{% endfor %}
+
 	</div>
+
+	{% for stack in character.inventory %}
+
+		<div class='item-popup center' data-item='{{ stack.id }}'>
+
+				<h3>{{ stack.item.name() }}</h3>
+				{% for key, type in stack.item.types() %}
+
+					{% if key > 0 %}
+						<p><small>{{ type.name() }}</small></p>
+					{% else %}
+						<p>{{ type.name() }}</p>
+					{% endif %}
+
+				{% endfor %}
+
+		</div>
+
+	{% endfor %}
 	 
 </div>

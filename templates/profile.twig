@@ -6,51 +6,77 @@
 
 {% block content %}
 	
-	<h1>Welcome <a class='highlight mb-4'>{{ account.username }}</a>!</h1>
+	<h1>{{ format('message.welcome', "<span class='highlight mb-4'>" ~ account.username ~ "</span>")|raw }}</h1>
 
-	<div class='col'>
-	<div class='row'>
-		{% for character in account.characters %}
-			
-			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
-				<h4>{{ character.name }}</h4>
-				<small>
-					<p>{{ character.race.name}} {{ character.clazz.name }}</p>
-					<p>Level {{ character.level() }}</p>
-					<p>{{ character.birth|age }}</p>
-				</small>
-				{{ icon("class/" ~ character.clazz.name)|raw }}
-			</div>
-
-		{% else %}
-			
-			<a href='profile/create'>
-				<div class='character-panel create'>
-					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+	<div class='character-row big'>
+			{% for character in account.characters %}
+				
+				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+					<h4>{{ character.name() }}</h4>
+					<small>
+						<p>{{ character.description()}}</p>
+						<p>Level {{ character.level() }}</p>
+						<p>{{ character.birth|age }}</p>
+					</small>
+					{{ character|icon|raw }}
 				</div>
-			</a>
 
-		{% endfor %}
-	</div>
-	</div>
-	
-	<div class='col'>
+			{% else %}
+				
+				<a href='profile/create'>
+					<div class='character-panel create'>
+						<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+					</div>
+				</a>
 
-	{% if account.selected %}
-		{% set stats = account.selected.stats() %}
+			{% endfor %}
+		
+		<div>
 
-			<div class='stats ml-5'>
-				{% for stat in stats.keys %}
-					<table>
-					<tr>
-						<td class='stat'>{{ stat }}:</td>
-						<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
-					</tr>
-					</table>
-				{% endfor %}
-			</div>
+			<div class='ml-5'>
+				<div class='row'>
+					<a href='/'><div class='profile-btn fade dungeon-btn'>{{ icon('icon/dungeon')|raw }}</div></a>
+					<div class='top'>
+						<div class='profile-btn fade' data-window='lang-window'>{{ icon('icon/lang')|raw }}</div>
+					</div>
+				</div>
+
+				{% if account.selected %}
+					{% set stats = account.selected.stats() %}
 					
-	{% endif %}
+					<div class='bar health' data-amount='{{ account.selected.participant.health / account.selected.maxHealth() }}'></div>
+					<div class='mt-1' />
+					<div class='bar xp' data-amount='{{ account.selected.xp / account.selected.requiredXp() }}'></div>
+					
+					<table class='stats mt-2 w-100'>
+						{% for stat in stats.keys %}
+							<tr>
+								<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+								<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+							</tr>
+						{% endfor %}
+					</table>
+
+					<div class='mt-2'>
+						{% for skill in account.selected.skills %}
+							<p>{{ skill.name() }}</p>
+						{% endfor %}
+					</div>
+								
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class='window' id='lang-window'>
+		<div class='row'>
+			{% for index, lang in langs() %}
+
+				{% if index > 0 and index % 8 == 0 %}</div><div class='row'>{% endif %}
+				<div class='lang' data-action='language/{{ lang }}'>{{ lang|lower }}</div>
+
+			{% endfor %}
+		</div>
 	</div>
 
 {% endblock %}

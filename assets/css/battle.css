@@ -1,16 +1,54 @@
 .battlefield {
 
-	width: calc(100vw - 280px);
+	width: 100%;
 	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
-	background-color: #666;
+	background-color: #0005;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
 	background-size: cover;
-	border-radius: 10px;
+	/* border-radius: 10px; */
 	margin-bottom: 15px;
 	color: #FFF;
 	
 	padding: 10px;
 	
+}
+
+@keyframes join-battle {
+	from {
+		transform: scale(0, 0);
+	}
+	to {
+
+	}
+}
+
+@keyframes die {
+	30% {
+		transform: scale(0.7, 0.7) rotate(10deg);
+	}
+	70% {
+		transform: scale(0.6, 0.6) rotate(-10deg);
+	}
+	to {
+		transform: scale(0, 0) rotate(0deg);
+		opacity: 0;
+	}
+}
+
+.participant.joined {
+
+	animation: join-battle 1s forwards linear;
+	overflow: hidden;
+	pointer-events: none;
+
+}
+
+.participant.died {
+
+	animation: die 0.8s forwards linear;
+	overflow: hidden;
+	pointer-events: none; 
+
 }
 
 .participants {
@@ -25,29 +63,81 @@
 }
 
 .participant {
+	position: relative;
+	display: inline-block;
 	cursor: pointer;
-	float: left;
 	width: 200px;
 }
 
 .participant.selected {
-	 filter: drop-shadow(0 0 4px var(--gold-light));
+	 filter: drop-shadow(0 0 4px var(--highlight));
 }
 
-.participant.active {
+.participant.active > .participant-icon .icon {
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 
-.healthbar {
-	border-radius: 5px;
-	height: 10px;	
-	width: 80%;
-	margin: 4px auto;
-	background-color: rgba(0, 0, 0, 0.2);
+.effect {
+	--speed: 4s;
+	--width: 30px;
+	width: var(--width);
 }
 
-.healthbar > div {
-	border-radius: 5px;
+@keyframes fade-in {
+	from 	{ opacity: 0 }
+	to 		{ opacity: 1 }
+}
+
+@keyframes orbit {
+	from {
+		top: 25%;
+		left: 0;
+		z-index: 2;
+	}
+	50% {
+		top: 75%;
+		left: calc(100% - var(--width));
+	}
+	to {
+		top: 25%;
+		left: 0;
+		z-index: 0;
+	}
+}
+
+.participant-icon {
+	position: relative;
+	z-index: 1;
+}
+
+.orbit {
+	z-index: 0;
+	
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+
+	animation: orbit var(--speed) ease-in-out infinite, fade-in 0.5s linear;
+
+}
+
+.orbit:nth-child(3n + 1) {
+	animation-delay: calc(var(--speed) / 3);
+}
+
+.orbit:nth-child(3n + 2) {
+	animation-delay: calc(var(--speed) / 3 * 2);
+}
+
+.froze::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
 	height: 100%;
-	background-color: var(--red);
+	width: 100%;
+	opacity: 0.2;
+	background-color: #87ddff;
+	clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
 }

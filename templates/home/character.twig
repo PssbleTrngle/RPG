@@ -2,31 +2,36 @@
 
 <div class='popup h-0' data-popup='.learn'>
 
-	<h3>Learn new skills</h3>
+	<h3>{{ format('message.learn') }}</h3>
 
-	{% for skill in skills %}
-		<p class='skill action' data-action='{{ skill.id }}'>{{ skill.name }}</p>
-	{% endfor %}
+	<table class='learnable-skills'>
+		{% for skill in skills %}
+				<tr class='learnable-skill {% if skill.cost > character.skillpoints %}disabled{% endif %}'data-action='/character/learn/{{ skill.id }}'>
+					<td class='center cost'>{{ skill.cost }}</td>
+					<td class='right'>{{ skill.name() }}</td>
+				</tr>
+		{% endfor %}
+	</table>
 
 	<div class='h-2'></div>
 			
 </div>
 
-<div class='profile'>
-	<div class='row'>
+<div class='ml-2 profile'>
+	<div class='row right'>
 		
 		<div class='profile-icon fade' >
 			<a href='/profile'>
-				{{ icon('class/' ~ character.clazz.name)|raw }}
+				{{ character|icon|raw }}
 			</a>
 		</div>
 
-		<div>
+		<div class='middle'>
 			{% if skills.count() %}
-				<div class='profile-btn fade glow-2 learn'></div>
+				<div class='profile-btn fade glow-2 learn'>{{ icon('icon/skills')|raw }}</div>
 			{% endif %}
 
-			<div class='profile-btn fade inventory-btn'></div>
+			<div class='profile-btn fade inventory-btn'>{{ icon('icon/chest')|raw }}</div>
 		</div>
 		 
 	</div>

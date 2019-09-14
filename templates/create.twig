@@ -13,8 +13,8 @@
 			
 
 			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-id='{{ starter.id }}'>
-				<h4>{{ starter.name }}</h4>
-				{{ icon("class/" ~ starter.name)|raw }}
+				<h4>{{ starter.name() }}</h4>
+				{{ icon("class/" ~ starter.name())|raw }}
 			</div>
 
 		{% else %}
@@ -38,7 +38,7 @@
 			$('.character-panel').click(function() {
 
 				window.params.class = $(this).attr('data-id');
-				window.params.name = $('#name').val();
+				window.params.name() = $('#name').val();
 				sendAction('/character/create');
 
 			});

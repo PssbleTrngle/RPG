@@ -24,6 +24,14 @@
 		$this->view->render($response, 'admin/validate.twig', ['log' => validate($level)]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
+	
+	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
+		
+		$log = json_encode(getAccount()->selected->participant->battle->enemies()->first()->npc);
+
+		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		
+	});
 
 	$app->get('/admin/loot', function (Request $request, Response $response, array $args) {
 		
@@ -45,22 +53,20 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
 
-	$app->post('/admin/post', function (Request $request, Response $response) {
-		
-		$args = $request->getParams()['args'] ?? null;
-		$action = $request->getParams()['action'] ?? null;
-		
-		if($action)
-			return $response->withRedirect('/'.$action, 307);
-		$this->view->render($response, 'post.twig', []);
-		
-	})->add(new NeedsAuthentication($container['view'], 'admin'));
+	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
+		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
+	})->add(new NeedsAuthentication($container['view'], 'betatester'));
 
-	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {
-		
-		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);
-		
-	})->add(new NeedsAuthentication($container['view'], 'betatest'));
+	$app->get('/admin/list/{class}', function (Request $request, Response $response, array $args) {
+
+		$class = $args['class'];
+		$objects = [];
+
+		if(is_subclass_of($class, 'BaseModel')) $objects = $class::all();
+
+		return $this->view->render($response, 'admin/list.twig', ['objects' => $objects, 'search' => $class]);
+
+	})->add(new NeedsAuthentication($container['view'], 'betatester'));
 
 	$app->get('/admin/level', function (Request $request, Response $response, array $args) {
 		

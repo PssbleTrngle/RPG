@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 03, 2019 at 12:56 PM
+-- Generation Time: Sep 12, 2019 at 08:05 PM
 -- Server version: 10.1.41-MariaDB-0ubuntu0.18.04.1
 -- PHP Version: 7.1.14
 
@@ -47,7 +47,7 @@ INSERT INTO `account` (`id`, `username`, `password_hash`, `status_id`, `birth`, 
 (4, 'Luis', '$2y$10$wP5OEhJ.NjUZBOSpZ5KKbejZgxELrcuM/0NwA//JQrwTO0jYgntXu', 50, '2019-05-29 11:44:25', 2),
 (5, 'DerDruide', '$2y$10$I9UzxQjPAfDPNqODmh7y/embo.A8YqWMK91Xq2zHXkCV.U3avgAWq', 50, '2019-05-29 11:44:28', 3),
 (6, 'GoodThor', '$2y$10$OZHCNrEud4cL99M.Nvs4V.yue5iq6fm.WIeeTvhCb8OsD30Ck6Q1m', 1, '2019-07-10 18:53:18', NULL),
-(7, 'tester', '$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y', 1, '2019-07-28 22:22:24', 4),
+(7, 'tester', '$2y$10$UT.5BWsZYGejUm2EDn94yemp1WL6S6qDZB1WWzGF5v66HM8bHGr.y', 50, '2019-09-12 06:41:40', 4),
 (8, 'xxx_darkoverlord_xxx', '$2y$10$jnClTKPXbjNTtDBDyuu7oObN/9jfLBfK0Z1s0sOWwSDYwfRg1wmRK', 100, '2019-07-29 17:23:20', NULL);
 
 -- --------------------------------------------------------
@@ -94,7 +94,8 @@ CREATE TABLE `battle` (
 
 INSERT INTO `battle` (`id`, `active_id`, `round`, `message`, `position_id`) VALUES
 (83, 3, 1, 'Groooover skipped\\n', 3),
-(102, 4, 1, '', 4);
+(102, 4, 1, '', 4),
+(105, 4, 1, '', 4);
 
 -- --------------------------------------------------------
 
@@ -107,28 +108,27 @@ CREATE TABLE `character` (
   `race_id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `health` int(11) NOT NULL,
   `xp` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `account_id` int(11) NOT NULL,
   `birth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `battle_id` int(11) DEFAULT NULL
+  `participant_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `character`
 --
 
-INSERT INTO `character` (`id`, `race_id`, `class_id`, `name`, `health`, `xp`, `account_id`, `birth`, `battle_id`) VALUES
-(1, 1, 21, 'Tom', 600, 0, 1, '2019-05-03 15:47:17', NULL),
-(2, 2, 2, 'The Rock', 100, 0, 4, '2019-05-13 15:48:01', NULL),
-(3, 3, 111, 'Groooover', 80, 805, 5, '2019-05-20 08:25:24', NULL),
-(4, 4, 1, 'Kurt', 90, 73004, 7, '2019-05-20 08:27:06', NULL),
-(5, 1, 23, 'Test Subject 24', 90, 0, 7, '2019-05-20 11:57:21', NULL),
-(6, 1, 3, 'HoyHoy', 1000, 0, 8, '2019-07-29 20:24:43', NULL),
-(7, 1, 2, 'Peter', 1000, 0, 8, '2019-07-29 20:31:40', NULL),
-(8, 1, 1, 'Kim', 1000, 0, 8, '2019-07-29 20:32:42', NULL),
-(9, 1, 2, 'Troy', 1000, 0, 8, '2019-07-29 20:42:17', NULL),
-(10, 1, 4, 'Timo', 1000, 0, 8, '2019-07-29 20:42:36', NULL);
+INSERT INTO `character` (`id`, `race_id`, `class_id`, `name`, `xp`, `account_id`, `birth`, `participant_id`) VALUES
+(1, 1, 21, 'Tom', 0, 1, '2019-05-03 15:47:17', 0),
+(2, 2, 2, 'The Rock', 0, 4, '2019-05-13 15:48:01', 0),
+(3, 3, 111, 'Groooover', 807, 5, '2019-05-20 08:25:24', 0),
+(4, 4, 1, 'Kurt', 73005, 7, '2019-05-20 08:27:06', 0),
+(5, 1, 23, 'Test Subject 24', 0, 7, '2019-05-20 11:57:21', 0),
+(6, 1, 3, 'HoyHoy', 0, 8, '2019-07-29 20:24:43', 0),
+(7, 1, 2, 'Peter', 0, 8, '2019-07-29 20:31:40', 0),
+(8, 1, 1, 'Kim', 0, 8, '2019-07-29 20:32:42', 0),
+(9, 1, 2, 'Troy', 0, 8, '2019-07-29 20:42:17', 0),
+(10, 1, 4, 'Timo', 0, 8, '2019-07-29 20:42:36', 0);
 
 -- --------------------------------------------------------
 
@@ -159,54 +159,55 @@ INSERT INTO `character_skills` (`character_id`, `skill_id`, `nextUse`) VALUES
 CREATE TABLE `class` (
   `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `stats_id` int(11) DEFAULT NULL
+  `stats_id` int(11) DEFAULT NULL,
+  `start_weapon_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `class`
 --
 
-INSERT INTO `class` (`id`, `name`, `stats_id`) VALUES
-(1, 'Apprentice', 12),
-(2, 'Warrior', 13),
-(3, 'Rogue', 14),
-(4, 'Wild', 15),
-(21, 'Knight', 16),
-(22, 'Shaman', 17),
-(23, 'Ranger', 18),
-(24, 'Mage', 19),
-(25, 'Alchemist', 20),
-(26, 'Tamer', 1),
-(27, 'Berserk', 1),
-(28, 'Assassin', 1),
-(29, 'Traveller', 1),
-(30, 'Fighter', 1),
-(100, 'Reaper', 1),
-(101, 'Swift', 1),
-(102, 'Focused', 1),
-(103, 'Guardian', 1),
-(104, 'Fallen', 1),
-(105, 'Kamikaze', 1),
-(106, 'Hunter', 1),
-(107, 'Beast', 1),
-(108, 'Infused', 1),
-(109, 'Elementalist', 1),
-(110, 'Sage', 1),
-(111, 'Druid', 1),
-(112, 'Necromancer', 1),
-(113, 'Driven', 1),
-(114, 'Bard', 1),
-(400, 'Wizard', 1),
-(401, 'Touched', 1),
-(402, 'Spirit', 1),
-(403, 'Gate', 1),
-(404, 'Narrator', 1),
-(405, 'Fate', 1),
-(406, 'Death', 1),
-(407, 'Wind', 1),
-(408, 'Seal', 1),
-(409, 'Truth', 1),
-(410, 'Pain', 1);
+INSERT INTO `class` (`id`, `name`, `stats_id`, `start_weapon_id`) VALUES
+(1, 'Apprentice', 12, 106),
+(2, 'Warrior', 13, 100),
+(3, 'Rogue', 14, 110),
+(4, 'Wild', 15, 109),
+(21, 'Knight', 16, NULL),
+(22, 'Shaman', 17, NULL),
+(23, 'Ranger', 18, NULL),
+(24, 'Mage', 19, NULL),
+(25, 'Alchemist', 20, NULL),
+(26, 'Tamer', 1, NULL),
+(27, 'Berserk', 1, NULL),
+(28, 'Assassin', 1, NULL),
+(29, 'Traveller', 1, NULL),
+(30, 'Fighter', 1, NULL),
+(100, 'Reaper', 1, NULL),
+(101, 'Swift', 1, NULL),
+(102, 'Focused', 1, NULL),
+(103, 'Guardian', 1, NULL),
+(104, 'Fallen', 1, NULL),
+(105, 'Kamikaze', 1, NULL),
+(106, 'Hunter', 1, NULL),
+(107, 'Beast', 1, NULL),
+(108, 'Infused', 1, NULL),
+(109, 'Elementalist', 1, NULL),
+(110, 'Sage', 1, NULL),
+(111, 'Druid', 1, NULL),
+(112, 'Necromancer', 1, NULL),
+(113, 'Driven', 1, NULL),
+(114, 'Bard', 1, NULL),
+(400, 'Wizard', 1, NULL),
+(401, 'Touched', 1, NULL),
+(402, 'Spirit', 1, NULL),
+(403, 'Gate', 1, NULL),
+(404, 'Narrator', 1, NULL),
+(405, 'Fate', 1, NULL),
+(406, 'Death', 1, NULL),
+(407, 'Wind', 1, NULL),
+(408, 'Seal', 1, NULL),
+(409, 'Truth', 1, NULL),
+(410, 'Pain', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -309,8 +310,7 @@ CREATE TABLE `enchantment` (
 
 CREATE TABLE `enemy` (
   `id` int(11) NOT NULL,
-  `health` int(11) NOT NULL,
-  `battle_id` int(11) DEFAULT NULL,
+  `participant_id` int(11) DEFAULT NULL,
   `npc_id` int(11) NOT NULL,
   `suffix` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -319,20 +319,10 @@ CREATE TABLE `enemy` (
 -- Dumping data for table `enemy`
 --
 
-INSERT INTO `enemy` (`id`, `health`, `battle_id`, `npc_id`, `suffix`) VALUES
-(56, 20, 83, 1, 'A'),
-(76, 20, 102, 1, 'A');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `enemy_effects`
---
-
-CREATE TABLE `enemy_effects` (
-  `enemy_id` int(11) NOT NULL,
-  `effect_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `enemy` (`id`, `participant_id`, `npc_id`, `suffix`) VALUES
+(56, 83, 1, 'A'),
+(76, 102, 1, 'A'),
+(79, 105, 1, 'A');
 
 -- --------------------------------------------------------
 
@@ -412,11 +402,9 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`id`, `character_id`, `item_id`, `slot_id`, `enchantment_id`, `amount`) VALUES
-(1, 4, 1, 1, NULL, 51),
-(2, 4, 2, 1, NULL, 1),
-(3, 4, 2, 1, NULL, 1),
-(19, 3, 1, 1, NULL, 5),
-(40, 4, 1, 4, NULL, 1);
+(1, 4, 103, 1, NULL, 1),
+(19, 4, 1, 1, NULL, 9),
+(45, 4, 210, 2, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -428,16 +416,51 @@ CREATE TABLE `item` (
   `id` int(11) NOT NULL,
   `name` varchar(40) NOT NULL,
   `type_id` int(11) NOT NULL,
-  `stackable` tinyint(1) NOT NULL DEFAULT '1'
+  `stackable` tinyint(1) NOT NULL DEFAULT '1',
+  `rarity_id` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `item`
 --
 
-INSERT INTO `item` (`id`, `name`, `type_id`, `stackable`) VALUES
-(1, 'Health Potion', 2, 1),
-(2, 'Rusty Blade', 3, 0);
+INSERT INTO `item` (`id`, `name`, `type_id`, `stackable`, `rarity_id`) VALUES
+(1, 'health_potion', 2, 1, 1),
+(2, 'honey', 1, 1, 1),
+(3, 'poison', 2, 1, 1),
+(100, 'blade', 7, 0, 2),
+(101, 'bow', 16, 0, 2),
+(102, 'florett', 17, 0, 2),
+(103, 'maze', 12, 0, 2),
+(104, 'nunchuck', 15, 0, 2),
+(105, 'sceptre', 8, 0, 2),
+(106, 'wand', 11, 0, 2),
+(107, 'battlestaff', 9, 0, 2),
+(108, 'club', 14, 0, 2),
+(109, 'dagger', 10, 0, 2),
+(110, 'hammer', 13, 0, 2),
+(200, 'blade', 7, 0, 3),
+(201, 'bow', 16, 0, 3),
+(202, 'florett', 17, 0, 3),
+(203, 'maze', 12, 0, 3),
+(204, 'nunchuck', 15, 0, 3),
+(205, 'sceptre', 8, 0, 3),
+(206, 'wand', 11, 0, 3),
+(207, 'battlestaff', 9, 0, 3),
+(208, 'club', 14, 0, 3),
+(209, 'dagger', 10, 0, 3),
+(210, 'hammer', 13, 0, 3),
+(300, 'blade', 7, 0, 6),
+(301, 'bow', 16, 0, 6),
+(302, 'florett', 17, 0, 6),
+(303, 'maze', 12, 0, 6),
+(304, 'nunchuck', 15, 0, 6),
+(305, 'sceptre', 8, 0, 6),
+(306, 'wand', 11, 0, 6),
+(307, 'battlestaff', 9, 0, 6),
+(308, 'club', 14, 0, 6),
+(309, 'dagger', 10, 0, 6),
+(310, 'hammer', 13, 0, 6);
 
 -- --------------------------------------------------------
 
@@ -447,19 +470,61 @@ INSERT INTO `item` (`id`, `name`, `type_id`, `stackable`) VALUES
 
 CREATE TABLE `itemtype` (
   `id` int(11) NOT NULL,
-  `name` varchar(20) NOT NULL
+  `name` varchar(20) NOT NULL,
+  `icon` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `itemtype`
 --
 
-INSERT INTO `itemtype` (`id`, `name`) VALUES
-(1, 'Object'),
-(2, 'Potion'),
-(3, 'Weapon'),
-(4, 'Shield'),
-(5, 'Armor');
+INSERT INTO `itemtype` (`id`, `name`, `icon`) VALUES
+(1, 'Object', 0),
+(2, 'Potion', 1),
+(3, 'Weapon', 1),
+(4, 'Shield', 0),
+(5, 'Armor', 1),
+(6, 'Two-Handed', 0),
+(7, 'Blade', 0),
+(8, 'Sceptre', 0),
+(9, 'Battlestaff', 0),
+(10, 'Dagger', 0),
+(11, 'Wand', 0),
+(12, 'Maze', 0),
+(13, 'Hammer', 0),
+(14, 'Club', 0),
+(15, 'Nunchuck', 0),
+(16, 'Bow', 0),
+(17, 'Florett', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `itemtype_relations`
+--
+
+CREATE TABLE `itemtype_relations` (
+  `child` int(11) NOT NULL,
+  `parent` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `itemtype_relations`
+--
+
+INSERT INTO `itemtype_relations` (`child`, `parent`) VALUES
+(6, 3),
+(9, 6),
+(14, 6),
+(10, 3),
+(13, 6),
+(12, 3),
+(8, 3),
+(7, 3),
+(11, 6),
+(16, 6),
+(15, 3),
+(17, 3);
 
 -- --------------------------------------------------------
 
@@ -504,10 +569,11 @@ CREATE TABLE `npc` (
 --
 
 INSERT INTO `npc` (`id`, `level`, `name`, `maxHealth`, `rank_id`) VALUES
-(1, 1, 'Angry Bees', 20, 1),
-(2, 10, 'Drake', 180, 1),
-(3, 5, 'Eye', 8, 1),
-(4, 15, 'Skull', 16, 1);
+(1, 1, 'angry_bees', 20, 1),
+(2, 10, 'drake', 180, 1),
+(3, 5, 'eye', 8, 1),
+(4, 15, 'skull', 16, 1),
+(5, 1, 'slime', 30, 1);
 
 -- --------------------------------------------------------
 
@@ -526,7 +592,32 @@ CREATE TABLE `npc_loot` (
 --
 
 INSERT INTO `npc_loot` (`npc_id`, `item_id`, `chance`) VALUES
-(1, 1, 100);
+(1, 2, 100);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant`
+--
+
+CREATE TABLE `participant` (
+  `id` int(11) NOT NULL,
+  `died` tinyint(1) NOT NULL DEFAULT '0',
+  `joined` tinyint(1) NOT NULL DEFAULT '0',
+  `health` int(11) NOT NULL,
+  `battle` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participant_effects`
+--
+
+CREATE TABLE `participant_effects` (
+  `participant_id` int(11) NOT NULL,
+  `effect_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -550,8 +641,8 @@ CREATE TABLE `position` (
 INSERT INTO `position` (`id`, `location_id`, `dungeon_id`, `floor`, `attempts`, `foundStairs`) VALUES
 (1, 1, NULL, NULL, NULL, 0),
 (2, 41, NULL, NULL, NULL, 0),
-(3, 1, 1, 1, 7, 1),
-(4, 1, 1, 3, 3, 0),
+(3, 1, 1, 1, 0, 0),
+(4, 1, 1, 3, 5, 0),
 (5, 1, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
@@ -604,6 +695,28 @@ INSERT INTO `rank` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rarity`
+--
+
+CREATE TABLE `rarity` (
+  `id` int(11) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `color` varchar(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `rarity`
+--
+
+INSERT INTO `rarity` (`id`, `name`, `color`) VALUES
+(1, 'None', NULL),
+(2, 'Rusty', '8a4722'),
+(3, 'Sharp', 'a18f85'),
+(6, 'Royal', 'ba7713');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `skill`
 --
 
@@ -638,18 +751,19 @@ INSERT INTO `skill` (`id`, `name`, `timeout`, `cost`, `group`, `affectDead`) VAL
 
 CREATE TABLE `slot` (
   `id` int(11) NOT NULL,
-  `name` varchar(10) NOT NULL
+  `name` varchar(10) NOT NULL,
+  `space` int(11) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `slot`
 --
 
-INSERT INTO `slot` (`id`, `name`) VALUES
-(1, 'Inventory'),
-(2, 'Left Hand'),
-(3, 'Right Hand'),
-(4, 'Loot');
+INSERT INTO `slot` (`id`, `name`, `space`) VALUES
+(1, 'Inventory', 20),
+(2, 'Left Hand', 1),
+(3, 'Right Hand', 1),
+(4, 'Loot', 20);
 
 -- --------------------------------------------------------
 
@@ -735,8 +849,8 @@ ALTER TABLE `character`
   ADD PRIMARY KEY (`id`),
   ADD KEY `race` (`race_id`),
   ADD KEY `class` (`class_id`),
-  ADD KEY `battle` (`battle_id`),
-  ADD KEY `character_ibfk_3` (`account_id`);
+  ADD KEY `character_ibfk_3` (`account_id`),
+  ADD KEY `participant_id` (`participant_id`);
 
 --
 -- Indexes for table `character_skills`
@@ -792,15 +906,8 @@ ALTER TABLE `enchantment`
 --
 ALTER TABLE `enemy`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `battle` (`battle_id`),
+  ADD KEY `battle` (`participant_id`),
   ADD KEY `npc` (`npc_id`);
-
---
--- Indexes for table `enemy_effects`
---
-ALTER TABLE `enemy_effects`
-  ADD KEY `effect` (`effect_id`),
-  ADD KEY `enemy` (`enemy_id`);
 
 --
 -- Indexes for table `evolution`
@@ -814,23 +921,31 @@ ALTER TABLE `evolution`
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `item` (`item_id`),
   ADD KEY `slot` (`slot_id`),
   ADD KEY `enchantment` (`enchantment_id`),
-  ADD KEY `inventory_ibfk_1` (`character_id`);
+  ADD KEY `inventory_ibfk_1` (`character_id`),
+  ADD KEY `inventory_ibfk_2` (`item_id`);
 
 --
 -- Indexes for table `item`
 --
 ALTER TABLE `item`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type_id`);
+  ADD KEY `itemtype_ibfk_1` (`type_id`);
 
 --
 -- Indexes for table `itemtype`
 --
 ALTER TABLE `itemtype`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `itemtype_relations`
+--
+ALTER TABLE `itemtype_relations`
+  ADD KEY `child` (`child`),
+  ADD KEY `parent` (`parent`);
 
 --
 -- Indexes for table `location`
@@ -854,6 +969,20 @@ ALTER TABLE `npc_loot`
   ADD KEY `loot` (`item_id`);
 
 --
+-- Indexes for table `participant`
+--
+ALTER TABLE `participant`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `battle` (`battle`);
+
+--
+-- Indexes for table `participant_effects`
+--
+ALTER TABLE `participant_effects`
+  ADD KEY `effect` (`effect_id`),
+  ADD KEY `enemy` (`participant_id`);
+
+--
 -- Indexes for table `position`
 --
 ALTER TABLE `position`
@@ -872,6 +1001,12 @@ ALTER TABLE `race`
 -- Indexes for table `rank`
 --
 ALTER TABLE `rank`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `rarity`
+--
+ALTER TABLE `rarity`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -912,7 +1047,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `battle`
 --
 ALTER TABLE `battle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `character`
@@ -924,19 +1059,43 @@ ALTER TABLE `character`
 -- AUTO_INCREMENT for table `enemy`
 --
 ALTER TABLE `enemy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT for table `item`
+--
+ALTER TABLE `item`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=311;
+
+--
+-- AUTO_INCREMENT for table `itemtype`
+--
+ALTER TABLE `itemtype`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `npc`
 --
 ALTER TABLE `npc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `participant`
+--
+ALTER TABLE `participant`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `rarity`
+--
+ALTER TABLE `rarity`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `stats`
@@ -968,8 +1127,7 @@ ALTER TABLE `battle`
 ALTER TABLE `character`
   ADD CONSTRAINT `character_ibfk_1` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`),
   ADD CONSTRAINT `character_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`),
-  ADD CONSTRAINT `character_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`),
-  ADD CONSTRAINT `character_ibfk_4` FOREIGN KEY (`battle_id`) REFERENCES `battle` (`id`);
+  ADD CONSTRAINT `character_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`);
 
 --
 -- Constraints for table `character_skills`
@@ -997,15 +1155,7 @@ ALTER TABLE `dungeon_npc`
 -- Constraints for table `enemy`
 --
 ALTER TABLE `enemy`
-  ADD CONSTRAINT `enemy_ibfk_1` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`),
-  ADD CONSTRAINT `enemy_ibfk_2` FOREIGN KEY (`battle_id`) REFERENCES `battle` (`id`);
-
---
--- Constraints for table `enemy_effects`
---
-ALTER TABLE `enemy_effects`
-  ADD CONSTRAINT `enemy_effects_ibfk_1` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`),
-  ADD CONSTRAINT `enemy_effects_ibfk_2` FOREIGN KEY (`enemy_id`) REFERENCES `enemy` (`id`);
+  ADD CONSTRAINT `enemy_ibfk_1` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`);
 
 --
 -- Constraints for table `evolution`
@@ -1027,7 +1177,14 @@ ALTER TABLE `inventory`
 -- Constraints for table `item`
 --
 ALTER TABLE `item`
-  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `itemtype` (`id`);
+  ADD CONSTRAINT `itemtype_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `itemtype` (`id`);
+
+--
+-- Constraints for table `itemtype_relations`
+--
+ALTER TABLE `itemtype_relations`
+  ADD CONSTRAINT `itemtype_relations_ibfk_1` FOREIGN KEY (`child`) REFERENCES `itemtype` (`id`),
+  ADD CONSTRAINT `itemtype_relations_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `itemtype` (`id`);
 
 --
 -- Constraints for table `location`
@@ -1047,6 +1204,13 @@ ALTER TABLE `npc`
 ALTER TABLE `npc_loot`
   ADD CONSTRAINT `npc_loot_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
   ADD CONSTRAINT `npc_loot_ibfk_2` FOREIGN KEY (`npc_id`) REFERENCES `npc` (`id`);
+
+--
+-- Constraints for table `participant_effects`
+--
+ALTER TABLE `participant_effects`
+  ADD CONSTRAINT `participant_effects_ibfk_1` FOREIGN KEY (`effect_id`) REFERENCES `effect` (`id`),
+  ADD CONSTRAINT `participant_effects_ibfk_2` FOREIGN KEY (`participant_id`) REFERENCES `participant` (`id`);
 
 --
 -- Constraints for table `position`

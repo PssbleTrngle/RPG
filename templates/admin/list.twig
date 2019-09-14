@@ -1,0 +1,21 @@
+{% extends 'base.twig' %}
+
+{% block title %}List{% endblock %}
+
+{% block content %}
+
+	<div class='inventory'>
+		{% for object in objects %}
+
+			<div class='slot'>
+				<div>{{ object|icon|raw }}</div>
+				<p>{{ object.name() }}</p>
+			</div>
+
+		{% else %}
+			<h2>Nothing found in {{ search }}</h2>
+		{% endfor %}
+
+	</div>
+
+{% endblock %}

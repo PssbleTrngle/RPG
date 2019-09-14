@@ -12,16 +12,34 @@
 
 	{% endif %}
 
-	<form method='post'>
+	<form>
 		<input type='text' name='action' placeholder='action'></input>
 		<input type='text' name='args' placeholder='args'></input>
 		<input type='submit'></input>
-	</post>
+	</form>
 
-{% endblock %}
+	<p id='message' class='mt-2'></p>
 
-{% block script %}
-<script>
+	<script>
+		$(window).ready(function() {
 
-</script>
+			$('form').submit(function(e) {
+ 				e.preventDefault();
+
+ 				let args = $('[name=args]').val();
+				if(args) window.params = JSON.parse(args);
+				sendAction('/' + $('[name=action]').val(), function(result) {
+					try {
+						result = JSON.stringify(result);
+					} catch(err) {}
+
+					$('#message').text(result);
+				});
+
+			});
+
+		});
+	</script>
+
+
 {% endblock %}

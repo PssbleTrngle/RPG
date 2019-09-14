@@ -4,8 +4,8 @@
 	width: 100%;
 	max-width: 800px;
 	
-	border: 3px solid var(--gold);
-	border-radius: 20px;
+	border: 3px solid var(--highlight-dark);
+	/* border-radius: 20px; */
 	
 	box-shadow: 0 0 20px 0 rgba(0,0,0,0.5) inset;
 	
@@ -17,7 +17,7 @@
 	padding-top: 30px;
 	
 	position: absolute;
-	border-radius: 100%;
+	/* border-radius: 100%; */
 	box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
 	
 	cursor: pointer;
@@ -28,61 +28,67 @@
 }
 
 .map-part.selected {
-	background-color: var(--gold-light);	
-	border-color: var(--gold);	
-	box-shadow: 0 0 15px 0 var(--gold-light);
+	background-color: var(--highlight);	
+	border-color: var(--highlight-dark);	
+	box-shadow: 0 0 15px 0 var(--highlight);
 }
 
 .map > .back {
 
-	border-radius: 100%;
+	/* border-radius: 100%; */
 	width: 40px;
 	height: 40px;
 	margin: 5px;
 	
-	background-color: var(--gold-light);
-	border: 2px var(--gold) solid;
+	background-color: var(--highlight);
+	border: 2px var(--highlight-dark) solid;
 	color: #ffffff;
 	font-size: 22px;
 	opacity: 0;
 }
 
 .map > .back:hover {
-	background-color: var(--gold);
+	background-color: var(--highlight-dark);
+}
+
+.dungeon-top {
+	--top: 30%;
+	--right: 15%;
+	--left: 15%;
+	--width: 15px;
+
+	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
+	padding: 7px 0;
+	color: #FFF;
+	background-color: var(--alternate-bg);
 }
 
 .dungeon {
 	width: 400px;	
 }
 
+.floors {
+	border: 5px var(--alternate-bg) solid;
+}
+
 .floor {
-	
+
 	padding: 10px;
 	width: calc(100% - 20px);
-	background-color: #999;
+	background-color: #0006;
+	background-image: linear-gradient(to top, transparent 70%, #0007);
 	position: relative;
+	border-top: 3px var(--alternate-bg) solid;
 	
 }
 
-.floor::before {
-	content: '';
-	
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 12px;
-	
-	background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
-	
+.floor.current {
+	background-color: var(--highlight-dark);
 }
 
 .floor:first-child {
-	border-radius: 10px 10px 0 0;
-}
-
-.floor:first-child::before {
-	border-radius: 10px 10px 0 0;
+	border-top: none;
+	/* border-radius: 10px 10px 0 0; */
 }
 
 .floor.below {
@@ -97,10 +103,6 @@
 	padding-top: 18px;
 	padding-bottom: 18px;
 	background-color: #666;
-	border-radius: 0 0 10px 10px;
+	/* border-radius: 0 0 10px 10px; */
 
-}
-
-.floor.current {
-	background-color: var(--gold-light);
 }

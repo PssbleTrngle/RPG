@@ -9,8 +9,10 @@
 	$OPTIONS = [
 	
 		'max_enemies' => 4,
-		'call_chance' => 0.02,
+		'call_chance' => 0.03,
 		'base_bag_size' => 10,
+		'default_lang' => 'en',
+		'max_effects' => 3,
 		
 	];
 

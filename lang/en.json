@@ -1,0 +1,98 @@
+{
+	"time": {
+		"day": "1 Day",
+		"days": "$1 Days"
+	},
+	"message": {
+		"level_up": "You reached the next level!",
+		"welcome": "Welcome $1!",
+		"won": "You won the battle!",
+		"lost": "You lost the battle!",
+		"ran": "You ran away",
+		"learn": "Learn new skills",
+		"evolve_1": "You're experience has brought you far, but this is where your paths part",
+		"evolve_2": "Choose an specialization"
+	},
+	"stat": {
+		"wisdom": "Wisdom",
+		"strength": "Strength",
+		"resistance": "Resistance",
+		"agility": "Agility",
+		"luck": "Luck"
+	},
+	"character": "$1 $2",
+	"class": {
+		"apprentice": "Apprentice",
+		"warrior": "Warrior",
+		"rogue": "Rogue",
+		"wild": "Wild",
+		"knight": "Knight",
+		"shaman": "Shaman",
+		"ranger": "Ranger",
+		"mage": "Mage",
+		"alchemist": "Alchemist",
+		"tamer": "Tamer",
+		"berserk": "Berserk",
+		"assassin": "Assassin",
+		"traveller": "Traveller",
+		"fighter": "Fighter",
+		"reaper": "Reaper",
+		"swift": "Swift",
+		"focused": "Focused",
+		"guardian": "Guardian",
+		"fallen": "Fallen",
+		"kamikaze": "Kamikaze",
+		"hunter": "Hunter",
+		"beast": "Beast",
+		"infused": "Infused",
+		"elementalist": "Elementalist",
+		"sage": "Sage"
+	},
+	"race": {
+		"human": "Human",
+		"troll": "Troll",
+		"nymph": "Nymph",
+		"shade": "Shade"
+	},
+	"npc": {
+		"angry_bees": "Angry Bees",
+		"drake": "Drake",
+		"eye": "Floating Eye",
+		"skull": "Floating Skull",
+		"slime": "Generic Slime"
+	},
+	"item": {
+		"honey": "Honey Comb",
+		"weapon": {
+			"format": "$2 $1",
+			"blade": "Blade",
+			"bow": "Bow",
+			"florett": "Florett",
+			"maze": "Maze",
+			"nunchuck": "Nunchuck",
+			"sceptre": "Sceptre",
+			"wand": "Wand",
+			"battlestaff": "Battlestaff",
+			"club": "Club",
+			"dagger": "Dagger",
+			"hammer": "Hammer"
+		},
+		"potion": {
+			"health_potion": "Health Potion",
+			"poison": "Poison"
+
+		}
+	},
+	"rarity": {
+		"rusty": "Rusty",
+		"sharp": "Sharp",
+		"royal": "Royal"
+	},
+	"skill": {
+		"pulse": "Pulse",
+		"glow": "Glow"
+	},
+	"dungeon": {
+		"some_crypt": "Some Crypt"
+	}
+}

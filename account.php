@@ -8,6 +8,52 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	$ACCOUNT = null;
+
+	function getAccount() {
+		global $ACCOUNT;
+
+		if(!is_null($ACCOUNT)) return $ACCOUNT;
+
+	    if (isset($_SESSION['account'])) {
+
+	    	$account = Account::where('id', $_SESSION['account'])->first();
+			Stack::tidy($account->selected);
+			$account->selected->validate();
+
+			$ACCOUNT = $account;
+			return $ACCOUNT;
+
+	    }
+	    return null;
+	}
+
+	$app->get('/stats/users', function (Request $request, Response $response, array $args) {	
+
+		$json = [
+			"schemaVersion" => 1,
+			"label" => "Users",
+			"message" => "".Account::all()->count(),
+			"color" => "yellow"
+		];
+
+		return json_encode($json);
+
+	});
+
+	$app->get('/stats/characters', function (Request $request, Response $response, array $args) {	
+
+		$json = [
+			"schemaVersion" => 1,
+			"label" => "Users",
+			"message" => "".Character::all()->count(),
+			"color" => "yellow"
+		];
+
+		return json_encode($json);
+
+	});
+
 	$app->get('/logout', function (Request $request, Response $response, array $args) {		
 		unset($_SESSION['account']);
 		return $response->withRedirect($request->getParams()['next'] ?? '/');
@@ -43,7 +89,7 @@
 			$account = new Account;
 			$account->username = $username;
 			$account->password_hash = password_hash($password, PASSWORD_DEFAULT);
-			$account->status = Status::where('name', 'user')->first()->id;
+			$account->status_id = Status::where('name', 'user')->first()->id;
 			
 			$account->save();
 			$account->refresh();

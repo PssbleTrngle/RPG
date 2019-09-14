@@ -7,7 +7,7 @@
 
 $(window).ready(function() {
 	
-	$('.healthbar').each(function() {
+	$('.bar').each(function() {
 		
 		let bar = $(this);
 		let inner = $(document.createElement('div'));

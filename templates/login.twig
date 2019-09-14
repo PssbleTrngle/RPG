@@ -13,38 +13,35 @@
 	<div class='login-icon center mb-1'>{{ icon('class/random')|raw }}</div>
 	 
 	<div class='mb-4'></div>
-	<div class='row'>
+	<table class='logins'>
+		<tr>
+			<td><h2 class='mt-2 center'>Login</h2></td>
+			<td><h2 class='mt-2 center'>Signup</h2></td>
+		</tr>
+		<tr>
+			<td class='login center bottom py-2'>
 
-		<div class='w-50'>
-		<div class='login center'>
+				<form method='post'>
 
-			<h2 class='mb-2'>Login</h2>
+					<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
+					<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
+					<div><input type='submit' value='Login'></input></div>
 
-			<form method='post'>
+				</form>
+			</td>
 
-				<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
-				<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
-				<div><input type='submit' value='Login'></input></div>
+			<td class='login center bottom py-2'>
 
-			</form>
-		</div>
-		</div>
+				<form method='post' action='signup'>
 
-		<div class='w-50'>
-		<div class='login center'>
+					<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
+					<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
+					<div class='mb-1'><input type='password' placeholder='Repeat password'></input></div>
+					<div><input type='submit' value='Create'></input></div>
 
-			<h2 class='mb-2'>Signup</h2>
-
-			<form method='post' action='signup'>
-
-				<div class='mb-1'><input type='text' placeholder='Username' name='username'></input></div>
-				<div class='mb-1'><input type='password' placeholder='Password' name='password'></input></div>
-				<div class='mb-1'><input type='password' placeholder='Repeat password'></input></div>
-				<div><input type='submit' value='Create'></input></div>
-
-			</form>
-		</div>
-		</div>
-	</div>
+				</form>
+			</td>
+		</tr>
+	</table>
 
 {% endblock %}

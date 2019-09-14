@@ -6,31 +6,20 @@
 
 {% block content %}
 	
-	{% if character.battle.exists %}
+	{% if character.participant.battle.exists %}
 
-		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
+		{% include 'home/battle.twig' with {'battle': character.participant.battle, 'character': character} %}
 	
 	{% else %}
 	
-		<div class='col-66'>
-		
-			{% set evolutions = character.canEvolveTo() %}	
-			{% if evolutions.count() %}
+	<div class='row w-100'>
+		<div class='top w-66'>
 
-				<div class='character-row'>
-				<p class='center'>You're experience has brought you far, but this is where your paths part</p>
-				<h3 class='center mb-4'>Choose an specialization</h3>
-					{% for evolution in evolutions %}
-
-						<div class='character-panel medium evolve' data-class='{{ evolution.id }}'>
-							<h5>{{ evolution.name }}</h5>
-							{{ icon("class/" ~ evolution.name|lower)|raw }}
-						</div>
-
-					{% endfor %}
-				</div>
+			{% if character.message %}
+				<h1 class='mb-1 banner'>{{ format('message.' ~ character.message) }}</h1>
 			{% endif %}
 
+			{% include 'home/evolve.twig' with {'character': character} %}
 
 			{% set pos = character.position %}
 			{% if pos.dungeon.exists %}
@@ -40,21 +29,21 @@
 			{% endif %}
 
 		</div>
-		<div class='col-33'>
+		<div class='top right'>
 
-			<div class='right'>
+			<div class='ml-2'>
 				{% include 'home/character.twig' with {'character': character} %}
 				{% include 'home/inventory.twig' with {'character': character} %}
 			</div>
 
 		</div>
+	</div>
 
 	{% endif %}
 
 {% endblock %}
 
 {% block script %}
-<script src='/assets/scripts/inventory.js'></script>
 <script>
 
 $(window).ready(function() {
