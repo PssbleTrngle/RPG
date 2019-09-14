@@ -6,7 +6,7 @@
 
 {% block content %}
 	
-	<h1>{{ format('message.welcome', "<span class='highlight mb-4'>" ~ account.username ~ "</span>")|raw }}</h1>
+	<h1 class='banner w-66 mb-2'>{{ format('message.welcome', account.username) }}</h1>
 
 	<div class='character-row big'>
 			{% for character in account.characters %}
