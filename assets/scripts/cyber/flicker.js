@@ -9,7 +9,8 @@ jQuery.fn.isText = function() {
 
 jQuery.fn.flicker = function() {
 
-		let target = $(this);
+	let target = $(this);
+	if(!target[0]) return;
 
 	if(!target[0].reversed) {
 
@@ -55,6 +56,7 @@ $(window).ready(function() {
 	}, 20 * 1000 / text_elements.length);
 
 	window.setInterval(function() {
+			
 			images.random().flicker();
 
 	}, 40 * 1000 / images.length);

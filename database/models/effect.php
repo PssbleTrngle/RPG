@@ -27,7 +27,7 @@
 				$capsule::table('participant_effects')
 					->where('participant_id', $target->id)
 					->where('effect_id', $this->id)
-					->decrement('hadFor');
+					->decrement('countdown');
 
 			}
 
