@@ -29,11 +29,11 @@
 				return false;
 			}]);
 			
-			static::register(['id' => 2, 'name' => 'rage'], ['apply' => function($target) {
+			static::register(['id' => 2, 'name' => 'stunned'], ['apply' => function($target) {
 				
 			}]);
 			
-			static::register(['id' => 3, 'name' => 'burn'], ['apply' => function($target) {
+			static::register(['id' => 3, 'name' => 'burned'], ['apply' => function($target) {
 				
 			}]);
 			
@@ -41,7 +41,7 @@
 				
 			}]);
 			
-			static::register(['id' => 5, 'name' => 'shock'], ['apply' => function($target) {
+			static::register(['id' => 5, 'name' => 'rage'], ['apply' => function($target) {
 				
 			}]);
 			

@@ -206,7 +206,7 @@
 			
 		$character = $account->selected;
 
-		if($character && ($battle = $character->battle) && ($battle->active == $character->id)) {
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
 			$message = $battle->next($character->name.' skipped');
@@ -222,7 +222,7 @@
 			
 		$character = $account->selected;
 
-		if($character && ($battle = $character->battle) && ($battle->active_id == $character->id)) {
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
 			$message = $battle->run($character);

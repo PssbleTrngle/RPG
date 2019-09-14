@@ -102,11 +102,9 @@
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$selected = getAccount()->selected;
-		$selected->participant->addEffect(Effect::find(2));
+		$selected->participant->addEffect(Effect::find(1));
 		$selected->participant->addEffect(Effect::find(3));
-
-		foreach (Participant::all() as $participant) if($participant->battle)
-			$participant->addEffect(Effect::find(4));
+		$selected->participant->addEffect(Effect::find(3));
 
 		if($selected)
 			return $this->view->render($response, 'home.twig', []);

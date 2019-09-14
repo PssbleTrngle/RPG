@@ -8,13 +8,21 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	$ACCOUNT = null;
+
 	function getAccount() {
+		global $ACCOUNT;
+
+		if(!is_null($ACCOUNT)) return $ACCOUNT;
+
 	    if (isset($_SESSION['account'])) {
 
 	    	$account = Account::where('id', $_SESSION['account'])->first();
 			Stack::tidy($account->selected);
+			$account->selected->validate();
 
-			return $account;
+			$ACCOUNT = $account;
+			return $ACCOUNT;
 
 	    }
 	    return null;

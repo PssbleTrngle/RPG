@@ -12,72 +12,27 @@
 
 	function validate($debug_level = 0b00) {
 		$out = "";
+
+		foreach(get_declared_classes() as $class) {
+			if(is_subclass_of($class, 'BaseModel') && method_exists($class, 'validate')) {
+				$corrected = 0;
+
+				foreach ($class::all() as $instance) {
+					if(!$instance->validate()) $corrected++;
+				}
+
+				if(hasLevel($debug_level, 1) && $corrected > 0) $out .= info($corrected.' '.$class.' not correct', 'red');
+				else if(hasLevel($debug_level, 0) && $corrected == 0) $out .= info('Every '.$class.' correct', 'green');
+
+			}
+		}
+
+		$out .= '<br>';
 		
 		$out .= validateClasses($debug_level);
 		$out .= validateRaces($debug_level);
-		$out .= validateBattles($debug_level);
-		$out .= validateAccounts($debug_level);
-		
+
 		return $out;
-	}
-
-	function validateBattles($debug_level) {
-
-		$removed = 0;
-		$removedParticipants = 0;
-
-		foreach(Battle::all() as $battle) {
-			
-			$won = true;
-			foreach($battle->enemies() as $enemy)
-				$won &= $enemy->health <= 0;
-			
-			if($won) {
-				$battle->win();
-				$removed++;
-			}
-		
-		}
-
-		foreach(Participant::all() as $participant) {
-			
-			if($participant->enemy_id && !$participant->battle) {
-				$participant->enemy->delete();
-				$participant->delete();
-				$removedParticipants++;
-			}
-		
-		}
-
-		if($remove > 0 && hasLevel($debug_level, 1))
-			return $removed.' battles removed';
-		if($remove == 0 && hasLevel($debug_level, 0))
-			return 'all battles correct';
-
-		if($removedParticipants > 0 && hasLevel($debug_level, 1))
-			return $removed.' participants removed';
-		if($removedParticipants == 0 && hasLevel($debug_level, 0))
-			return 'all participant correct';
-
-	}
-
-	function validateAccounts($debug_level) {
-
-		foreach (Account::all() as $account) {
-
-			if($account->selected && $account->id != $account->selected->account_id) {
-				$account->selected_id = null;
-				$account->save();
-			}
-			
-			foreach($account->characters as $character) {
-				if(!$character->position) $character->createPosition();
-				if(!$character->participant) $character->createParticipant();
-			}
-
-		}
-		return '';
-
 	}
 
 	function validateRaces($debug_level) {

@@ -26,9 +26,14 @@
 			$('form').submit(function(e) {
  				e.preventDefault();
 
-				window.params = JSON.parse($('[name=args]').val());
+ 				let args = $('[name=args]').val();
+				if(args) window.params = JSON.parse(args);
 				sendAction('/' + $('[name=action]').val(), function(result) {
-					$('#message').text(JSON.stringify(result));
+					try {
+						result = JSON.stringify(result);
+					} catch(err) {}
+
+					$('#message').text(result);
 				});
 
 			});

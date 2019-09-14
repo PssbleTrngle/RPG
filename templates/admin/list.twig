@@ -12,7 +12,10 @@
 				<p>{{ object.name() }}</p>
 			</div>
 
+		{% else %}
+			<h2>Nothing found in {{ search }}</h2>
 		{% endfor %}
+
 	</div>
 
 {% endblock %}

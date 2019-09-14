@@ -15,6 +15,10 @@
 	<div class='row w-100'>
 		<div class='top w-66'>
 
+			{% if character.message %}
+				<h1 class='mb-1 banner'>{{ format('message.' ~ character.message) }}</h1>
+			{% endif %}
+
 			{% include 'home/evolve.twig' with {'character': character} %}
 
 			{% set pos = character.position %}

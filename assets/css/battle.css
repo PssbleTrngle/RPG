@@ -51,10 +51,6 @@
 
 }
 
-.effect {
-	width: 30px;
-}
-
 .participants {
 	color: #000;
 	padding: 40px;
@@ -77,12 +73,7 @@
 	 filter: drop-shadow(0 0 4px var(--highlight));
 }
 
-.participant-icon {
-	position: absolute;
-	z-index: 1;
-}
-
-.participant.active > .participant-icon {
+.participant.active > .participant-icon .icon {
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 
@@ -98,4 +89,69 @@
 	/* border-radius: 5px; */
 	height: 100%;
 	background-color: var(--red);
+}
+
+.effect {
+	--speed: 4s;
+	--width: 30px;
+	width: var(--width);
+}
+
+@keyframes fade-in {
+	from 	{ opacity: 0 }
+	to 		{ opacity: 1 }
+}
+
+@keyframes orbit {
+	from {
+		top: 25%;
+		left: 0;
+		z-index: 2;
+	}
+	50% {
+		top: 75%;
+		left: calc(100% - var(--width));
+	}
+	to {
+		top: 25%;
+		left: 0;
+		z-index: 0;
+	}
+}
+
+.participant-icon {
+	position: relative;
+	z-index: 1;
+}
+
+.orbit {
+	z-index: 0;
+	
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+
+	animation: orbit var(--speed) ease-in-out infinite, fade-in 0.5s linear;
+
+}
+
+.orbit:nth-child(3n + 1) {
+	animation-delay: calc(var(--speed) / 3);
+}
+
+.orbit:nth-child(3n + 2) {
+	animation-delay: calc(var(--speed) / 3 * 2);
+}
+
+.froze::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	opacity: 0.2;
+	background-color: #87ddff;
+	clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
 }

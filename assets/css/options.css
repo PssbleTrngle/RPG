@@ -20,13 +20,17 @@
 	display: table-cell;		
 }
 
-.option.disabled {
+.disabled, .loading {	
+	pointer-events: none !important;
+	cursor: default !important;
+}
+
+.option.disabled, .option.loading {
 	border-color: #444;
 }
 
-.option.disabled:hover {
-	background-color: transparent;
-	cursor: default;
+.option.error {
+	border-color: var(--red);
 }
 
 .option[data-parent] {

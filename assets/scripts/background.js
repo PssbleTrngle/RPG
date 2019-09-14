@@ -5,7 +5,7 @@
 window.inital_position = undefined;
 
 function moveBG(x, y) {
-	$('.box').css({ 'background-position' : (x - window.inital_position.x) + 'px ' + (y - window.inital_position.y) + 'px' });
+	$('.bg').css({ 'background-position' : (x - window.inital_position.x) + 'px ' + (y - window.inital_position.y) + 'px' });
 }
 
 $(window).mousemove(function(e) {

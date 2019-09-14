@@ -2,6 +2,7 @@
 	
 	--bg: #66665A;
 	--alternate-bg: #22221E;
+	--alternate-bg-darker: #111;
 
 	--black: #000;
 	--white: #FFF;
@@ -11,6 +12,7 @@
 	--red-light: #ed5a5a;
 	--green-light: #82db51;
 	
+	--highlight-darker: #a3700f;
 	--highlight-dark: #e2a126;
 	--highlight: #f2b748;
 	--highlight-light: #f2c56f;

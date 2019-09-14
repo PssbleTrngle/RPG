@@ -3,18 +3,22 @@
 	class Stack extends BaseModel {
    		
 		protected $table = 'inventory';
-		protected $with = ['item', 'slot', 'character', 'enchantment'];
+		protected $with = ['item', 'slot', 'enchantment'];
 		
 		public function item() {
 			return $this->belongsTo(Item::class, 'item_id');
 		}
 		
-		public function slot() {
-			return $this->belongsTo(Slot::class, 'slot_id');
+		public function name() {
+			return $this->amount.'x '.$this->item->name();
 		}
 		
-		public function character() {
-			return $this->belongsTo(Character::class, 'character_id');
+		public function icon() {
+			return $this->item->icon();
+		}
+		
+		public function slot() {
+			return $this->belongsTo(Slot::class, 'slot_id');
 		}
 		
 		public function enchantment() {
@@ -53,19 +57,25 @@
 		
 		public function take($character) {
 			if(!$character) return false;
+
+			$slot = Slot::where('name', 'inventory')->first();
 			
-			if($character) {			
-				if($this->character->id == $character->id) {
-					if($this->slot_id != 1) {
+			if($character) {
+				if($this->character_id == $character->id) {
+					if($this->slot_id != $slot->id) {
 						
-						$hasSpace = $character->itemIn(1)->count() < $character->bagSize();
+						/* TODO test */
+						$hasSpace = $character->itemIn($slot)->count() < $character->bagSize()
+						|| $character->itemIn($slot)->where('stackable', true)->contains('item_id', $this->item->id);
 						
-						if(!$hasSpace && $this->stackable) foreach($character->itemIn(1) as $stack)
-							if($stack->item_id == $this->item) {
+						/*
+						if(!$hasSpace && $this->stackable) foreach($character->itemIn($slot) as $stack)
+							if($stack->item_id == $this->item_id) {
 								$hasSpace = true;
 								break;
 							}
-						
+						*/
+
 						if($hasSpace) {
 						
 							$this->slot_id = 1;

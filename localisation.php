@@ -34,11 +34,17 @@
 	}
 
 	$json = null;
+	$lang = null;
 
 	function getLang() {
+		global $lang;
 		global $default;
 		
-		if(isset($_SESSION['lang'])) return $_SESSION['lang'];
+		if(!is_null($lang)) return $lang;
+		if(isset($_SESSION['lang'])) {
+			$lang = $_SESSION['lang'];
+			return $lang;
+		}
 		return $default;
 
 	}

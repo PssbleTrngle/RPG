@@ -57,12 +57,15 @@
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'betatester'));
 
-	$app->get('/admin/items', function (Request $request, Response $response, array $args) {		
-		return $this->view->render($response, 'admin/list.twig', ['objects' => Item::all()]);		
-	})->add(new NeedsAuthentication($container['view'], 'betatester'));
+	$app->get('/admin/list/{class}', function (Request $request, Response $response, array $args) {
 
-	$app->get('/admin/npcs', function (Request $request, Response $response, array $args) {		
-		return $this->view->render($response, 'admin/list.twig', ['objects' => NPC::all()]);		
+		$class = $args['class'];
+		$objects = [];
+
+		if(is_subclass_of($class, 'BaseModel')) $objects = $class::all();
+
+		return $this->view->render($response, 'admin/list.twig', ['objects' => $objects, 'search' => $class]);
+
 	})->add(new NeedsAuthentication($container['view'], 'betatester'));
 
 	$app->get('/admin/level', function (Request $request, Response $response, array $args) {

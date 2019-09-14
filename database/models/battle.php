@@ -27,7 +27,7 @@
 			return $asParticipants ? $participants : $participants->pluck('character');
 		}
 		
-		private function end() {
+		public function delete() {
 			global $capsule;
 			
 			foreach($this->participants as $participant)
@@ -40,28 +40,33 @@
 						->update(['nextUse' => 0]);
 
 				} else {
-					$participant->enemy->delete();
 					$participant->delete();
 				}
 			
-			$this->delete();
+			parent::delete();
 			
 		}
 		
 		public function win() {
 			
-			foreach($this->participants as $participant)
-				if($participant->character)
-					$participant->character->addLoot($this->getLoot());
+			foreach($this->characters() as $character) {
+				$character->message = 'won';
+				$character->addLoot($this->getLoot());
+			}
 			
 			$this->refresh();
-			$this->end();
+			$this->delete();
 			
 		}
 		
 		public function loose() {
 			
-			$this->end();
+			foreach($this->characters() as $character) {
+				$character->message = 'lost';
+				$character->save();
+			}
+			
+			$this->delete();
 			
 		}
 		
@@ -69,18 +74,29 @@
 			
 			if($this->active_id == $character->id) {
 				
+				$character->message = 'ran';
+				$character->save();
+
 				$character->participant->battle_id = null;
 				$character->participant->save();
 
 				$this->refresh();
 
-				if($this->participant->whereNotNull('character')->count() > 0)
+				if($this->characters()->count() > 0) {
 					$this->next($character->name.' ran away');
 
-				$this->save();
-				$this->refresh();
+					$this->save();
+					$this->refresh();
+
+				} else {
+					$this->delete();
+				}
+
+				return true;
 			
 			}
+
+			return false;
 			
 		}
 		
@@ -110,25 +126,24 @@
 			$this->save();
 			$count = $this->participants->count();
 			
-			if($this->characters()->count() == 0) {
-				$this->end();
-				return true;
-			}
+			if($this->validate()) {
 			
-			$index = ($this->activeIndex() + 1);
-			while(is_null(($next = $this->participants[$index])->character)) {
-				
-				if($next->enemy && $next->canTakeTurn()) $this->message .= $next->enemy->takeTurn().'\n';
+				$index = ($this->activeIndex() + 1);
+				while(is_null(($next = $this->participants[$index])->character)) {
+					
+					if($next->enemy && $next->canTakeTurn()) $this->message .= $next->enemy->takeTurn().'\n';
+					$this->save();
+					$this->refresh();
+					
+					$index = ($index + 1) % $count;
+					if($index == 0) $this->nextRound();
+				}
+					
+				$this->active_id = $next->character->id;
 				$this->save();
 				$this->refresh();
-				
-				$index = ($index + 1) % $count;
-				if($index == 0) $this->nextRound();
+
 			}
-				
-			$this->active_id = $next->character->id;
-			$this->save();
-			$this->refresh();
 			
 			return $this->message;
 			
@@ -200,6 +215,26 @@
 			
 			return $loot;
 			
+		}
+
+		public function validate() {
+
+			if($this->characters()->count() == 0) {
+				$this->delete();
+				return false;
+			}
+
+			$won = true;
+			foreach($this->enemies() as $enemy)
+				$won &= $enemy->participant->health() <= 0;
+			
+			if($won) {
+				$this->win();
+				return false;
+			}
+
+			return true;
+
 		}
 		
 	}	

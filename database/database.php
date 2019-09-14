@@ -58,7 +58,7 @@
 		}
 
 		public function color() {
-			return null;
+			return false;
 		}
 		
 		public function name() {

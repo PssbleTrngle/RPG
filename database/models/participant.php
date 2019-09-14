@@ -5,6 +5,18 @@
 		protected $table = 'participant';
 		protected $with = ['battle', 'character', 'enemy', 'effects'];
 
+		public function delete() {
+			global $capsule;
+
+			if($this->enemy)
+				$this->enemy->delete();
+
+			$capsule->table('participant_effects')->where('participant_id', $this->id)->delete();
+
+			parent::delete();
+
+		}
+
 		public function battle() {
 			return $this->belongsTo(Battle::class, 'battle_id');
 		}
@@ -24,10 +36,14 @@
 		public function addEffect($effect) {
 			global $capsule;
 
-			if(!$this->effects->contains('id', $effect->id)) {
-				$capsule->table('participant_effects')->insert(['participant_id' => $this->id, 'effect_id' => $effect->id]);
-				$this->refresh();
-				return true;
+			if($this->effects->count() < option('max_effects')) {
+
+				if(!$this->effects->contains('id', $effect->id)) {
+					$capsule->table('participant_effects')->insert(['participant_id' => $this->id, 'effect_id' => $effect->id]);
+					$this->refresh();
+					return true;
+				}
+
 			}
 
 			return false;
@@ -81,7 +97,18 @@
 
 			return true;
 		}
-		
-	}	
+	
+		public function validate() {
+
+			if(($this->enemy_id && !$this->battle_id) || !$this->parent()) {
+				$this->delete();
+				return false;
+			}
+
+			return true;
+
+		}
+
+	}
 
 ?>

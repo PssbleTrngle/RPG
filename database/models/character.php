@@ -187,6 +187,22 @@
 			$this->save();
 
 		}
+
+		public function validate() {
+
+			$correct = true;
+
+			if(!$this->position) {
+				$this->createPosition();
+				$correct = false;
+			}
+			if(!$this->participant) {
+				$this->createParticipant();
+				$correct = false;
+			}
+
+			return $correct;
+		}
 		
 	}
 		

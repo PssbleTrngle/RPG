@@ -5,6 +5,9 @@
 	},
 	"message": {
 		"welcome": "Welcome $1!",
+		"won": "You won the battle!",
+		"lost": "You lost the battle!",
+		"ran": "You ran away",
 		"learn": "Learn new skills",
 		"evolve_1": "You're experience has brought you far, but this is where your paths part",
 		"evolve_2": "Choose an specialization"

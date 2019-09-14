@@ -2,10 +2,15 @@
 	
 	--bg: #222;
 	--alternate-bg: #000;
+	--alternate-bg-darker: #002626;
 	
+	--highlight-darker: #128c86;
 	--highlight-dark: #1fbfb7;
 	--highlight: #2ee8df;
 	--highlight-light: #42fff6;
+
+	--red: #b80f20;
+	--green: #63a31f;
 	
 }
 
