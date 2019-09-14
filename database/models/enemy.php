@@ -41,7 +41,7 @@
 				} else {
 					
 					$target = $battle->characters(true)->random();
-					$damage = 5;
+					$damage = 0;
 					
 					$target->damage($damage);
 					return $this->name().' dealt '.$damage.' damage to '.$target->name();

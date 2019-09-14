@@ -26,6 +26,18 @@
 		'prefix'    => '',
 	]);
 
+	interface Target {
+   		
+		public function damage($amount);
+   		
+		public function heal($amount);
+   		
+		public function revive($by = null);
+   		
+		public function addEffect($effect);
+	
+	}
+
 	class BaseModel extends Model {
 
    		public $timestamps = false;

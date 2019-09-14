@@ -102,9 +102,10 @@
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$selected = getAccount()->selected;
+
 		$selected->participant->addEffect(Effect::find(1));
-		$selected->participant->addEffect(Effect::find(3));
-		$selected->participant->addEffect(Effect::find(3));
+		#$selected->participant->addEffect(Effect::find(3));
+		#$selected->participant->addEffect(Effect::find(3));
 
 		if($selected)
 			return $this->view->render($response, 'home.twig', []);

@@ -63,7 +63,9 @@
 			
 			foreach($this->characters() as $character) {
 				$character->message = 'lost';
+				$character->participant->revive();
 				$character->save();
+				/* TODO loose something */
 			}
 			
 			$this->delete();
@@ -101,6 +103,8 @@
 		}
 		
 		private function activeIndex() {
+
+			/* TODO rework */
 			
 			for($index = 0; $index < $this->participants->count(); $index++) {
 				$participant = $this->participants[$index];
@@ -123,27 +127,29 @@
 		public function next($charMessage = "") {
 		
 			$this->message = $charMessage.'\n';
-			$this->save();
 			$count = $this->participants->count();
-			
-			if($this->validate()) {
-			
-				$index = ($this->activeIndex() + 1);
-				while(is_null(($next = $this->participants[$index])->character)) {
-					
-					if($next->enemy && $next->canTakeTurn()) $this->message .= $next->enemy->takeTurn().'\n';
-					$this->save();
-					$this->refresh();
-					
-					$index = ($index + 1) % $count;
-					if($index == 0) $this->nextRound();
-				}
-					
-				$this->active_id = $next->character->id;
-				$this->save();
-				$this->refresh();
 
+			$this->active->participant->afterTurn();
+			
+			$index = ($this->activeIndex() + 1) % $count;
+			while(is_null(($next = $this->participants[$index])->character)) {
+				
+				if($next->enemy && $next->canTakeTurn()) {
+					$this->message .= $next->enemy->takeTurn().'\n';
+					$next->enemy->refresh();
+				}
+
+				$next->afterTurn();
+				
+				$index = ($index + 1) % $count;
+				if($index == 0) $this->nextRound();
 			}
+
+			$this->active_id = $next->character->id;
+			$this->save();
+			$this->refresh();
+
+			$this->validate();
 			
 			return $this->message;
 			
@@ -162,7 +168,6 @@
 			}
 			
 			$this->round++;
-			$this->save();
 			
 		}
 		
@@ -224,10 +229,19 @@
 				return false;
 			}
 
-			$won = true;
-			foreach($this->enemies() as $enemy)
-				$won &= $enemy->participant->health() <= 0;
+			$lost = true;
+			foreach($this->characters(true) as $participant)
+				$lost &= $participant->health() <= 0;
 			
+			if($lost) {
+				$this->loose();
+				return false;	
+			}
+
+			$won = true;
+			foreach($this->enemies(true) as $participant)
+				$won &= $participant->health() <= 0;
+
 			if($won) {
 				$this->win();
 				return false;

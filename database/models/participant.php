@@ -1,6 +1,6 @@
 <?php
 
-	class Participant extends BaseModel {
+	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
 		protected $with = ['battle', 'character', 'enemy', 'effects'];
@@ -30,7 +30,7 @@
 		}
 		
 		public function effects() {
-			return $this->belongsToMany(Effect::class, 'participant_effects', 'participant_id', 'effect_id');
+			return $this->belongsToMany(Effect::class, 'participant_effects', 'participant_id', 'effect_id')->withPivot('countdown');
 		}
 
 		public function addEffect($effect) {
@@ -39,11 +39,33 @@
 			if($this->effects->count() < option('max_effects')) {
 
 				if(!$this->effects->contains('id', $effect->id)) {
-					$capsule->table('participant_effects')->insert(['participant_id' => $this->id, 'effect_id' => $effect->id]);
+
+					$rand = rand($effect->fade_min, $effect->fade_max);
+
+					$capsule->table('participant_effects')
+						->insert(['participant_id' => $this->id, 'effect_id' => $effect->id, 'countdown' => $rand]);
+
 					$this->refresh();
 					return true;
 				}
 
+			}
+
+			return false;
+		}
+
+		public function removeEffect($effect) {
+			global $capsule;
+
+			if($this->effects->contains('id', $effect->id)) {
+
+				$capsule->table('participant_effects')
+					->where('participant_id', $this->id)
+					->where('effect_id', $effect->id)
+					->delete();
+
+				$this->refresh();
+				return true;
 			}
 
 			return false;
@@ -105,7 +127,29 @@
 				return false;
 			}
 
+			if($this->health <= 0) {
+				$this->revive();
+				return false;
+			}
+
 			return true;
+
+		}
+
+		public function afterTurn() {
+
+			foreach($this->effects as $effect)
+				$effect->apply($this);
+
+			$this->save();
+			$this->refresh();
+
+		}
+
+		public function revive($by = null) {
+
+			$this->health = ceil($this->maxHealth() / 3);
+			$this->save();
 
 		}
 
