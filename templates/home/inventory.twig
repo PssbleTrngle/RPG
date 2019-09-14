@@ -7,7 +7,7 @@
 			<p>{{ stack.item.name() }}</p>
 		</div>
 	{% elseif renderEmpty %}
-		<div class='slot-icon'>
+		<div class='slot-text'>
 			<p>Empty</p>
 		</div>
 	{% endif %}
@@ -32,13 +32,13 @@
 
 	<div class='inventory mb-2'>
 
-		<div class='slot-icon'>Hand</div>
+		<div class='slot-icon mirror'>{{ icon('slot/hand')|raw }}</div>
 
 		{% for side in ['left', 'right'] %}
 			{{ inventory.slot(character.itemIn(side ~ '_hand'), true) }}
 		{% endfor %}
 
-		<div class='slot-icon'>Hand</div>
+		<div class='slot-icon'>{{ icon('slot/hand')|raw }}</div>
 
 	</div>
 

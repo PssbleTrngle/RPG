@@ -426,3 +426,7 @@ input.grow {
 .bar.xp > div {
 	background-color: var(--highlight-light);
 }
+
+.mirror {
+  transform: scaleX(-1);
+}

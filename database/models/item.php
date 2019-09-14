@@ -217,10 +217,10 @@
 	
 		public static function registerAll() {
 			
-			static::register(['id' => 1, 'name' => "Inventory", 'space' => 20], ['fits' => function($item) { return true; }]);
-			static::register(['id' => 2, 'name' => "Left Hand", 'space' => 1], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 3, 'name' => "Right Hand", 'space' => 1], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 4, 'name' => "Loot", 'space' => 20], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 1, 'name' => "inventory", 'space' => 20], ['fits' => function($item) { return true; }]);
+			static::register(['id' => 2, 'name' => "left_hand", 'space' => 1], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 3, 'name' => "right_hand", 'space' => 1], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 4, 'name' => "loot", 'space' => 20], ['fits' => function($item) { return false; }]);
 			
 		}
 		

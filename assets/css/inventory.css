@@ -1,16 +1,33 @@
 .inventory {
+	--size: 65px;
 	text-align: center;
 }
 
-.slot, .slot-icon {	
+.slot, .slot-icon, .slot-text {
+	vertical-align: top;
 	display: inline-block;
 	margin: 0 5px;
-	width: 65px;
+	width: var(--size);	
+	text-align: center;
+}
+
+.slot-text {
+	
+	font-size: 15px;
+	padding: calc(var(--size) / 2 - 10px) 0;
+	background-color: #0001;
+
 }
 
 .slot {
+	font-size: 10px;
 	cursor: pointer;
-	transition: transform 0.2s linear;
+	transition: transform 0.2s linear;	
+}
+
+.slot-icon > div {
+	width: 80%;
+	margin: 10%;
 }
 
 .inventory.loot > .slot {
@@ -25,13 +42,6 @@
 	margin-left: 10%;
 	width: 80%;
 	margin-bottom: 8px;
-}
-
-.slot > p {
-	
-	font-size: 10px;
-	text-align: center;
-	
 }
 
 .slot > p:last-child {
