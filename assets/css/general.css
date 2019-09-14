@@ -184,10 +184,12 @@ img.icon {
 .h-5 { height: calc(var(--marg) * 5); }
 
 .popup {
-
 	overflow-y: hidden;
-	transition: height 0.15s linear;
-	
+	transition: height 1s ease-in-out, background-color 0.2s linear;
+}
+
+.popup.moving {
+	background-color: #0002;
 }
 
 .box {

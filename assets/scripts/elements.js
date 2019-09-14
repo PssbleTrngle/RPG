@@ -73,35 +73,30 @@ $(window).ready(function() {
 	
 		let popup = $(this);
 		let btn = $(popup.attr('data-popup'));
+
+		let current = popup.innerHeight();
+		popup.css({ height: 'auto' });
+		let max = popup.innerHeight();
+		popup.css({ height: current });
 		
-		if(btn)
-			btn.click(function() {		
-				let current = popup.innerHeight();
+		if(btn) btn.click(function() {
 
-				if(current) {
+			if(popup.innerHeight()) {
 
-					let max = popup.innerHeight();
-					popup.css({ height: max });
-					window.setTimeout(function() {
-						popup.css({ height: 0 });
-					}, 1);
+				popup.css({ height: 0 });
+				btn.removeClass("open");
 
-					btn.removeClass("open");
+			} else {
 
-				} else {
+				popup.css({ height: max });
+				btn.addClass("open");
 
-					popup.css({ height: 'auto' });
-					let max = popup.innerHeight();
-					popup.css({ height: 0 });
-					window.setTimeout(function() {
-						popup.css({ height: max });
-					}, 1);
+			}
 
-					btn.addClass("open");
+			popup.addClass('moving');
+			window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
 
-				}
-
-			});
+		});
 		
 	});
 	
