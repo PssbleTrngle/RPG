@@ -10,11 +10,13 @@
 
 		<div class='participant-icon {% for effect in par.effects %}{{ effect.name }} {% endfor %}'>{{ par|icon|raw }}</div>
 
-		{% for effect in par.effects %}
-			<div class='effect orbit'>
-				{{ effect|icon|raw }}
-			</div>
-		{% endfor %}
+		<div>
+			{% for effect in par.effects %}
+				<div class='effect orbit'>
+					{{ effect|icon|raw }}
+				</div>
+			{% endfor %}
+		</div>
 
 	</div>
 

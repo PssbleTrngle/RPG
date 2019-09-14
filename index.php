@@ -103,7 +103,8 @@
 
 		$selected = getAccount()->selected;
 
-		$selected->participant->addEffect(Effect::find(1));
+		if($selected->participant->battle)
+			$selected->participant->battle->enemies(true)->first()->addEffect(Effect::find(1));
 		#$selected->participant->addEffect(Effect::find(3));
 		#$selected->participant->addEffect(Effect::find(3));
 

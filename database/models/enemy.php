@@ -70,6 +70,18 @@
 		public function participant() {
 			return $this->belongsTo(Participant::class, 'participant_id');
 		}
+
+		public function validate() {
+
+			if(!$this->participant || !$this->participant->battle) {
+				$this->delete();
+				return false;
+			}
+
+			return true;
+
+		}
+
 	}
 
 ?>
