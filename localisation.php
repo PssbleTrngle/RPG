@@ -45,6 +45,8 @@
 			$lang = $_SESSION['lang'];
 			return $lang;
 		}
+
+		setLang($default);
 		return $default;
 
 	}
