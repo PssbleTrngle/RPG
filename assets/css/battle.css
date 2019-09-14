@@ -77,20 +77,6 @@
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 
-.healthbar {
-	/* border-radius: 5px; */
-	height: 10px;	
-	width: 80%;
-	margin: 4px auto;
-	background-color: rgba(0, 0, 0, 0.2);
-}
-
-.healthbar > div {
-	/* border-radius: 5px; */
-	height: 100%;
-	background-color: var(--red);
-}
-
 .effect {
 	--speed: 4s;
 	--width: 30px;

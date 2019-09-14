@@ -121,6 +121,14 @@
 	transform: translate(-3px, 0);
 }
 
+.learnable-skill.disabled {
+	background-color: #444;
+}
+
+.disabled .cost {
+	background-color: var(--red);
+}
+
 .learnable-skill:hover {
 	transform: translate(var(--hover-left), 0);
 }

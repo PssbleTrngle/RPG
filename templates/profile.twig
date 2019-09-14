@@ -43,15 +43,25 @@
 
 				{% if account.selected %}
 					{% set stats = account.selected.stats() %}
+					
+					<div class='bar health' data-amount='{{ account.selected.participant.health / account.selected.maxHealth() }}'></div>
+					<div class='mt-1' />
+					<div class='bar xp' data-amount='{{ account.selected.xp / account.selected.requiredXp() }}'></div>
+					
+					<table class='stats mt-2 w-100'>
+						{% for stat in stats.keys %}
+							<tr>
+								<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+								<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+							</tr>
+						{% endfor %}
+					</table>
 
-						<table class='stats'>
-							{% for stat in stats.keys %}
-								<tr>
-									<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
-									<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
-								</tr>
-							{% endfor %}
-						</table>
+					<div class='mt-2'>
+						{% for skill in account.selected.skills %}
+							<p>{{ skill.name() }}</p>
+						{% endfor %}
+					</div>
 								
 				{% endif %}
 			</div>

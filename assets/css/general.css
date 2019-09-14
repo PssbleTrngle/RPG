@@ -405,3 +405,24 @@ input.grow {
 		calc(100% - var(--length) - var(--depth) * 2) 10%,
 		calc(100% - var(--length) - var(--depth) * 2) 0);
 }
+
+.bar {
+	/* border-radius: 5px; */
+	height: 10px;	
+	width: 80%;
+	margin: 4px auto;
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.bar > div {
+	/* border-radius: 5px; */
+	height: 100%;
+}
+
+.bar.health > div {
+	background-color: var(--red);
+}
+
+.bar.xp > div {
+	background-color: var(--highlight-light);
+}

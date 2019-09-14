@@ -15,29 +15,53 @@
 		
 		public function addLoot($loot) {
 			
-			$this->xp += $loot['xp'];
+			if(array_key_exists('xp', $loot))
+				$this->addXp($loot['xp']);
+			
 			foreach($loot['items'] as $item) {
 				
 				$item->character_id = $this->id;
-				$item->slot_id = 4;
+				$item->slot_id = Slot::where('name', 'loot')->first()->id;
 				$item->save();
 				
 			}
 			
+		}
+
+		private function levelUp() {
+
+			$this->message = 'level_up';
+			$this->level++;
+			$this->skillpoints += ceil($this->level / 5) + 1;
+
 			$this->save();
-			
+
+		}
+
+		public function addXp($xp) {
+
+			$this->xp += $xp;
+			$this->validate();
+			$this->save();
+
 		}
 
 		public function learn($skill) {
-			if(!$skill) return false;
 			global $capsule;
 
-			if($skill) {
-			
-				$capsule::table('character_skills')
-					->insert(['skill' => $skill->id, 'character' => $this->id]);
+			if($skill && $this->canLearn()->contains('id', $skill->id)) {
 
-				return true;
+				if($this->skillpoints >= $skill->cost) {
+			
+					$capsule::table('character_skills')
+						->insert(['skill_id' => $skill->id, 'character_id' => $this->id]);
+
+					$this->skillpoints--;
+					$this->save();
+
+					return true;
+
+				}
 
 			}
 
@@ -104,23 +128,12 @@
 		}
 		
 		public function level() {
-			return floor(static::levelFrom($this->xp));
+			return $this->level;
 		}
 		
-		public function requiredXp($level) {		
-			return 10 * $level;			
-		}
-		
-		public function levelFrom($xp) {
-			
-			return log(max($xp, 2)) + 1;
-			
-			$level = 0;
-			while($xp >= 0) {
-				$xp -= requiredXp($level);
-				$level++;
-			}
-			return $level;
+		public function requiredXp($level = null) {
+			if(is_null($level)) $level = $this->level + 1;		
+			return 10 * ($level - 1);
 		}
 		
 		public function evolve($to) {
@@ -140,11 +153,17 @@
 		}
 		
 		public function canEvolveTo() {
+			/* TODO Remove Unneccessary Query */
 			return $this->clazz->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
 		}
 		
 		public function canLearn() {			
-			return $this->clazz->skills()->wherePivot('level', '<=', $this->level())->get();
+			return $this->clazz->skills()
+				->wherePivot('level', '<=', $this->level())
+				->get()
+				->filter(function($value, $key) {
+					return !$this->skills->contains('id', $value->id);
+				});
 		}
 		
 		public function skills() {		
@@ -199,6 +218,14 @@
 			if(!$this->participant) {
 				$this->createParticipant();
 				$correct = false;
+			}
+
+			while($this->xp >= $this->requiredXp()) {
+
+				$this->xp -= $this->requiredXp();
+				$this->levelUp();
+				$correct = false;
+
 			}
 
 			return $correct;

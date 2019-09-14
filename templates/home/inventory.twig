@@ -35,7 +35,7 @@
 		<div class='slot-icon'>Hand</div>
 
 		{% for side in ['left', 'right'] %}
-			{{ inventory.slot(character.itemIn(side ~ ' hand'), true) }}
+			{{ inventory.slot(character.itemIn(side ~ '_hand'), true) }}
 		{% endfor %}
 
 		<div class='slot-icon'>Hand</div>

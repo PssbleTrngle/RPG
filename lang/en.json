@@ -4,6 +4,7 @@
 		"days": "$1 Days"
 	},
 	"message": {
+		"level_up": "You reached the next level!",
 		"welcome": "Welcome $1!",
 		"won": "You won the battle!",
 		"lost": "You lost the battle!",
@@ -92,5 +93,6 @@
 		"glow": "Glow"
 	},
 	"dungeon": {
+		"some_crypt": "Some Crypt"
 	}
 }

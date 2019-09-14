@@ -99,15 +99,15 @@
 
 	registerAction('/character/learn/{skill}', function($args, $account) {
 		
-		$skill = $args['skill'] ?? null;
+		$skill = Skill::find($args['skill'] ?? null);
+		$character = $account->selected;
 		
 		if($skill) {
-			$character = $account->selected;
 			if($character)
 				return ['success' => $character->learn($skill)];
 		}
 		
-		return ['success' => false];
+		return ['success' => false, 'message' => 'Not a valid skill'];
 		
 	});
 

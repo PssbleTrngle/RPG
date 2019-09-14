@@ -4,7 +4,7 @@
 	top: 0;
 	left: 0;
 	display: none;
-	background-color: #0002;
+	background-color: #0006;
 	height: 100vh;
 	width: 100vw;
 	z-index: 100;
@@ -13,13 +13,14 @@
 
 .window {
 
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, 100vh);
 	box-shadow: 3px 4px 4px #000A;
 	transition: transform 0.3s cubic-bezier(0, 0, 0.52, 1.49);
 	z-index: 101;
+	background-color: var(--bg);
 
 }
 
@@ -30,7 +31,6 @@
 
 	padding: 20px;
 	max-height: 80vh;
-	background-color: var(--bg);
 
 }
 
