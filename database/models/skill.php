@@ -19,14 +19,6 @@
 				
 			}			
 		}
-			
-		public function apply($target, $user) {
-			$func = static::$functions['use'][$this->id];
-			
-			if(!$func) return false;
-			
-			return $func($target, $user);
-		}
 	
 		public static function registerAll() {
 
@@ -35,7 +27,7 @@
 			static::register(['id' => 1, 'name' => 'slash', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Target $target, Participant $user) {
 
 				$damage = $user->stats()->apply(8, 'strength');
-				return $target->damage($damage) ? 'The slash dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
+				return $target->damage(new DamageEvent($damage)) ? 'The slash dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 
 			}]);
 			
@@ -46,7 +38,7 @@
 				if(rand(1, 100) < 0.1)
 					$target->addEffect(Effect::where('name', 'poison'));
 
-				return $target->damage($damage) ? 'The backstab dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
+				return $target->damage(new DamageEvent($damage)) ? 'The backstab dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 				
 			}]);
 
@@ -81,7 +73,7 @@
 			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Target $target, Participant $user) {
 
 				$damage = $user->stats()->apply(8, 'wisdom');
-				return $target->damage($damage) ? 'The pulse dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
+				return $target->damage(new DamageEvent($damage)) ? 'The pulse dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
 				
 			}]);
 			
@@ -90,7 +82,7 @@
 				foreach($targets as $target) {
 
 					$damage = $user->stats()->apply(4, 'wisdom');
-					if($target->damage($damage)) $damaged++;
+					if($target->damage(new DamageEvent($damage))) $damaged++;
 						
 				}
 				return $damaged > 0 ? 'The rumble damaged '.$damaged : false;

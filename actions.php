@@ -180,7 +180,7 @@
 					if(!$skill->group) $target = $target->first();
 					
 					$battle->prepareTurn();
-					$message = $skill->apply($target, $character);
+					$message = $skill->use($target, $character->participant);
 					$battle->refresh();
 					
 					if($message) {

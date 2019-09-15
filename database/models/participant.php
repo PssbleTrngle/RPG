@@ -94,6 +94,10 @@
 		public function icon() {
 			return $this->parent()->icon();
 		}
+		
+		public function stats() {
+			return $this->parent()->stats();
+		}
 
 		public function health() {
 			$this->health = max(0, min($this->health, $this->maxHealth()));
@@ -107,10 +111,13 @@
 			return true;
 		}
 		
-		public function damage($amount, $source = null) {
+		public function damage(DamageEvent $event) {
 			if($this->health <= 0) return false;
 
-			$this->health = max(0, $this->health - abs($amount));
+			foreach ($this->effects as $effect)
+				$effect->onDamage($event, $this);
+
+			$this->health = max(0, $this->health - abs($event->amount));
 
 			if($this->health == 0)
 				$this->died = true;
@@ -149,7 +156,7 @@
 		public function revive(Participant $by = null) {
 
 			$amount = 0.3; 
-			if(!is_null($by)) $amount = $by->parent()->stats()->apply(0.3, 'wisdom');
+			if(!is_null($by)) $amount = $by->stats()->apply(0.3, 'wisdom');
 
 			$this->health = ceil($this->maxHealth() * $amount);
 			$this->save();
