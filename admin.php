@@ -20,7 +20,7 @@
 	
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		
-		$log = json_encode(getAccount()->selected->participant->effects->where('id', 1)->first()->pivot->countdown);
+		$log = json_encode(Participant::find(77)->name());
 		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
 		
 	});

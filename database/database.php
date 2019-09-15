@@ -32,7 +32,7 @@
    		
 		public function heal($amount);
    		
-		public function revive($by = null);
+		public function revive(Participant $by = null);
    		
 		public function addEffect($effect);
 	

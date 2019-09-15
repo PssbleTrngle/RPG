@@ -74,10 +74,10 @@
 
 	registerAction('/character/select/{id}', function($args, $account) {
 
-		$id = $args['id'];
+		$character = Character::find($args['id'] ?? null);
 		
-		if($id)
-			return ['success' => $account->select($id)];
+		if($character)
+			return ['success' => $account->select($character)];
 		
 		return ['success' => false];
 

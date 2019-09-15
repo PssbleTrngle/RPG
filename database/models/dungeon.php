@@ -4,6 +4,10 @@
    		
 		protected $table = 'dungeon';
 		protected $with = ['location', 'npcs'];
+
+		public function icon() {
+			return $this->icon ? 'position/dungeon/'.$this->icon : null;
+		}
 		
 		public function location() {
 			return $this->belongsTo(Location::class, 'location_id');

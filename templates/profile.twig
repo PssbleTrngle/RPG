@@ -35,7 +35,9 @@
 
 			<div class='ml-5'>
 				<div class='row'>
-					<a href='/'><div class='profile-btn fade dungeon-btn'>{{ icon('icon/dungeon')|raw }}</div></a>
+					{% if account.selected %}
+						<a href='/'><div class='profile-btn fade dungeon-btn'>{{ account.selected.position|icon|raw }}</div></a>
+					{% endif %}
 					<div class='top'>
 						<div class='profile-btn fade' data-window='lang-window'>{{ icon('icon/lang')|raw }}</div>
 					</div>

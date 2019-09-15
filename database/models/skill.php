@@ -70,6 +70,12 @@
 				return $healt > 0 ? 'The rain cleansed '.$healt : false;
 			}]);
 
+			static::register(['id' => 53, 'name' => "revive", 'timeout' => 0, 'cost' => 5, 'group' => false, 'affectDead' => true], ['use' => function(Target $target, Participant $user) {
+
+				return $target->revive($user) ? 'You revived '.$target->name() : 'The spell failed!';
+			
+			}]);
+
 			/* ------------------------  ATTACK SPELLS  ------------------------ */
 			
 			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Target $target, Participant $user) {

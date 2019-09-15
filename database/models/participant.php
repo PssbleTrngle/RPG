@@ -146,9 +146,12 @@
 
 		}
 
-		public function revive($by = null) {
+		public function revive(Participant $by = null) {
 
-			$this->health = ceil($this->maxHealth() / 3);
+			$amount = 0.3; 
+			if(!is_null($by)) $amount = $by->parent()->stats()->apply(0.3, 'wisdom');
+
+			$this->health = ceil($this->maxHealth() * $amount);
 			$this->save();
 
 		}
