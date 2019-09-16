@@ -185,7 +185,8 @@
 					
 					if($message) {
 						$skill->timeout($character);
-						$battle->next($message);
+						$battle->addMessage($message);
+						$battle->next();
 					}
 
 					return ['success' => $message !== false, 'message' => $message];
@@ -209,8 +210,9 @@
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
-			$message = $battle->next($character->name.' skipped');
-			return ['success' => $message !== false, 'message' => $message];
+			$battle->addMessage(new Message('skipped', [$character->name]));
+			$success = $battle->next();
+			return ['success' => $sucess];
 
 		}
 		

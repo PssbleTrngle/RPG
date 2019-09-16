@@ -1,5 +1,9 @@
 <?php
 
+	$formats = [
+		'h' => 'highlight',
+	];
+
 	function convert($json) {
 		if(is_string($json)) return $json;
 
@@ -58,6 +62,7 @@
 
 	function format($key, $vars = []) {
 		global $json;
+		global $formats;
 		$key = strtolower($key);
 
 		if(is_null($json))
@@ -65,6 +70,11 @@
 
 		$unknown = getAccount()->hasStatus('betatester') ? $key : '???';
 		$translation = $json[$key] ?? $unknown;
+
+		foreach ($formats as $key => $class) {
+			$pattern = "/§$key(.*?)( |$)/";
+			$translation = preg_replace($pattern, "<span class='$class'>$1</span> ", $translation);
+		}
 
 		if($vars)
 			foreach($vars as $key => $var)

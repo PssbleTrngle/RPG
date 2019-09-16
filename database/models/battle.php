@@ -1,10 +1,41 @@
 <?php
 
+	class Message extends BaseModel {
+
+		protected $table = 'battle_messages';
+		private static $glue = ';';
+
+		public function __construct($key = '', $args = null) {
+			$this->key = $key;
+			if($args) $this->args = implode(static::$glue, str_replace(static::$glue, ',', $args));
+		}
+
+		public function format() {
+			$args = $this->args ? explode(static::$glue, $this->args) : [];
+			return format('message.battle.'.$this->key, $args);
+		}
+
+	}
+
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position'];
+		protected $with = ['participants', 'active', 'position', 'messages'];
+
+		public function addMessage($message) {
+
+			if(is_string($message))
+				$message = new Message($message);
+
+			$message->battle_id = $this->id;
+			$message->save();
+
+		}
 		
+		public function messages() {
+			return $this->hasMany(Message::class, 'battle_id');
+		}
+
 		public function active() {
 			return $this->belongsTo(Character::class, 'active_id')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
@@ -42,6 +73,9 @@
 				} else {
 					$participant->delete();
 				}
+
+			foreach ($this->messages as $message)
+				$message->delete();
 			
 			parent::delete();
 			
@@ -124,9 +158,8 @@
 
 		}
 		
-		public function next($charMessage = "") {
+		public function next() {
 		
-			$this->message = $charMessage.'\n';
 			$count = $this->participants->count();
 
 			$this->active->participant->afterTurn();
@@ -135,7 +168,8 @@
 			while(is_null(($next = $this->participants[$index])->character)) {
 				
 				if($next->enemy && $next->canTakeTurn()) {
-					$this->message .= $next->enemy->takeTurn().'\n';
+					$msg = $next->enemy->takeTurn();
+					if($msg) $this->addMessage($msg);
 					$next->enemy->refresh();
 				}
 
@@ -151,7 +185,7 @@
 
 			$this->validate();
 			
-			return $this->message;
+			return true;
 			
 		}
 			
@@ -177,7 +211,6 @@
 				$battle = new Battle;
 				$battle->active_id = $character->id;
 				$battle->position_id = $character->id;
-				$battle->message = '';
 				$battle->save();
 				$battle->refresh();
 				$battle->addCharacter($character);

@@ -39,12 +39,14 @@ function sendAction(action, func, source) {
 
 			if(source) source.addClass('error disabled');
 			$('.feedback').text('An error occured');
+			$('.admin-feedback').html(result.json);
 
 		}
 	}).fail(function(result) {
 
 		if(source) source.addClass('error disabled');
 		$('.feedback').text('An error occured');
+		$('.admin-feedback').html(result.responseText);
 
 	}).always(function(result) {		
 		$('.loading').removeClass('loading');

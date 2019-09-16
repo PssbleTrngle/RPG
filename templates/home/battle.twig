@@ -74,8 +74,8 @@
 	</div>
 	
 	<div class='mt-2'>
-		{% for line in battle.message|split('\\n') %}
-		<p>{{ line }}</p>	
+		{% for key in battle.messages %}
+		<p>{{ key.format()|raw }}</p>	
 		{% endfor %}
 	</div>
 	

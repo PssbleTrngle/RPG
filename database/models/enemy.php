@@ -36,19 +36,19 @@
 					$battle->addNPC($called);
 					$called->save();
 					
-					return $this->name().' called for help';
+					return new Message('called_help', [$this->name()]);
 					
 				} else {
 					
 					$target = $battle->characters(true)->random();
-					$damage = 0;
+					$damage = new DamageEvent(2);
 					
-					$target->damage(new DamageEvent($damage));
-					return $this->name().' dealt '.$damage.' damage to '.$target->name();
+					$target->damage($damage);
+					return new Message('damaged_by', [$this->name(), $damage->amount, $target->name()]);
 					
 				}
 				
-				return $this->name().' was too scared to attack';
+				return new Message('scared', [$this->name()]);
 				
 			}
 		

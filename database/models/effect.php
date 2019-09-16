@@ -4,11 +4,6 @@
    		
 		protected $table = 'effect';
 
-		/* TODO remove */
-		public function name() {
-			return $this->name;
-		}
-
 		public function apply(Target $target) {
 			global $capsule;
 			

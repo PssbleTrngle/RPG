@@ -33,12 +33,13 @@
 			
 			static::register(['id' => 2, 'name' => 'backstab', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Target $target, Participant $user) {
 				
-				$damage = $user->stats()->apply(8, 'strength');
+				$damage = new DamageEvent($user->stats()->apply(8, 'strength'));
 
 				if(rand(1, 100) < 0.1)
 					$target->addEffect(Effect::where('name', 'poison'));
 
-				return $target->damage(new DamageEvent($damage)) ? 'The backstab dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
+				/* TODO replace strin literal 'backstab' */
+				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), 'backstab', $damage->amount, $target->name()]) : 'no_effect';
 				
 			}]);
 
@@ -72,8 +73,9 @@
 			
 			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Target $target, Participant $user) {
 
-				$damage = $user->stats()->apply(8, 'wisdom');
-				return $target->damage(new DamageEvent($damage)) ? 'The pulse dealt '.$damage.' damage to '.$target->name() : 'The attack had no effect!';
+				$damage = new DamageEvent($user->stats()->apply(8, 'wisdom'));
+				/* TODO replace strin literal 'pulse' */
+				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), 'pulse', $damage->amount, $target->name()]) : 'no_effect';
 				
 			}]);
 			

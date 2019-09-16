@@ -11,7 +11,15 @@
 		"ran": "You ran away",
 		"learn": "Learn new skills",
 		"evolve_1": "You're experience has brought you far, but this is where your paths part",
-		"evolve_2": "Choose an specialization"
+		"evolve_2": "Choose an specialization",
+		"battle": {
+			"damaged_by": "§h$1 dealt §h$2 damage to §h$3",
+			"damaged_using": "§h$1's §h$2 dealt §h$3 damage to §h$4",
+			"no_effect": "The attack had no effect!",
+			"skipped": "§h$1 skipped",
+			"scared": "§h$1 was to scared to attack",
+			"called_help": "§h$1Called for help"
+		}
 	},
 	"stat": {
 		"wisdom": "Wisdom",
