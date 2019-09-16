@@ -63,6 +63,7 @@
 			if(array_key_exists($method, static::$functions))
 				if(array_key_exists($this->id, static::$functions[$method])) {
 					$func = static::$functions[$method][$this->id];
+					array_unshift($args, $this);
 					return call_user_func_array($func, $args);
 				}
 				else return false;
