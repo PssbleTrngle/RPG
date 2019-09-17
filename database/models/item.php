@@ -55,7 +55,7 @@
 			}
 		}
 		
-		public function take($character) {
+		public function take($character, $slot) {
 			if(!$character) return false;
 
 			$slot = Slot::where('name', 'inventory')->first();
@@ -65,9 +65,11 @@
 					if($this->slot_id != $slot->id) {
 						
 						/* TODO test */
-						$hasSpace = $character->itemIn($slot)->count() < $character->bagSize()
+						/*
+						$hasSpace = $character->itemIn($slot)->count() < $slot->space
 						|| $character->itemIn($slot)->where('stackable', true)->contains('item_id', $this->item->id);
-						
+						*/
+
 						/*
 						if(!$hasSpace && $this->stackable) foreach($character->itemIn($slot) as $stack)
 							if($stack->item_id == $this->item_id) {
@@ -75,17 +77,6 @@
 								break;
 							}
 						*/
-
-						if($hasSpace) {
-						
-							$this->slot_id = 1;
-							$this->save();
-							$character->refresh();
-							Stack::tidy($character);
-							
-							return true;
-							
-						}
 						
 					}
 				}			
@@ -112,6 +103,18 @@
    		
 		protected $table = 'itemtype';
 		protected $with = ['items', 'parents'];
+
+		public function name() {
+
+			$name = $this->table.'.';
+			foreach ($this->anchestors() as $anchestor) 
+				if($anchestor->icon)
+					$name .= $anchestor->name.'s.';
+
+			$name .= $this->name;
+
+			return format($name);
+		}
 		
 		public function items() {
 			return $this->hasMany(Item::class, 'type_id')->without(['type']);
@@ -162,7 +165,7 @@
 		public function name() {
 
 			$name = format(implode('.', explode('/', $this->icon())));
-			if($this->color()) return format('item.weapon.format', [$name, $this->rarity->name()]);
+			if($this->color()) return format('item.weapon.format', [$this->type->name(), $this->rarity->name()]);
 
 			return $name;
 		}
@@ -176,10 +179,8 @@
 		}
 
 		public function hasType($type) {
-			foreach ($this->types as $has)
-				if($has->id == $type->id)
-					return true;
-			return false;
+			if(is_string($type)) return $this->types()->contains('name', $type);
+			return $this->types()->contains('id', $type->id);
 		}
 
 		public function types() {
@@ -187,7 +188,7 @@
 			$types = $this->type->anchestors();
 			$types[] = $this->type;
 
-			return array_reverse($types);
+			return collect(array_reverse($types));
 
 		}
 	
@@ -214,13 +215,62 @@
 		function accept(Item $item) {
 			return $functions[$this->id]($item);			
 		}
+
+		function fits(Stack $stack, Character $character) {
+
+			$items = $character->itemIn($this);
+			$singular = $this->space == 1;
+
+			if($stack->slot && $stack->slot->id == $this->id) 
+				return ['success' => false, 'message' => 'Already in this slot'];
+
+			if($this->locked($character)) 
+				return ['success' => false, 'message' => 'Slot is locked'];
+
+			if($singular) {
+				if($items) return ['success' => false, 'message' => 'Already equiped something'];
+			} else {
+				if($items->count() >= $this->space)
+					return ['success' => false, 'message' => 'Not enough space'];
+			}
+
+			return result($this->__call('fits', [$stack, $character]));
+
+		}
 	
 		public static function registerAll() {
 			
-			static::register(['id' => 1, 'name' => "inventory", 'space' => 20], ['fits' => function($item) { return true; }]);
-			static::register(['id' => 2, 'name' => "left_hand", 'space' => 1], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 3, 'name' => "right_hand", 'space' => 1], ['fits' => function($item) { return false; }]);
-			static::register(['id' => 4, 'name' => "loot", 'space' => 20], ['fits' => function($item) { return false; }]);
+			static::register(['id' => 1, 'name' => "inventory", 'space' => 20], ['fits' => function($slot, $stack, $character) { return true; }]);
+
+			static::register(['id' => 2, 'name' => "left_hand", 'space' => 1], ['fits' => function($slot, $stack, $character) {
+
+				$other = $character->itemIn('right_hand');
+				$isWeapon = $stack->item->hasType('weapon');
+				$locked = $other && $stack->item->hasType('two_handed');
+				return $isWeapon && !$locked;
+
+			}, 'locked' => function($slot, $character) {
+
+				$other = $character->itemIn('right_hand');
+				return $other && $other->item->hasType('two_handed');
+
+			}]);
+
+			static::register(['id' => 3, 'name' => "right_hand", 'space' => 1], ['fits' => function($slot, $stack, $character) {
+
+				$other = $character->itemIn('left_hand');
+				$isWeapon = $stack->item->hasType('weapon');
+				$locked = $other && $stack->item->hasType('two_handed');
+				return $isWeapon && !$locked;
+
+			}, 'locked' => function($slot, $character) {
+
+				$other = $character->itemIn('left_hand');
+				return $other && $other->item->hasType('two_handed');
+
+			}]);
+
+			static::register(['id' => 4, 'name' => "loot", 'space' => 20], ['fits' => function($slot, $stack, $character) { return false; }]);
 			
 		}
 		

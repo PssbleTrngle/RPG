@@ -261,12 +261,23 @@
 	registerAction('/inventory/take', function($args, $account) {
 			
 		$character = $account->selected;
-		$stack = $args['stack'] ?? null;		
+		$stack = Stack::find($args['stack'] ?? null);
+		$slot = Slot::find($args['slot'] ?? null);	
 
-		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
+		if($character && $stack && $slot && !$character->battle) {
+
+			$fits = $slot->fits($stack, $character);
+
+			if($fits['success']) {
 			
-			$message = $stack->take($character);
-			return ['success' => $message !== false, 'message' => $message, 'reload' => 'inventory'];
+				$stack->slot_id = $slot->id;
+				$stack->save();
+				$character->refresh();
+				Stack::tidy($character);
+				
+			}
+			
+			return result($fits, ['reload' => 'inventory']);
 
 		}
 		

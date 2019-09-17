@@ -1,4 +1,4 @@
-{% macro slot(stack, renderEmpty = false) %}
+{% macro slot(stack, slot = null, character = null, renderEmpty = false) %}
 
 	{% if stack %}
 		<div class='slot' id='{{ stack.id }}'>
@@ -8,7 +8,11 @@
 		</div>
 	{% elseif renderEmpty %}
 		<div class='slot-text'>
-			<p>Empty</p>
+			{% if slot and character and slot.locked(character) %}
+				<p>Locked</p>
+			{% else %}
+				<p>Empty</p>
+			{% endif %}
 		</div>
 	{% endif %}
 
@@ -16,43 +20,57 @@
 
 {% import _self as inventory %}
 
-<div class='popup' data-popup='.inventory-btn' data-reload='inventory'>
+<div data-reload='inventory'>
 
-	{% if character.itemIn('loot').count > 0 %}
-		<div class='inventory loot mb-2'>
+	<div class='popup' data-popup='.inventory-btn'>
 
-			{% for stack in character.itemIn('loot') %}
-				{{ inventory.slot(stack) }}
+		{% set slot = 'Slot'|byName('loot') %}
+		{% if character.itemIn(slot).count > 0 %}
+			<div class='inventory loot mb-2'>
+
+				{% for stack in character.itemIn(slot) %}
+					{{ inventory.slot(stack, slot, character) }}
+				{% endfor %}
+
+			</div>
+		{% endif %}
+
+		<div class='row h-4'></div>
+
+		<div class='inventory mb-2'>
+
+			<div class='slot-icon mirror'>{{ icon('slot/hand')|raw }}</div>
+
+			{% for side in ['left', 'right'] %}
+
+				{% set slot = 'Slot'|byName(side ~ '_hand') %}
+				{{ inventory.slot(character.itemIn(slot), slot, character, true) }}
+			{% endfor %}
+
+			<div class='slot-icon'>{{ icon('slot/hand')|raw }}</div>
+
+		</div>
+
+		<div class='inventory'>
+
+				{% set slot = 'Slot'|byName('inventory') %}
+			{% for stack in character.itemIn(slot) %}
+				{{ inventory.slot(stack, slot, character) }}
 			{% endfor %}
 
 		</div>
-	{% endif %}
-
-	<div class='row h-4'></div>
-
-	<div class='inventory mb-2'>
-
-		<div class='slot-icon mirror'>{{ icon('slot/hand')|raw }}</div>
-
-		{% for side in ['left', 'right'] %}
-			{{ inventory.slot(character.itemIn(side ~ '_hand'), true) }}
-		{% endfor %}
-
-		<div class='slot-icon'>{{ icon('slot/hand')|raw }}</div>
-
-	</div>
-
-	<div class='inventory mb-2'>
-
-		{% for stack in character.itemIn('inventory') %}
-			{{ inventory.slot(stack) }}
-		{% endfor %}
-
+		 
 	</div>
 
 	{% for stack in character.inventory %}
 
-		<div class='item-popup center' data-item='{{ stack.id }}'>
+		<div class='item-popup center mt-2' data-item='{{ stack.id }}'>
+
+				<div class='options horizontal'>
+					{% for slot in 'Slot'|all if slot.fits(stack, character).success %}
+						<div class='option' data-slot='{{ slot.id }}'>{{ slot.name() }}</div>
+					{% endfor %}
+				</div>
 
 				<h3>{{ stack.item.name() }}</h3>
 				{% for key, type in stack.item.types() %}
@@ -68,5 +86,5 @@
 		</div>
 
 	{% endfor %}
-	 
+
 </div>

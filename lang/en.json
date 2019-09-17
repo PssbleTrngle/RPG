@@ -69,10 +69,18 @@
 		"skull": "Floating Skull",
 		"slime": "Generic Slime"
 	},
-	"item": {
-		"honey": "Honey Comb",
-		"weapon": {
-			"format": "$2 $1",
+	"slot": {
+		"inventory": "Inventory",
+		"left_hand": "Left Hand",
+		"right_hand": "Right Hand",
+		"loot": "Loot"
+ 	},
+	"itemtype": {
+		"weapon": "Weapon",
+		"potion": "Potion",
+		"object": "Object",
+		"weapons": {
+			"two_handed": "Two-Handed",
 			"blade": "Blade",
 			"bow": "Bow",
 			"florett": "Florett",
@@ -84,6 +92,12 @@
 			"club": "Club",
 			"dagger": "Dagger",
 			"hammer": "Hammer"
+		}
+	},
+	"item": {
+		"honey": "Honey Comb",
+		"weapon": {
+			"format": "$2 $1"
 		},
 		"potion": {
 			"health_potion": "Health Potion",

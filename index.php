@@ -89,8 +89,14 @@
 	        return getAccount();
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('areas', function () {
-	        return Area::all();
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('all', function ($class) {
+	        if(is_subclass_of($class, 'BaseModel')) return $class::all();
+	        return collect([]);
+	    }));
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('byName', function ($class, $name) {
+	        if(is_subclass_of($class, 'BaseModel')) return $class::where('name', $name)->first();
+	        return null;
 	    }));
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {

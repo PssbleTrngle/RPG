@@ -161,9 +161,9 @@
 			if($this && $this->position->dungeon && !$this->participant->battle) {
 			
 				$this->position->dungeon_id = null;
-				$this->position->floor = 1;
+				$this->position->floor = null;
 				$this->position->attempts = 0;
-				$this->position->foundStairs = 0;
+				$this->position->foundStairs = false;
 				$this->position->save();
 				return true;
 				

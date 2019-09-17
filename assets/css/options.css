@@ -12,12 +12,13 @@
 .options.horizontal {
 
 	display: table-row;
-	padding: 5px;
 	
 }
 
 .options.horizontal > .option {
-	display: table-cell;		
+	display: inline-block;
+	margin: 0 3px;
+	margin-bottom: 5px;
 }
 
 .disabled, .loading {	
