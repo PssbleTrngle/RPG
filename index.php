@@ -52,14 +52,14 @@
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('styles', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/css/*.css");
-	    	$lang = glob("assets/css/$lang/*.css");
+	    	$lang = $lang ? glob("assets/css/$lang/*.css") : [];
 			return array_merge($general, $lang);
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/scripts/*.js");
-	    	$lang = glob("assets/scripts/$lang/*.js");
+	    	$lang = $lang ? glob("assets/scripts/$lang/*.js") : [];
 			return array_merge($general, $lang);
 	    }));
 

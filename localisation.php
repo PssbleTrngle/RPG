@@ -45,7 +45,7 @@
 		global $default;
 		
 		if(!is_null($lang)) return $lang;
-		if(isset($_SESSION['lang'])) {
+		if($_SESSION['lang'] ?? null) {
 			$lang = $_SESSION['lang'];
 			return $lang;
 		}
