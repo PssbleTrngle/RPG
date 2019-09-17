@@ -14,6 +14,9 @@ $(window).ready(function() {
 
 		});
 
+		if(map[0].selected_area)
+			map.find('.map-back').addClass('shown');
+
 		for(loc of map.find('.location')) {
 
 			let element = $(loc);
@@ -23,7 +26,6 @@ $(window).ready(function() {
 				element.click(function() {
 
 					map[0].selected_area = element.attr('id');
-					map.find('.map-back').addClass('shown');
 					map.reload();
 
 				});

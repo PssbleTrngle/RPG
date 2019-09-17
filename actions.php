@@ -10,6 +10,13 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	function result($in, $adds = []) {
+
+		if(is_bool($in)) $in = ['success' => $in];
+		return array_merge($in, $adds);
+	
+	}
+
 	function registerAction($url, $func, $status = 'user') {
 		global $app;
 		global $container;
@@ -20,9 +27,7 @@
 				foreach($request->getParams() as $key => $value)
 					$args[$key] = $value;
 
-				$answer = $func($args, getAccount());
-				if(is_bool($answer)) $answer = ['success' => $answer];
-				return json_encode($answer);
+				return json_encode(result($func($args, getAccount())));
 
 			});
 
@@ -69,7 +74,7 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 
 	});
 
@@ -80,7 +85,7 @@
 		if($character)
 			return ['success' => $account->select($character)];
 		
-		return ['success' => false];
+		return false;
 
 	});
 
@@ -94,7 +99,7 @@
 				return ['success' => $character->evolve($to)];
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
@@ -120,10 +125,11 @@
 			$character = $account->selected;
 			
 			if($character)
-				return ['success' => $character->travel($location), 'reload' => 'map'];
+				return result($character->travel($location), ['reload' => 'map']);
+
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	}); 
 
@@ -232,7 +238,7 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
@@ -248,7 +254,7 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
@@ -264,7 +270,7 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 

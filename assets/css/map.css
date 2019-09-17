@@ -89,12 +89,17 @@
 	text-align: center;
 }
 
+.location.disabled {
+	filter: brightness(50%) grayscale();
+}
+
 .location:hover .tooltip {
 	opacity: 1;
 }
 
 .map-back {
 
+	z-index: 1;
 	position: absolute;
 
 	/* border-radius: 100%; */

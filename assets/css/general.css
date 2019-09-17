@@ -451,5 +451,5 @@ input.grow {
 }
 
 .feedback.flashed {
-	animation: flash forwards 0.3s linear;
+	animation: flash forwards 0.5s linear;
 }

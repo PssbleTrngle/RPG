@@ -18,11 +18,15 @@ $(window).ready(function() {
 	
 	onLoad('.feedback', function(element) {
 		element.bind("DOMSubtreeModified",function() {
-			//element.css({ color: 'var(--highlight)' });
+			
+			element.css({ opacity: 1 });
 			element.addClass('flashed');
 			window.setTimeout(function() {
 				element.removeClass('flashed');
-			}, 300);
+			}, 500);
+			window.setTimeout(function() {
+				element.animate({ opacity: 0 }, 300);
+			}, 1000);
 		});	
 	});
 

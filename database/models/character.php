@@ -115,7 +115,7 @@
 		
 		public function travel($location) {
 			
-			if($location->level <= $this->level()) {
+			if($location->area->level <= $this->level()) {
 				
 				if($this->canTravel()) {
 				
@@ -124,10 +124,13 @@
 				
 					return true;
 					
-				}				
+				}
+
+				return ['success' => false, 'message' => 'You are not able to travel'];
+						
 			}
-			
-			return false;
+
+			return ['success' => false, 'message' => 'Youre level is not high enough'];
 		}
 		
 		public function enter($dungeon) {
