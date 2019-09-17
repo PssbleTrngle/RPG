@@ -3,10 +3,14 @@
 	class Dungeon extends BaseModel {
    		
 		protected $table = 'dungeon';
-		protected $with = ['location', 'npcs'];
+		protected $with = ['area', 'npcs'];
+
+		public function icon() {
+			return $this->icon ? 'position/dungeon/'.$this->icon : null;
+		}
 		
-		public function location() {
-			return $this->belongsTo(Location::class, 'location_id');
+		public function area() {
+			return $this->belongsTo(Area::class, 'area_id');
 		}
 		
 		public function npcs() {
@@ -20,24 +24,6 @@
 			
 			$npc = $this->npcs->random();
 			return NPC::find(1);
-			
-		}
-		
-		public function leave($character) {
-			if(!$character) return false;
-			
-			if($character && ($position = $character->position) && ($dungeon = $position->dungeon) && ($dungeon->id == $this->id)) {
-			
-				#$position->dungeon = null;
-				$position->floor = 1;
-				$position->attempts = 0;
-				$position->foundStairs = 0;
-				$position->save();
-				return true;
-				
-			}
-			
-			return false;
 			
 		}
 		

@@ -16,7 +16,7 @@
 
 {% import _self as inventory %}
 
-<div class='popup' data-popup='.inventory-btn' >
+<div class='popup' data-popup='.inventory-btn' data-reload='inventory'>
 
 	{% if character.itemIn('loot').count > 0 %}
 		<div class='inventory loot mb-2'>

@@ -1,10 +1,41 @@
 <?php
 
+	class Message extends BaseModel {
+
+		protected $table = 'battle_messages';
+		private static $glue = ';';
+
+		public function __construct($key = '', $args = null) {
+			$this->key = $key;
+			if($args) $this->args = implode(static::$glue, str_replace(static::$glue, ',', $args));
+		}
+
+		public function format() {
+			$args = $this->args ? explode(static::$glue, $this->args) : [];
+			return format('message.battle.'.$this->key, $args);
+		}
+
+	}
+
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position'];
+		protected $with = ['participants', 'active', 'position', 'messages'];
+
+		public function addMessage($message) {
+
+			if(is_string($message))
+				$message = new Message($message);
+
+			$message->battle_id = $this->id;
+			$message->save();
+
+		}
 		
+		public function messages() {
+			return $this->hasMany(Message::class, 'battle_id');
+		}
+
 		public function active() {
 			return $this->belongsTo(Character::class, 'active_id')->without(['clazz', 'race', 'position', 'battle', 'canEvolveTo', 'inventory', 'account']);
 		}
@@ -42,6 +73,9 @@
 				} else {
 					$participant->delete();
 				}
+
+			foreach ($this->messages as $message)
+				$message->delete();
 			
 			parent::delete();
 			
@@ -63,7 +97,9 @@
 			
 			foreach($this->characters() as $character) {
 				$character->message = 'lost';
+				$character->participant->revive();
 				$character->save();
+				/* TODO loose something */
 			}
 			
 			$this->delete();
@@ -101,6 +137,8 @@
 		}
 		
 		private function activeIndex() {
+
+			/* TODO rework */
 			
 			for($index = 0; $index < $this->participants->count(); $index++) {
 				$participant = $this->participants[$index];
@@ -120,32 +158,34 @@
 
 		}
 		
-		public function next($charMessage = "") {
+		public function next() {
 		
-			$this->message = $charMessage.'\n';
-			$this->save();
 			$count = $this->participants->count();
-			
-			if($this->validate()) {
-			
-				$index = ($this->activeIndex() + 1);
-				while(is_null(($next = $this->participants[$index])->character)) {
-					
-					if($next->enemy && $next->canTakeTurn()) $this->message .= $next->enemy->takeTurn().'\n';
-					$this->save();
-					$this->refresh();
-					
-					$index = ($index + 1) % $count;
-					if($index == 0) $this->nextRound();
-				}
-					
-				$this->active_id = $next->character->id;
-				$this->save();
-				$this->refresh();
 
-			}
+			$this->active->participant->afterTurn();
 			
-			return $this->message;
+			$index = ($this->activeIndex() + 1) % $count;
+			while(is_null(($next = $this->participants[$index])->character)) {
+				
+				if($next->enemy && $next->canTakeTurn()) {
+					$msg = $next->enemy->takeTurn();
+					if($msg) $this->addMessage($msg);
+					$next->enemy->refresh();
+				}
+
+				$next->afterTurn();
+				
+				$index = ($index + 1) % $count;
+				if($index == 0) $this->nextRound();
+			}
+
+			$this->active_id = $next->character->id;
+			$this->save();
+			$this->refresh();
+
+			$this->validate();
+			
+			return true;
 			
 		}
 			
@@ -162,7 +202,6 @@
 			}
 			
 			$this->round++;
-			$this->save();
 			
 		}
 		
@@ -172,7 +211,6 @@
 				$battle = new Battle;
 				$battle->active_id = $character->id;
 				$battle->position_id = $character->id;
-				$battle->message = '';
 				$battle->save();
 				$battle->refresh();
 				$battle->addCharacter($character);
@@ -224,10 +262,19 @@
 				return false;
 			}
 
-			$won = true;
-			foreach($this->enemies() as $enemy)
-				$won &= $enemy->participant->health() <= 0;
+			$lost = true;
+			foreach($this->characters(true) as $participant)
+				$lost &= $participant->health() <= 0;
 			
+			if($lost) {
+				$this->loose();
+				return false;	
+			}
+
+			$won = true;
+			foreach($this->enemies(true) as $participant)
+				$won &= $participant->health() <= 0;
+
 			if($won) {
 				$this->win();
 				return false;

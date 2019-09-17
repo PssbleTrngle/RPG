@@ -1,0 +1,42 @@
+{% macro location(loc, isHere, level = null, class = null) %}
+
+	<div id='{{ loc.id }}' 
+		class='{% if class %}{{ class }}{% endif %} location {% if isHere %}here{% endif %} {% if level and loc.level > level %}disabled{% endif %}' 
+		data-map-y='{{ loc.mapY }}'data-map-x='{{ loc.mapX }}' {% if loc.area.exists %}data-area='{{ loc.area.id }}'{% endif %}>
+
+		{{ loc|icon()|raw }}
+		<small class='tooltip'>{{ loc.name() }}</small>
+		<small class='tooltip'>{{ loc.level }}</small>
+	</div>
+
+{% endmacro %}
+
+<div class='row mt-3 bottom'>
+	
+	<div class='map' data-reload='map'>
+
+		<div class='map-back'></div>
+
+		<h3 class='feedback'></h3>
+
+		{% import _self as map %}
+
+		{% for area in areas() %}
+
+			{{ map.location(area, character.position.location.area.id == area.id, character.level(), 'area') }}
+
+			{% if area.level <= character.level() %}
+				{% for location in area.locations %}
+					{{ map.location(location, character.position.location.id == location.id, character.level()) }}
+				{% endfor %}
+
+				{% for dungeon in area.dungeons %}
+					{{ map.location(dungeon, character.position.dungeon and character.position.dungeon.id == dungeon.id, character.level(), 'dungeon') }}
+				{% endfor %}
+			{% endif %}
+
+		{% endfor %}
+
+	</div>			
+
+</div>

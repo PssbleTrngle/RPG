@@ -10,11 +10,13 @@
 
 		<div class='participant-icon {% for effect in par.effects %}{{ effect.name }} {% endfor %}'>{{ par|icon|raw }}</div>
 
-		{% for effect in par.effects %}
-			<div class='effect orbit'>
-				{{ effect|icon|raw }}
-			</div>
-		{% endfor %}
+		<div>
+			{% for effect in par.effects %}
+				<div class='effect orbit'>
+					{{ effect|icon|raw }}
+				</div>
+			{% endfor %}
+		</div>
 
 	</div>
 
@@ -72,8 +74,8 @@
 	</div>
 	
 	<div class='mt-2'>
-		{% for line in battle.message|split('\\n') %}
-		<p>{{ line }}</p>	
+		{% for key in battle.messages %}
+		<p>{{ key.format()|raw }}</p>	
 		{% endfor %}
 	</div>
 	

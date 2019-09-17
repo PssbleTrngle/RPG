@@ -7,31 +7,38 @@
 
 $(window).ready(function() {
 	
-	$('.bar').each(function() {
+	onLoad('.bar', function(element) {
 		
-		let bar = $(this);
 		let inner = $(document.createElement('div'));
-		let width = bar.attr('data-amount')*100 + '%';
+		let width = element.attr('data-amount')*100 + '%';
 		inner.css({width});
-		bar.append(inner);
+		element.append(inner);
 		
 	});
-
-	$('.grow').on('input', function() {
-	    var width = $(this).textWidth();
-	    $(this).css({width});
-	}).trigger('input');
-
-	$('[data-action]').each(function() {
-		let action = $(this).attr('data-action');
-		$(this).sendAction(action);		
-	})
 	
-	$('.option').each(function() {
-		let option = $(this);
+	onLoad('.feedback', function(element) {
+		element.bind("DOMSubtreeModified",function() {
+			
+			element.css({ opacity: 1 });
+			element.addClass('flashed');
+			window.setTimeout(function() {
+				element.removeClass('flashed');
+			}, 500);
+			window.setTimeout(function() {
+				element.animate({ opacity: 0 }, 300);
+			}, 1000);
+		});	
+	});
+
+	onLoad('[data-action]', function(element) {
+		let action = element.attr('data-action');
+		element.sendAction(action);		
+	});
+
+	onLoad('.option', function(element) {
 		
-		let options = option.closest('.options');
-		let parent = option.attr('data-parent');
+		let options = element.closest('.options');
+		let parent = element.attr('data-parent');
 		if(parent) parent = $('.option#' + parent);
 			
 		if(parent && options) {
@@ -44,65 +51,60 @@ $(window).ready(function() {
 				
 			});
 			
-		}
-	
+		}	
 	});
 	
-	$('.options').each(function() {
-		let options = $(this);
+	onLoad('.options', function(element) {
 		
-		if(options.find('.option[data-parent]').length) {
+		if(element.find('.option[data-parent]').length) {
 		
 			let back = $(document.createElement('div'));
 			back.addClass('back');
 			back.addClass('option');
 			back.text('Back');
 			back.click(function() {
-				options.find('.option').css({'display': 'block'});
-				options.find('.option[data-parent]').css({'display': 'none'});
-				options.find('.option.back').css({'display': 'none'});
+				element.find('.option').css({'display': 'block'});
+				element.find('.option[data-parent]').css({'display': 'none'});
+				element.find('.option.back').css({'display': 'none'});
 			});
 			
-			options.prepend(back);
+			element.prepend(back);
 			
 		}
 		
+	});
+
+	onLoad('[data-popup]', function(element) {
+		element.attr('data-max', element.maxHeight());
+		if(element.innerHeight())
+			element.css({ height: element.attr('data-max') });
 	});
 
 	$('[data-popup]').each(function() {
 	
 		let popup = $(this);
 		let btn = $(popup.attr('data-popup'));
+
+		popup.reload();
 		
-		if(btn)
-			btn.click(function() {		
-				let current = popup.innerHeight();
+		if(btn) btn.click(function() {
 
-				if(current) {
+			if(popup.innerHeight()) {
 
-					let max = popup.innerHeight();
-					popup.css({ height: max });
-					window.setTimeout(function() {
-						popup.css({ height: 0 });
-					}, 1);
+				popup.css({ height: 0 });
+				btn.removeClass("open");
 
-					btn.removeClass("open");
+			} else {
 
-				} else {
+				popup.css({ height: popup.attr('data-max') });
+				btn.addClass("open");
 
-					popup.css({ height: 'auto' });
-					let max = popup.innerHeight();
-					popup.css({ height: 0 });
-					window.setTimeout(function() {
-						popup.css({ height: max });
-					}, 1);
+			}
 
-					btn.addClass("open");
+			popup.addClass('moving');
+			window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
 
-				}
-
-			});
-		
+		});		
 	});
 	
 });
@@ -114,4 +116,15 @@ $.fn.textWidth = function(text, font) {
     $.fn.textWidth.fakeEl.text(text || this.val() || this.text() || this.attr('placeholder')).css('font', font || this.css('font'));
     
     return $.fn.textWidth.fakeEl.width();
+};
+
+$.fn.maxHeight = function() {
+
+	let current = $(this).innerHeight();
+	$(this).css({ height: 'auto' });
+	let max = $(this).innerHeight();
+	$(this).css({ height: current });
+
+	return max;
+
 };

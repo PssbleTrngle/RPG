@@ -108,23 +108,69 @@
 			$selected = $this->account()->first()->selected;
 			return $selected && $selected->id == $this->id;
 		}
+
+		public function canTravel() {
+			return !$this->participant->battle && !$this->position->dungeon;
+		}
 		
 		public function travel($location) {
 			
-			if($location->level <= $this->level()) {
+			if($location->area->level <= $this->level()) {
 				
-				if(!$this->battle) {
+				if($this->canTravel()) {
 				
-					$pos = $this->position();
-					$pos->location_id = $location->id;
-					$pos->save();
+					$this->position->location_id = $location->id;
+					$this->position->save();
+				
+					return true;
 					
 				}
+
+				return ['success' => false, 'message' => 'You are not able to travel'];
+						
+			}
+
+			return ['success' => false, 'message' => 'Youre level is not high enough'];
+		}
+		
+		public function enter($dungeon) {
+			
+			if($dungeon->level <= $this->level()) {
 				
-				return true;				
+				if($this->canTravel()) {
+				
+					$this->position->dungeon_id = $dungeon->id;
+					$this->position->foundStairs = false;
+					$this->position->floor = 1;
+					$this->position->attempts = 0;
+					$this->position->save();
+				
+					return true;		
+					
+				}
+
+				return ['success' => false, 'message' => 'You are not able to travel'];
+
+			}
+
+			return ['success' => false, 'message' => 'Youre level is not high enough'];
+		}
+		
+		public function leave() {
+			
+			if($this && $this->position->dungeon && !$this->participant->battle) {
+			
+				$this->position->dungeon_id = null;
+				$this->position->floor = 1;
+				$this->position->attempts = 0;
+				$this->position->foundStairs = 0;
+				$this->position->save();
+				return true;
+				
 			}
 			
 			return false;
+			
 		}
 		
 		public function level() {

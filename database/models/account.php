@@ -36,20 +36,14 @@
 		}
 		
 		public function select($character) {
-			if(!$character) return false;
-			
-			$do = false;
-			
-			if($character)
-				foreach($this->characters as $char)
-					$do = $do || $char->id == $character->id;
-			
-			if($do) {
+
+			if($character && $this->characters->contains('id', $character->id)) {
 				$this->selected_id = $character->id;
 				$this->save();
+				return true;
 			}
 			
-			return $do;
+			return false;
 		}
 
 		public function hasStatus($status) {

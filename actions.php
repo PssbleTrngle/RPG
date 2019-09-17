@@ -10,6 +10,13 @@
 	use \Psr\Http\Message\ServerRequestInterface as Request;
 	use \Psr\Http\Message\ResponseInterface as Response;
 
+	function result($in, $adds = []) {
+
+		if(is_bool($in)) $in = ['success' => $in];
+		return array_merge($in, $adds);
+	
+	}
+
 	function registerAction($url, $func, $status = 'user') {
 		global $app;
 		global $container;
@@ -20,8 +27,7 @@
 				foreach($request->getParams() as $key => $value)
 					$args[$key] = $value;
 
-				$answer = $func($args, getAccount());
-				return json_encode($answer);
+				return json_encode(result($func($args, getAccount())));
 
 			});
 
@@ -68,18 +74,18 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 
 	});
 
 	registerAction('/character/select/{id}', function($args, $account) {
 
-		$id = $args['id'];
+		$character = Character::find($args['id'] ?? null);
 		
-		if($id)
-			return ['success' => $account->select($id)];
+		if($character)
+			return ['success' => $account->select($character)];
 		
-		return ['success' => false];
+		return false;
 
 	});
 
@@ -93,7 +99,7 @@
 				return ['success' => $character->evolve($to)];
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
@@ -111,18 +117,34 @@
 		
 	});
 
-	registerAction('/character/travel', function($args, $account) {
+	registerAction('/character/travel/{location}', function($args, $account) {
 		
-		$id = $args['id'] ?? null;
+		$location = Location::find($args['location'] ?? null);
 		
-		if($id) {
+		if($location) {
 			$character = $account->selected;
 			
 			if($character)
-				return ['success' => $character->travel($id)];
+				return result($character->travel($location), ['reload' => 'map']);
+
 		}
 		
-		return ['success' => false];
+		return false;
+		
+	}); 
+
+	registerAction('/character/enter/{dungeon}', function($args, $account) {
+		
+		$dungeon = Dungeon::find($args['dungeon'] ?? null);
+		
+		if($dungeon) {
+			$character = $account->selected;
+			
+			if($character)
+				return $character->enter($dungeon);
+		}
+		
+		return false;
 		
 	}); 
 
@@ -139,7 +161,7 @@
 				
 				switch($action) {
 					case 'search': return ['success' => $dungeon->search($character)];
-					case 'leave': return ['success' => $dungeon->leave($character)];
+					case 'leave': return ['success' => $character->leave()];
 					case 'down': return ['success' => $dungeon->down($character)];
 					default: return ['success' => false, 'message' => "'$action' is not a valid action"];
 				}
@@ -180,12 +202,13 @@
 					if(!$skill->group) $target = $target->first();
 					
 					$battle->prepareTurn();
-					$message = $skill->apply($target, $character);
+					$message = $skill->use($target, $character->participant);
 					$battle->refresh();
 					
 					if($message) {
 						$skill->timeout($character);
-						$battle->next($message);
+						$battle->addMessage($message);
+						$battle->next();
 					}
 
 					return ['success' => $message !== false, 'message' => $message];
@@ -209,12 +232,13 @@
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
-			$message = $battle->next($character->name.' skipped');
-			return ['success' => $message !== false, 'message' => $message];
+			$battle->addMessage(new Message('skipped', [$character->name()]));
+			$success = $battle->next();
+			return ['success' => $success];
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
@@ -230,24 +254,23 @@
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 
 	registerAction('/inventory/take', function($args, $account) {
 			
 		$character = $account->selected;
-		$stack = $args['stack'] ?? null;
-		
+		$stack = $args['stack'] ?? null;		
 
 		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
 			
 			$message = $stack->take($character);
-			return ['success' => $message !== false, 'message' => $message];
+			return ['success' => $message !== false, 'message' => $message, 'reload' => 'inventory'];
 
 		}
 		
-		return ['success' => false];
+		return false;
 		
 	});
 

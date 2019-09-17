@@ -184,10 +184,12 @@ img.icon {
 .h-5 { height: calc(var(--marg) * 5); }
 
 .popup {
-
 	overflow-y: hidden;
-	transition: height 0.15s linear;
-	
+	transition: height 1s ease-in-out, background-color 0.2s linear;
+}
+
+.popup.moving {
+	background-color: #0002;
 }
 
 .box {
@@ -333,6 +335,9 @@ input.grow {
 	--length: 70px;
 	--depth: 20px;
 
+	margin-left: auto;
+	margin-right: auto;
+
 	position: relative;
 
 	text-align: center;
@@ -429,4 +434,22 @@ input.grow {
 
 .mirror {
   transform: scaleX(-1);
+}
+
+.feedback {
+}
+
+@keyframes flash {
+	from {
+		color: var(--highlight);
+		text-shadow: 0 0 2px var(--highlight-light);
+	}
+	to {
+		text-shadow: none;
+		color: initial;
+	}
+}
+
+.feedback.flashed {
+	animation: flash forwards 0.5s linear;
 }

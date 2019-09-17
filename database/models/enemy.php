@@ -36,19 +36,19 @@
 					$battle->addNPC($called);
 					$called->save();
 					
-					return $this->name().' called for help';
+					return new Message('called_help', [$this->name()]);
 					
 				} else {
 					
 					$target = $battle->characters(true)->random();
-					$damage = 5;
+					$damage = new DamageEvent(2);
 					
 					$target->damage($damage);
-					return $this->name().' dealt '.$damage.' damage to '.$target->name();
+					return new Message('damaged_by', [$this->name(), $damage->amount, $target->name()]);
 					
 				}
 				
-				return $this->name().' was too scared to attack';
+				return new Message('scared', [$this->name()]);
 				
 			}
 		
@@ -70,6 +70,18 @@
 		public function participant() {
 			return $this->belongsTo(Participant::class, 'participant_id');
 		}
+
+		public function validate() {
+
+			if(!$this->participant || !$this->participant->battle) {
+				$this->delete();
+				return false;
+			}
+
+			return true;
+
+		}
+
 	}
 
 ?>

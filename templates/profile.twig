@@ -6,7 +6,7 @@
 
 {% block content %}
 	
-	<h1>{{ format('message.welcome', "<span class='highlight mb-4'>" ~ account.username ~ "</span>")|raw }}</h1>
+	<h1 class='banner w-66 mb-2'>{{ format('message.welcome', account.username) }}</h1>
 
 	<div class='character-row big'>
 			{% for character in account.characters %}
@@ -35,7 +35,9 @@
 
 			<div class='ml-5'>
 				<div class='row'>
-					<a href='/'><div class='profile-btn fade dungeon-btn'>{{ icon('icon/dungeon')|raw }}</div></a>
+					{% if account.selected %}
+						<a href='/'><div class='profile-btn fade dungeon-btn'>{{ account.selected.position|icon|raw }}</div></a>
+					{% endif %}
 					<div class='top'>
 						<div class='profile-btn fade' data-window='lang-window'>{{ icon('icon/lang')|raw }}</div>
 					</div>

@@ -26,11 +26,51 @@
 		'prefix'    => '',
 	]);
 
+	class DamageEvent {
+
+		public $amount;
+		public $source;
+		public $element;
+
+		public function __construct($amount, $source = null, $element = null) {
+			$this->amount = abs($amount);
+			$this->source = $source;
+			$this->element = $element;
+		}
+
+	}
+
+	interface Target {
+   		
+		public function damage(DamageEvent $event);
+   		
+		public function heal($amount);
+   		
+		public function revive(Participant $by = null);
+   		
+		public function addEffect($effect);
+	
+	}
+
 	class BaseModel extends Model {
 
    		public $timestamps = false;
 		
 		public static $functions = [];
+
+		public function __call($method, $args) {
+
+			if(array_key_exists($method, static::$functions))
+				if(array_key_exists($this->id, static::$functions[$method])) {
+					$func = static::$functions[$method][$this->id];
+					array_unshift($args, $this);
+					return call_user_func_array($func, $args);
+				}
+				else return false;
+
+			return parent::__call($method, $args);
+
+		}
 
 		public static function register($request, $functions = []) {
 

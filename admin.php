@@ -18,20 +18,19 @@
 
 	}, 'admin');
 	
+	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
+		
+		$log = json_encode(Participant::find(77)->name());
+		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		
+	});
+	
 	$app->get('/admin/validate', function (Request $request, Response $response, array $args) {
 		
 		$level = $request->getParams()['level'] ?? 0b11111111;
 		$this->view->render($response, 'admin/validate.twig', ['log' => validate($level)]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'admin'));
-	
-	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
-		
-		$log = json_encode(getAccount()->selected->participant->battle->enemies()->first()->npc);
-
-		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
-		
-	});
 
 	$app->get('/admin/loot', function (Request $request, Response $response, array $args) {
 		

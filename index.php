@@ -89,6 +89,10 @@
 	        return getAccount();
 	    }));
 
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('areas', function () {
+	        return Area::all();
+	    }));
+
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
 	        $age = round(abs($time - time()) / 24 / 60 / 60);
@@ -102,9 +106,11 @@
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$selected = getAccount()->selected;
-		$selected->participant->addEffect(Effect::find(1));
-		$selected->participant->addEffect(Effect::find(3));
-		$selected->participant->addEffect(Effect::find(3));
+
+		if($selected->participant->battle) {
+		}
+		#$selected->participant->addEffect(Effect::find(3));
+		#$selected->participant->addEffect(Effect::find(3));
 
 		if($selected)
 			return $this->view->render($response, 'home.twig', []);
