@@ -89,6 +89,10 @@
 	        return getAccount();
 	    }));
 
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('areas', function () {
+	        return Area::all();
+	    }));
+
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
 	        $time = strtotime($time);
 	        $age = round(abs($time - time()) / 24 / 60 / 60);

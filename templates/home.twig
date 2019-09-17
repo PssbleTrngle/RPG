@@ -23,9 +23,9 @@
 
 			{% set pos = character.position %}
 			{% if pos.dungeon.exists %}
-
-				{% include 'home/dungeon.twig' with {'position': pos, 'character': character} %}
-				
+				{% include 'home/dungeon.twig' with {'position': pos} %}
+			{% else %}
+				{% include 'home/map.twig' with {'position': pos} %}
 			{% endif %}
 
 		</div>

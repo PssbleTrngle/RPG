@@ -36,7 +36,7 @@
 	class Location extends BaseModel {
    		
 		protected $table = 'location';
-		protected $with = ['dungeons', 'area'];
+		protected $with = ['area'];
 
 		public function icon() {
 			return $this->icon ? 'position/location/'.$this->icon : null;
@@ -46,16 +46,12 @@
 			return $this->belongsTo(Area::class, 'area_id');
 		}
 		
-		public function dungeons() {
-			return $this->hasMany(Dungeon::class, 'location_id')->without(['location']);
-		}
-		
 	}
 
 	class Area extends BaseModel {
    		
 		protected $table = 'area';
-		protected $with = ['locations'];
+		protected $with = ['locations', 'dungeons'];
 
 		public function icon() {
 			return $this->icon ? 'position/area/'.$this->icon : null;
@@ -63,6 +59,10 @@
 		
 		public function locations() {
 			return $this->hasMany(Location::class, 'area_id')->without(['area']);
+		}
+		
+		public function dungeons() {
+			return $this->hasMany(Dungeon::class, 'area_id')->without(['area']);
 		}
 		
 	}

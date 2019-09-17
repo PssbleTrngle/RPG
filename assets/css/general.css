@@ -435,3 +435,21 @@ input.grow {
 .mirror {
   transform: scaleX(-1);
 }
+
+.feedback {
+}
+
+@keyframes flash {
+	from {
+		color: var(--highlight);
+		text-shadow: 0 0 2px var(--highlight-light);
+	}
+	to {
+		text-shadow: none;
+		color: initial;
+	}
+}
+
+.feedback.flashed {
+	animation: flash forwards 0.3s linear;
+}

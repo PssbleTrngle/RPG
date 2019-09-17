@@ -21,6 +21,7 @@
 					$args[$key] = $value;
 
 				$answer = $func($args, getAccount());
+				if(is_bool($answer)) $answer = ['success' => $answer];
 				return json_encode($answer);
 
 			});
@@ -111,18 +112,33 @@
 		
 	});
 
-	registerAction('/character/travel', function($args, $account) {
+	registerAction('/character/travel/{location}', function($args, $account) {
 		
-		$id = $args['id'] ?? null;
+		$location = Location::find($args['location'] ?? null);
 		
-		if($id) {
+		if($location) {
 			$character = $account->selected;
 			
 			if($character)
-				return ['success' => $character->travel($id)];
+				return ['success' => $character->travel($location), 'reload' => 'map'];
 		}
 		
 		return ['success' => false];
+		
+	}); 
+
+	registerAction('/character/enter/{dungeon}', function($args, $account) {
+		
+		$dungeon = Dungeon::find($args['dungeon'] ?? null);
+		
+		if($dungeon) {
+			$character = $account->selected;
+			
+			if($character)
+				return $character->enter($dungeon);
+		}
+		
+		return false;
 		
 	}); 
 
@@ -139,7 +155,7 @@
 				
 				switch($action) {
 					case 'search': return ['success' => $dungeon->search($character)];
-					case 'leave': return ['success' => $dungeon->leave($character)];
+					case 'leave': return ['success' => $character->leave()];
 					case 'down': return ['success' => $dungeon->down($character)];
 					default: return ['success' => false, 'message' => "'$action' is not a valid action"];
 				}
@@ -210,9 +226,9 @@
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
-			$battle->addMessage(new Message('skipped', [$character->name]));
+			$battle->addMessage(new Message('skipped', [$character->name()]));
 			$success = $battle->next();
-			return ['success' => $sucess];
+			return ['success' => $success];
 
 		}
 		
@@ -239,13 +255,12 @@
 	registerAction('/inventory/take', function($args, $account) {
 			
 		$character = $account->selected;
-		$stack = $args['stack'] ?? null;
-		
+		$stack = $args['stack'] ?? null;		
 
 		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
 			
 			$message = $stack->take($character);
-			return ['success' => $message !== false, 'message' => $message];
+			return ['success' => $message !== false, 'message' => $message, 'reload' => 'inventory'];
 
 		}
 		

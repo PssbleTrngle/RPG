@@ -12,7 +12,28 @@ function sendAction(action, func, source) {
 
 	if(!func) func = function(result) {
 		if(result.redirect) window.open(result.redirect, '_self');
-		else if(result.success) location.reload();
+		else if(result.success) {
+
+			let reload = result.reload;
+			if(reload) {
+				let element = $('[data-reload=' + reload + ']');
+				if(element) {
+
+					$.get(window.location.href, function(result) {
+						let newElement = $(result).find('[data-reload=' + reload + ']');
+
+						if(newElement[0]) {
+							element.html(newElement.html());
+							element.reload();
+						}
+						else
+							location.reload();
+
+					});
+				}
+			} else location.reload();
+
+		}
 		else {
 
 			console.log(result);

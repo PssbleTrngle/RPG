@@ -1,31 +1,34 @@
 $(window).ready(function() {
 	
-	$('.loot').find('.slot').each(function() {
-		
-		let slot = $(this);
-		slot.click(function() {
+	onLoad('.loot', function(element) {
+		element.find('.slot').each(function() {
 			
-			window.params.stack = slot.attr('id');
-			sendAction('inventory/take');
+			let slot = $(this);
+			slot.click(function() {
+				
+				window.params.stack = slot.attr('id');
+				sendAction('inventory/take');
+				
+			});
 			
 		});
-		
 	});
 	
-	$('.inventory').not('.loot').find('.slot').each(function() {
+	onLoad('.inventory', function(element) {
+		element.not('.loot').find('.slot').each(function() {
 		
-		let slot = $(this);
-		let popup = $('.item-popup[data-item=' + slot.attr('id') + ']');
+			let popup = $('.item-popup[data-item=' + element.attr('id') + ']');
 
-		slot.click(function() {
-			if(popup) {
-				$('.item-popup').removeClass('active');
-				$('.slot').removeClass('active');
-				popup.addClass('active')
-				slot.addClass('active')
-			}
+			element.click(function() {
+				if(popup) {
+					$('.item-popup').removeClass('active');
+					$('.slot').removeClass('active');
+					element.addClass('active')
+					element.addClass('active')
+				}
+			
+			});			
 		});
-		
 	});
 	
 });
