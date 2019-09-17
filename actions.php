@@ -285,4 +285,32 @@
 		
 	});
 
+	registerAction('/inventory/action', function($args, $account) {
+			
+		$character = $account->selected;
+		$stack = Stack::find($args['stack'] ?? null);
+		$action = $args['action'] ?? null;
+
+		if($character && $stack && $action) {
+
+			$target = Participant::find($args['target']) ?? $character->participant;
+
+			if($target && $stack->item->can($action)) {
+
+				$stack->item->$action($stack, $target);
+				$character->refresh();
+				Stack::tidy($character);
+				return true;
+
+			}
+			
+			
+			return ['success' => false];
+
+		}
+		
+		return false;
+		
+	});
+
 ?>

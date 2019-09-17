@@ -41,7 +41,7 @@ $(window).ready(function() {
 		let parent = element.attr('data-parent');
 		if(parent) parent = $('.option#' + parent);
 			
-		if(parent && options) {
+		if(parent && parent[0] && options[0]) {
 		
 			parent.click(function() {
 				

@@ -49,20 +49,35 @@
 
 		</div>
 
-		<div class='pl-2 top'>
+		<div class='top px-1'>
 			{% if battle.active.id == character.id %}
 
-				<div class='options vertical'>
-
+				<div class='options w-100'>
 					<div class='option' id='attack'>Attack</div>
 					<div class='option' data-action='battle/skip'>Skip</div>
-					<div class='option' id='item'>Item</div>
 					<div class='option' data-action='battle/run'>Run</div>
 
-					{% for skill in character.skills().get() %}
-					<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name() }}</div>
+					{% for skill in character.skills %}
+						<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name() }}</div>
 					{% endfor %}
 				</div>
+
+				{% import 'home/inventory.twig' as inventory %}
+
+				<div class='inventory battle-inventory mt-3'>
+					{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+
+						{{ inventory.slot(stack) }}
+
+					{% endfor %}
+				</div>
+
+
+				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+
+					{{ inventory.popup(stack, character, false) }}
+
+				{% endfor %}
 			
 			{% else %}
 			
@@ -80,40 +95,3 @@
 	</div>
 	
 </div>
-
-<script>
-
-	$(window).ready(function() {
-		
-		$('.participant').click(function() {
-			
-			window.params.target = $(this).attr('id');
-			
-			sendAction('battle/skill');
-			
-		});
-		
-		$('.participant').hover(function() {
-			
-			$('.participant').removeClass('selected');
-			
-			let skill = window.params.skill;
-			let group = $('[data-skill=' + skill + ']').attr('data-group') != 0;
-			
-			if(skill) {
-				if(group)
-					$(this).closest('.row').find('.participant').addClass('selected');
-				else 
-					$(this).addClass('selected');
-			}
-		});
-		
-		$('.skill').click(function() {
-			
-			window.params.skill = $(this).attr('data-skill');
-			
-		});
-		
-	});
-
-</script>

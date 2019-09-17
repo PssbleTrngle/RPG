@@ -1,18 +1,17 @@
 .option {
 
-	width: 100px;
+	min-width: 100px;
 	text-align: center;
 	cursor: pointer;
-	padding: 10px;
+	padding: 10px 15px;
+	margin: 0 auto;
 	margin-bottom: 6px;
 	border: var(--highlight-dark) 2px solid;
 	
 }
 
 .options.horizontal {
-
-	display: table-row;
-	
+	text-align: center;
 }
 
 .options.horizontal > .option {
@@ -44,11 +43,16 @@
 }
 
 .option:last-child {
-	margin-right: 0;
 	margin-bottom: 0;
 }
 
 .option:hover {
 	background-color: var(--highlight);
 	border-color: var(--highlight);
+}
+
+.option.small {
+
+	min-width: 70px;
+
 }

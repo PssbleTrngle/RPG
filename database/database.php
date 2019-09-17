@@ -58,11 +58,16 @@
 		
 		public static $functions = [];
 
+		public function can($what) {
+			return array_key_exists($this->table.':'.$what, static::$functions)
+						&& array_key_exists($this->id, static::$functions[$this->table.':'.$what]);
+		}
+
 		public function __call($method, $args) {
 
-			if(array_key_exists($method, static::$functions))
-				if(array_key_exists($this->id, static::$functions[$method])) {
-					$func = static::$functions[$method][$this->id];
+			if(array_key_exists($this->table.':'.$method, static::$functions))
+				if(array_key_exists($this->id, static::$functions[$this->table.':'.$method])) {
+					$func = static::$functions[$this->table.':'.$method][$this->id];
 					array_unshift($args, $this);
 					return call_user_func_array($func, $args);
 				}
@@ -86,9 +91,9 @@
 			}		
 		
 			foreach($functions as $key => $function) {
-				if(!array_key_exists($key, static::$functions))
-					static::$functions[$key] = [];
-				static::$functions[$key][$id] = $function;
+				if(!array_key_exists($model->table.':'.$key, static::$functions))
+					static::$functions[$model->table.':'.$key] = [];
+				static::$functions[$model->table.':'.$key][$id] = $function;
 			}
 		
 		}

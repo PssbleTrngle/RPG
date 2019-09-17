@@ -33,17 +33,37 @@ $(window).ready(function() {
 		});
 	});
 
-	onLoad('.option[data-slot]', function(element) {
+	onLoad('.option', function(element) {
 
 		let slot = element.attr('data-slot');
-		element.click(function() {
+		let action = element.attr('data-item-action');
 
-			let stack = element.closest('.item-popup').attr('data-item');
-			window.params.stack = stack;
-			window.params.slot = slot;
-			sendAction('/inventory/take');
+		if(slot || action)
+			element.click(function() {
 
-		});
+				let stack = element.closest('.item-popup').attr('data-item');
+				window.params.stack = stack;
+
+				if(slot) {
+
+					window.params.slot = slot;
+					sendAction('/inventory/take');
+
+				} else if(action) {
+
+					let inBattle = element.closest('.battle')[0];
+
+					window.params.slot = slot;
+					window.params.action = action;
+
+					if(inBattle)
+						window.battle_action = '/inventory/action';
+					else
+						sendAction('/inventory/action');
+
+				}
+
+			});
 
 	});
 	

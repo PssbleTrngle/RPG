@@ -101,8 +101,8 @@
 		},
 		"potion": {
 			"health_potion": "Health Potion",
-			"poison": "Poison"
-
+			"poison_potion": "Poison",
+			"sleep_potion": "Sleep Powder"
 		}
 	},
 	"rarity": {
@@ -116,5 +116,13 @@
 	},
 	"dungeon": {
 		"some_crypt": "Some Crypt"
+	},
+	"action": {
+		"use": "Use",
+		"leave": "Exit",
+		"skip": "Skip",
+		"attack": "Attack",
+		"run": "Run",
+		"down": "Down"
 	}
 }

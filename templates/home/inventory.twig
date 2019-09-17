@@ -1,3 +1,38 @@
+{% macro popup(stack, character, canMove = true) %}
+
+	<div class='item-popup center mt-2' data-item='{{ stack.id }}'>
+
+		<div class='options horizontal'>
+
+			{% for action in ['use', 'apply'] if stack.item.can(action) %}
+				<div class='option small' data-item-action='{{ action }}'>{{ format('action.' ~ action) }}</div>
+			{% endfor %}
+
+			{% if canMove and character %}
+				{% for slot in 'Slot'|all if slot.fits(stack, character).success %}
+					<div class='option small' data-slot='{{ slot.id }}'>{{ slot.name() }}</div>
+				{% endfor %}
+			{% endif %}
+		
+		</div>
+
+		<div class='darken pb-2 pt-1 mt-1'>
+			<h3>{{ stack.item.name() }}</h3>
+			{% for key, type in stack.item.types() %}
+
+				{% if key > 0 %}
+					<p><small>{{ type.name() }}</small></p>
+				{% else %}
+					<p>{{ type.name() }}</p>
+				{% endif %}
+
+			{% endfor %}
+		</div>
+
+	</div>
+
+{% endmacro %}
+
 {% macro slot(stack, slot = null, character = null, renderEmpty = false) %}
 
 	{% if stack %}
@@ -64,26 +99,7 @@
 
 	{% for stack in character.inventory %}
 
-		<div class='item-popup center mt-2' data-item='{{ stack.id }}'>
-
-				<div class='options horizontal'>
-					{% for slot in 'Slot'|all if slot.fits(stack, character).success %}
-						<div class='option' data-slot='{{ slot.id }}'>{{ slot.name() }}</div>
-					{% endfor %}
-				</div>
-
-				<h3>{{ stack.item.name() }}</h3>
-				{% for key, type in stack.item.types() %}
-
-					{% if key > 0 %}
-						<p><small>{{ type.name() }}</small></p>
-					{% else %}
-						<p>{{ type.name() }}</p>
-					{% endif %}
-
-				{% endfor %}
-
-		</div>
+		{{ inventory.popup(stack, character) }}
 
 	{% endfor %}
 
