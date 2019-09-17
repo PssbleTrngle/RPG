@@ -20,13 +20,26 @@
 			<h3>{{ stack.item.name() }}</h3>
 			{% for key, type in stack.item.types() %}
 
-				{% if key > 0 %}
-					<p><small>{{ type.name() }}</small></p>
-				{% else %}
-					<p>{{ type.name() }}</p>
-				{% endif %}
+				<p>
+					{% if key > 0 %}
+						<small>{{ type.name() }}</small>
+					{% else %}
+						{{ type.name() }}
+					{% endif %}
+				</p>
 
 			{% endfor %}
+
+			<table class='stats w-33 mx-a'>
+				{% set stats = stack.item.stats %}
+				{% for stat in stats.keys if attribute(stats, stat) != 0 %}
+					<tr>
+						<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+						<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+
 		</div>
 
 	</div>

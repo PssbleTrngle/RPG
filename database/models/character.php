@@ -114,6 +114,9 @@
 		}
 		
 		public function travel($location) {
+
+			if($location->id == $this->position->location->id)
+				return ['success' => false, 'message' => 'Already here'];
 			
 			if($location->area->level <= $this->level()) {
 				

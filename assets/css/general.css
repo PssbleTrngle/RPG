@@ -138,6 +138,11 @@ img.icon {
 .mr-5, .mx-5, .m-5 { margin-right: 	calc(var(--marg) * 5); }
 .ml-5, .mx-5, .m-5 { margin-left: 	calc(var(--marg) * 5); }
 
+.mt-a, .my-a, .m-a { margin-top: 	auto; }
+.mb-a, .my-a, .m-a { margin-bottom: auto; }
+.mr-a, .mx-a, .m-a { margin-right: 	auto; }
+.ml-a, .mx-a, .m-a { margin-left: 	auto; }
+
 .pt-1, .py-1, .p-1 { padding-top: 	calc(var(--marg) * 1); }
 .pb-1, .py-1, .p-1 { padding-bottom: calc(var(--marg) * 1); }
 .pr-1, .px-1, .p-1 { padding-right: 	calc(var(--marg) * 1); }
