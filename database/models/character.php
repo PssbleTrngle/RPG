@@ -85,7 +85,13 @@
 		}
 		
 		public function stats() {
-			return $this->clazz->stats->add($this->race->stats);
+			$stats = $this->clazz->stats->add($this->race->stats);
+
+			foreach ($this->inventory as $stack) 
+				if($stack->slot->apply_stats)
+					$stats = $stats->add($stack->item->stats);
+
+			return $stats;
 		}
 		
 		public function position() {

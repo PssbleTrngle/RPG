@@ -74,42 +74,39 @@ $(window).ready(function() {
 		
 	});
 
-	onLoad('[data-popup]', function(element) {
+	onLoad('[data-popup]', function(popup) {
 		window.setTimeout(function() {
 
-			element.attr('data-max', element.maxHeight());
-			if(element.innerHeight())
-				element.css({ height: element.attr('data-max') });
+			popup.attr('data-max', popup.maxHeight());
+			if(popup.innerHeight())
+				popup.css({ height: popup.attr('data-max') });
 
 		}, 500);
-	});
-
-		$('[data-popup]').each(function() {
 		
-			let popup = $(this);
-			let btn = $(popup.attr('data-popup'));
+		let identifier = popup.attr('data-popup');
+		let btn = $(identifier);
 
-			popup.reload();
-			
-			if(btn) btn.click(function() {
+		if(btn) btn.click(function() {
 
-				if(popup.innerHeight()) {
+			popup = $('[data-popup=\'' + identifier + '\']');
 
-					popup.css({ height: 0 });
-					btn.removeClass("open");
+			if(popup.innerHeight()) {
 
-				} else {
+				popup.css({ height: 0 });
+				btn.removeClass("open");
 
-					popup.css({ height: popup.attr('data-max') });
-					btn.addClass("open");
+			} else {
 
-				}
+				popup.css({ height: popup.attr('data-max') });
+				btn.addClass("open");
 
-				popup.addClass('moving');
-				window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
+			}
 
-			});		
-		});
+			popup.addClass('moving');
+			window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
+
+		});	
+	});
 	
 });
 

@@ -4,6 +4,14 @@
    		
 		protected $table = 'stats';
 		public $keys = array('wisdom', 'strength', 'resistance', 'agility', 'luck');
+
+		public function __construct() {
+			$this->id = -1;
+		}
+
+		public function save(array $options = []) {
+			if($this->id > 0) parent::save($options);
+		}
 		
 		public function total() {
 			
@@ -15,7 +23,7 @@
 		}
   
 		public function add($other) {
-			$stats = new Stats;			
+			$stats = new Stats;		
 			foreach($this->keys as $stat)
 				$stats->$stat = $this->$stat + $other->$stat;
 			

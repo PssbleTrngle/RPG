@@ -210,14 +210,27 @@
 		}
 	
 		public static function registerAll() {
-			
+
 			/*
+			$keys = ['wisdom', 'strength', 'agility', 'luck', 'resistance'];
+			$weapons = ['blade', 'bow', 'florett', 'maze', 'nunchuck', 'sceptre', 'wand', 'battlestaff', 'club', 'dagger', 'hammer'];
+
 			foreach(Rarity::whereNotNull('color')->get() as $cent => $rarity)
-				foreach(['Blade', 'Bow', 'Florett', 'Maze', 'Nunchuck', 'Sceptre', 'Wand', 'Battlestaff', 'Club', 'Dagger', 'Hammer'] as $i => $weapon) {
+				foreach($weapons as $i => $weapon) {
 
-					$id = (100 * ($cent + 1)) + $i;			
+					$id = (100 * ($cent + 1)) + $i;
 
-					$weapon = strtolower($weapon);
+					$base = Stats::find(100 + $i);
+					$stats = Stats::find($id);
+					if($base && $stats) {
+						foreach ($keys as $key)
+							if($base->$key < 0)
+							$stats->$key = $base->$key - $cent;
+							else
+								$stats->$key = $base->$key * ($cent + 1);
+						$stats->save();
+					}
+
 					$type = ItemType::where('name', $weapon)->first() ?? ItemType::find(3);
 					static::register(['id' => $id, 'stats_id' => $id, 'name' => $weapon, 'rarity_id' => $rarity->id, 'type_id' => $type->id, 'stackable' => 0]);
 					
