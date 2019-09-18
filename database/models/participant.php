@@ -3,7 +3,7 @@
 	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
-		protected $with = ['battle', 'character', 'enemy', 'effects'];
+		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills'];
 
 		public function delete() {
 			global $capsule;
@@ -12,9 +12,16 @@
 				$this->enemy->delete();
 
 			$capsule->table('participant_effects')->where('participant_id', $this->id)->delete();
+			$capsule->table('participant_skills')->where('participant_id', $this->id)->delete();
 
 			parent::delete();
 
+		}
+		
+		public function skills() {	
+			return $this->belongsToMany(Skill::class, 'participant_skills', 'participant_id', 'skill_id')
+                ->as('usage')
+    			->withPivot('nextUse');
 		}
 
 		public function battle() {
@@ -31,6 +38,10 @@
 		
 		public function effects() {
 			return $this->belongsToMany(Effect::class, 'participant_effects', 'participant_id', 'effect_id')->withPivot('countdown');
+		}
+		
+		public function useableSkills() {
+			return $this->skills->where('usage.nextUse', '<=', 0);
 		}
 
 		public function addEffect($effect) {
@@ -72,7 +83,16 @@
 		}
 		
 		public function canTakeTurn() {
-			return $this->health > 0;
+			if($this->health <= 0) return false;
+
+			foreach ($this->effects as $effect)
+				if($effect->block) {
+					if($this->battle)
+						$this->battle->addMessage(new Message('blocked.'.$effect->name, $this->name()));
+					return false;
+				}
+
+			return true;
 		}
 
 		public function parent() {

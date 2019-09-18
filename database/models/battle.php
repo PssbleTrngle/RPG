@@ -7,6 +7,7 @@
 
 		public function __construct($key = '', $args = null) {
 			$this->key = $key;
+			if(is_string($args)) $args = [$args];
 			if($args) $this->args = implode(static::$glue, str_replace(static::$glue, ',', $args));
 		}
 
@@ -33,7 +34,7 @@
 		}
 		
 		public function messages() {
-			return $this->hasMany(Message::class, 'battle_id');
+			return $this->hasMany(Message::class, 'battle_id')->orderBy('id', 'desc');
 		}
 
 		public function active() {
@@ -66,8 +67,8 @@
 					$participant->battle_id = null;
 					$participant->save();
 				
-					$capsule::table('character_skills')
-						->where('character_id', $participant->character->id)
+					$capsule::table('participant_skills')
+						->where('participant_id', $participant->id)
 						->update(['nextUse' => 0]);
 
 				} else {
@@ -192,10 +193,10 @@
 		private function nextRound() {
 			global $capsule;
 			
-			foreach($this->participants as $participant) if($participant->character) {
+			foreach($this->participants as $participant) {
 			
-				$capsule::table('character_skills')
-					->where('character_id', $participant->character->id)
+				$capsule::table('participant_skills')
+					->where('participant_id', $participant->id)
 					->where('nextUse', '>', 0)
 					->decrement('nextUse');
 				
@@ -242,12 +243,8 @@
 				$npc = $enemy->npc;
 				$loot['xp'] += pow(1.5, $npc->level - 1);
 				
-				foreach($npc->loot as $item) {
-					$inventory = new Stack;
-					$inventory->item_id = $item->id;
-					$inventory->amount = 1;
-					$loot['items'][] = $inventory;
-				}
+				foreach($npc->loot as $item)
+					$loot['items'][] = Stack::create($item, 1);
 				
 			}
 			

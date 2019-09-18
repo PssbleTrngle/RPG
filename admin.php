@@ -20,7 +20,8 @@
 	
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		
-		$log = json_encode(Participant::find(77)->name());
+		$log = json_encode(Dungeon::find(1)->npcs->where('floor.minFloor', 2));
+
 		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
 		
 	});

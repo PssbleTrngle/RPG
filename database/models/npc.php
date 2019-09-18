@@ -9,7 +9,7 @@
 	class NPC extends BaseModel {
    		
 		protected $table = 'npc';
-		protected $with = ['loot', 'rank'];
+		protected $with = ['loot', 'rank', 'skills'];
 		
 		public function loot() {
 			return $this->belongsToMany(Item::class, 'npc_loot', 'npc_id', 'item_id')
@@ -20,7 +20,12 @@
 			return $this->belongsTo(Rank::class, 'rank_id');
 		}
 		
+		public function skills() {
+			return $this->belongsToMany(Skill::class, 'npc_skills', 'npc_id', 'skill_id');
+		}
+		
 		public function createEnemy($battle) {
+			global $capsule;
 
 			$enemy = new Enemy;
 			$participant = new Participant;
@@ -30,6 +35,11 @@
 
 			$participant->save();
 			$participant->refresh();
+
+			$skills = [];
+			foreach ($this->skills as $skill)
+				$skills[] = ['participant_id' => $participant->id, 'skill_id' => $skill->id];
+			$capsule->table('participant_skills')->insert($skills);
 			
 			$enemy->npc_id = $this->id;
 			$enemy->participant_id = $participant->id;

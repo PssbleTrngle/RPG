@@ -53,8 +53,8 @@
 
 				if($this->skillpoints >= $skill->cost) {
 			
-					$capsule::table('character_skills')
-						->insert(['skill_id' => $skill->id, 'character_id' => $this->id]);
+					$capsule::table('participant_skills')
+						->insert(['skill_id' => $skill->id, 'participant_id' => $this->participant->id]);
 
 					$this->skillpoints--;
 					$this->save();
@@ -217,14 +217,8 @@
 				->wherePivot('level', '<=', $this->level())
 				->get()
 				->filter(function($value, $key) {
-					return !$this->skills->contains('id', $value->id);
+					return !$this->participant->skills->contains('id', $value->id);
 				});
-		}
-		
-		public function skills() {		
-			return $this->belongsToMany(Skill::class, 'character_skills', 'character_id', 'skill_id')
-                ->as('usage')
-    			->withPivot('nextUse');
 		}
 		
 		public function maxHealth() {

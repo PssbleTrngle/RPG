@@ -1,0 +1,9 @@
+@font-face {
+  font-family: canterbury;
+  src: url('/assets/fonts/canterbury.ttf');
+}
+
+* {
+	font-family: canterbury;
+	letter-spacing: 0.1rem;
+}

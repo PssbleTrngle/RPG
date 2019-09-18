@@ -27,6 +27,8 @@
 			
 			if($battle) {
 				
+				$skills = $this->participant->useableSkills();
+
 				if(rand(1, 100) < (100 * option('call_chance'))
 					&& $battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
 					
@@ -38,13 +40,11 @@
 					
 					return new Message('called_help', [$this->name()]);
 					
-				} else {
+				} else if($skills->count() > 0) {
 					
+					$skill = $skills->random();
 					$target = $battle->characters(true)->random();
-					$damage = new DamageEvent(2);
-					
-					$target->damage($damage);
-					return new Message('damaged_by', [$this->name(), $damage->amount, $target->name()]);
+					return $skill->use($target, $this->participant);
 					
 				}
 				

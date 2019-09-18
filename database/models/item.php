@@ -4,6 +4,15 @@
    		
 		protected $table = 'inventory';
 		protected $with = ['item', 'slot', 'enchantment'];
+
+		public static function create(Item $item, int $amount = 1) {
+			
+			$stack = new static;
+			$stack->item_id = $item->id;
+			$stack->amount = $amount;
+			return $stack;
+
+		}
 		
 		public function item() {
 			return $this->belongsTo(Item::class, 'item_id');

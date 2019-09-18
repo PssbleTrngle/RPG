@@ -14,16 +14,16 @@
 		}
 		
 		public function npcs() {
-			return $this->belongsToMany(Skill::class, 'dungeon_npc', 'dungeon_id', 'npc_id')
+			return $this->belongsToMany(NPC::class, 'dungeon_npc', 'dungeon_id', 'npc_id')
                 ->as('floor')
     			->withPivot('maxFloor')
     			->withPivot('minFloor');
 		}
 		
 		public function getNPC($floor) {
-			
-			$npc = $this->npcs->random();
-			return NPC::find(1);
+
+			$npcs = $this->npcs->where('floor.minFloor', '<=', $floor)->where('floor.maxFloor', '>=', $floor);
+			return $npcs->random();
 			
 		}
 		
@@ -49,26 +49,32 @@
 		}
 		
 		public function search($character) {
-			if(!$character) return false;
 			
-			if($character && ($position = $character->position)
-			   && ($dungeon = $position->dungeon) && ($dungeon->id == $this->id)) {
+			if($character && ($position = $character->position) && $position->dungeon && $position->dungeon->id == $this->id) {
 				
-				if(!$position->foundStairs && rand(1, 100) < 5 + 3*$position->attempts) {
+				if(!$position->foundStairs && rand(1, 100) < 5 + 3* $position->attempts) {
 				
+					/* FIND STAIRS */
 					$position->foundStairs = true;
 					$position->attempts++;
 				
-				} else if(rand(1, 100) < 80) {
+				} else if(rand(1, 100) < 10 - $position->attempts) {
+					/* FIND LOOT */
+
+					$character->addLoot(['items' => [
+						Stack::create(Item::find(100 + rand(0, 10)), 1)
+					]]);
 					
+				} else {
+					
+					/* ENCOUNTER ENEMY */
 					$position->attempts++;
 					
-					if($npc = $dungeon->getNPC($position->floor)) {
+					if($npc = $position->dungeon->getNPC($position->floor)) {
 						$battle = Battle::start($character);
 						if(!$battle) return false;
 						$battle->addNPC($npc);
 					}
-					
 				}
 				
 				$position->save();

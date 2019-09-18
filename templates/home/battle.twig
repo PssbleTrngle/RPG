@@ -57,7 +57,7 @@
 					<div class='option' data-action='battle/skip'>Skip</div>
 					<div class='option' data-action='battle/run'>Run</div>
 
-					{% for skill in character.skills %}
+					{% for skill in character.participant.skills %}
 						<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name() }}</div>
 					{% endfor %}
 				</div>
@@ -89,7 +89,7 @@
 	</div>
 	
 	<div class='mt-2'>
-		{% for key in battle.messages %}
+		{% for key in battle.messages.take(5) %}
 		<p>{{ key.format()|raw }}</p>	
 		{% endfor %}
 	</div>

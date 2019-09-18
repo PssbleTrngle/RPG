@@ -184,10 +184,9 @@
 
 			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
-				$skill = $character->skills()
-					->where('id', $skillID)
-					->wherePivot('nextUse', '<=', 0)
-					->first();
+				$skill = $character->participant->useableSkills()
+							->where('id', $skillID)
+							->first();
 				
 				if($skillID && $skill) {
 						
@@ -206,7 +205,7 @@
 					$battle->refresh();
 					
 					if($message) {
-						$skill->timeout($character);
+						$skill->timeout($character->participant);
 						$battle->addMessage($message);
 						$battle->next();
 					}
