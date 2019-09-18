@@ -4,17 +4,14 @@
 
 {% block content %}
 
-	<div style='height: 600px;'>
-	<div class='classes mr-3' style='float: left;'></div>
-
 	<div class='character-row'>
-	{% for class in classes %}
-		<div class='character-panel' id='{{ class.id }}' style='float: left;'>
-			<h5>{{ class.name() }}</h5>
-			{{ icon('class/' ~ class.name()|lower, ['#ffffff'])|raw }}
-		</div>
-	{% endfor %}
-	</div>
+		<div class='classes mr-3 diagram'></div>
+		{% for class in classes %}
+			<div class='character-panel hidden' id='{{ class.id }}'>
+				<h5>{{ class.name() }}</h5>
+				{{ class|icon|raw }}
+			</div>
+		{% endfor %}
 	</div>
 
 {% endblock %}
@@ -52,7 +49,7 @@ $(window).ready(function() {
 			color: '#e2b11d',
 			fixed: false,
 			font: {
-				color: '#ffffff',
+				color: '#000',
 			},
 			scaling: {
 				label: true
@@ -66,7 +63,7 @@ $(window).ready(function() {
 			hierarchical: {
 				enabled: false,
 				parentCentralization: true,
-				direction: 'UP',
+				direction: 'UD',
 				sortMethod: 'hubsize'
 			}
 		}
@@ -79,10 +76,9 @@ $(window).ready(function() {
 			
 			let id = e.nodes[0];
 			
-			if(id) $('.character-panel').css({'display': 'none', '--size': '1'});
-			else $('.character-panel').css({'display': 'block', '--size': '0.4'});
-			
-			$('#' + id).css({'display': 'block'});
+			$('.character-panel').addClass('hidden');
+			if(id) $('.character-panel#' + id).removeClass('hidden');
+
 		});
 		
 	});

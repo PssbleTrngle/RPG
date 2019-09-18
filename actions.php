@@ -293,14 +293,20 @@
 
 		if($character && $stack && $action) {
 
-			$target = Participant::find($args['target']) ?? $character->participant;
+			$target = Participant::find($args['target'] ?? null) ?? $character->participant;
 
 			if($target && $stack->item->can($action)) {
 
-				$stack->item->$action($stack, $target);
+				$battle = $character->participant->battle;
+				if($battle) $battle->prepareTurn();
+
+				$success = $stack->item->$action($stack, $target);
+
+				if($battle && $success) $battle->next();
 				$character->refresh();
 				Stack::tidy($character);
-				return true;
+
+				return $success;
 
 			}
 			

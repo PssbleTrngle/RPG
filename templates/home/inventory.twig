@@ -17,28 +17,36 @@
 		</div>
 
 		<div class='darken pb-2 pt-1 mt-1'>
+
 			<h3>{{ stack.item.name() }}</h3>
-			{% for key, type in stack.item.types() %}
 
-				<p>
-					{% if key > 0 %}
-						<small>{{ type.name() }}</small>
-					{% else %}
-						{{ type.name() }}
-					{% endif %}
-				</p>
+			{% set matters = stack.item.stats.matters() %}
+			
+			<div class='{% if matters %}row{% endif %}'>
+				<div class='{% if matters %}w-50{% endif %} mx-a'>
+					{% for key, type in stack.item.types() %}
 
-			{% endfor %}
+						<p>
+							{% if key > 0 %}
+								<small>{{ type.name() }}</small>
+							{% else %}
+								{{ type.name() }}
+							{% endif %}
+						</p>
 
-			<table class='stats w-33 mx-a'>
-				{% set stats = stack.item.stats %}
-				{% for stat in stats.keys if attribute(stats, stat) != 0 %}
-					<tr>
-						<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
-						<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
-					</tr>
-				{% endfor %}
-			</table>
+					{% endfor %}
+				</div>
+
+				<table class='stats px-2'>
+					{% set stats = stack.item.stats %}
+					{% for stat in stats.keys if attribute(stats, stat) != 0 %}
+						<tr>
+							<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+							<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
 
 		</div>
 

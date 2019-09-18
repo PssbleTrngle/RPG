@@ -237,25 +237,36 @@
 			}
 			*/
 
-			static::register(['id' => 1, 'name' => 'health_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Target $target) {
-
-				if($target->heal(20))
+			static::register(['id' => 1, 'name' => 'health_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Participant $target) {
+				if($target->heal(20)) {
 					$stack->useUp();
-
+					return true;
+				}
+				return false;
 			}]);
 
-			static::register(['id' => 2, 'name' => 'sleep_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Target $target) {
-
-				if($target->addEffect(Effect::find(6)))
+			static::register(['id' => 2, 'name' => 'sleep_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Participant $target) {
+				if($target->addEffect(Effect::find(6))) {
 					$stack->useUp();
-
+					return true;
+				}
+				return false;
 			}]);
 
-			static::register(['id' => 3, 'name' => 'poison_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Target $target) {
-
-				if($target->addEffect(Effect::find(1)))
+			static::register(['id' => 3, 'name' => 'poison_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Participant $target) {
+				if($target->addEffect(Effect::find(1))) {
 					$stack->useUp();
+					return true;
+				}
+				return false;
+			}]);
 
+			static::register(['id' => 10, 'name' => 'ambrosia', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Participant $target) {
+				$removed = false;
+				foreach ($target->effects as $effect)
+					$removed = $removed || $target->removeEffect($effect);
+				if($removed) $stack->useUp();
+				return $removed;
 			}]);
 
 			static::register(['id' => 4, 'name' => 'honey', 'type_id' => 1, 'stackable' => 1]);

@@ -9,6 +9,13 @@
 			$this->id = -1;
 		}
 
+		public function matters() {
+			foreach ($this->keys as $stat)
+				if($this->$stat != 0)
+					return true;
+			return false;
+		}
+
 		public function save(array $options = []) {
 			if($this->id > 0) parent::save($options);
 		}

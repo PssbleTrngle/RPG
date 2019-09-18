@@ -467,3 +467,12 @@ input.grow {
 	color: white;
 	*/
 }
+
+.hidden {
+	display: none;
+}
+
+.diagram {
+	height: 600px;
+	width: 600px;
+}

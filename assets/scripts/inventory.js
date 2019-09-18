@@ -7,7 +7,7 @@ $(window).ready(function() {
 			slot.click(function() {
 				
 				window.params.stack = slot.attr('id');
-				window.params.slot = 4;
+				window.params.slot = 1;
 				sendAction('/inventory/take');
 				
 			});
