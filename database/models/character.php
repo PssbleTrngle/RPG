@@ -3,10 +3,10 @@
 	class Character extends BaseModel {
    		
 		protected $table = 'character';
-		protected $with = ['clazz', 'race', 'position', 'inventory', 'account'];
+		protected $with = ['classes', 'race', 'position', 'inventory', 'account'];
 		
 		public function icon() {
-			return $this->clazz->icon();
+			return $this->classes->last()->icon();
 		}
 		
 		public function race() {
@@ -72,8 +72,8 @@
 			return option('base_bag_size');
 		}
 		
-		public function clazz() {
-			return $this->belongsTo(Clazz::class, 'class_id');
+		public function classes() {
+			return $this->belongsToMany(Clazz::class, 'character_classes', 'character_id', 'class_id');
 		}
 		
 		public function account() {
@@ -85,7 +85,10 @@
 		}
 		
 		public function stats() {
-			$stats = $this->clazz->stats->add($this->race->stats);
+			$stats = $this->race->stats;
+
+			foreach ($this->classes as $class)
+				$stats = $stats->add($class->stats);
 
 			foreach ($this->inventory as $stack) 
 				if($stack->slot->apply_stats)
@@ -192,15 +195,13 @@
 		}
 		
 		public function evolve($to) {
-			if(!$to) return false;
-			
+			global $capsule;
+
 			if($to) {
-				foreach($this->canEvolveTo() as $can)
-					if($can->id == $to->id) {
-						$this->class = $to->id;
-						$this->save();
-						return true;
-					}
+				if($this->canEvolveTo()->contains('id', $to->id)) {
+					$capsule->table('character_classes')->insert(['character_id' => $this->id, 'class_id' => $to->id]);
+					return true;
+				}
 			}
 
 			return false;
@@ -209,16 +210,23 @@
 		
 		public function canEvolveTo() {
 			/* TODO Remove Unneccessary Query */
-			return $this->clazz->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
+			if($this->classes->isEmpty()) return Clazz::where('id', '<', 10)->get();
+			return $this->classes->last()->evolvesTo->where('evolution.level', '<=', $this->level());
 		}
 		
-		public function canLearn() {			
-			return $this->clazz->skills()
-				->wherePivot('level', '<=', $this->level())
-				->get()
-				->filter(function($value, $key) {
-					return !$this->participant->skills->contains('id', $value->id);
-				});
+		public function canLearn() {
+			$skills = collect([]);
+
+			foreach($this->classes as $class) {
+				$skills = $skills->merge(
+					$class->skills()
+						->wherePivot('level', '<=', $this->level())
+						->get()
+						->filter(function($value, $key) {
+							return !$this->participant->skills->contains('id', $value->id);
+						})->all());
+			}		
+			return $skills;
 		}
 		
 		public function maxHealth() {
@@ -226,7 +234,7 @@
 		}
 
 		public function description() {
-			return format('character', [$this->race->name(), $this->clazz->name()]);
+			return format('character', [$this->race->name(), $this->classes->last()->name()]);
 		}
 
 		public function name() {
@@ -257,7 +265,7 @@
 		}
 
 		public function validate() {
-
+			global $capsule;
 			$correct = true;
 
 			if(!$this->position) {
@@ -266,6 +274,11 @@
 			}
 			if(!$this->participant) {
 				$this->createParticipant();
+				$correct = false;
+			}
+
+			if($this->classes->isEmpty()) {
+				$this->evolve(Clazz::find(1));
 				$correct = false;
 			}
 

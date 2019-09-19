@@ -62,7 +62,6 @@
 			$character = new Character;
 			$character->name = $name;
 			$character->race_id = 1;
-			$character->class_id = $clazz->id;
 			$character->health = 1000;
 			$character->account_id = $account->id;
 
@@ -70,6 +69,9 @@
 			$character->createParticipant();
 
 			$character->save();
+			$character->refresh();
+
+			$character->evolve($clazz->id);
 			return ['redirect' => '/profile'];
 
 		}

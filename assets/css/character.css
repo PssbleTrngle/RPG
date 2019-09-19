@@ -150,3 +150,37 @@
 .stat:first-child {
 	padding-right: 40px;
 }
+
+.journey > * {
+	text-align: center;
+	position: relative;
+}
+
+.journey > p:not(:last-child) {
+	--distance: 15px;
+	--arrow-length: 12px;
+	margin-bottom: calc(var(--arrow-length) * 2 + var(--distance) * 2);
+}
+
+.journey > p:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	top: calc(100% + var(--distance));
+	left: calc(50% - var(--arrow-length) / 2);
+	width: var(--arrow-length);
+	height: var(--arrow-length);
+	background-color: #0002;
+}
+
+.journey > p:not(:last-child)::before {
+	content: '';
+	position: absolute;
+	top: calc(100% + var(--distance) + var(--arrow-length));
+	left: calc(50% - var(--arrow-length));
+	width: 0;
+	height: 0;
+
+	border-left: var(--arrow-length) solid transparent;
+	border-right: var(--arrow-length) solid transparent;
+	border-top: var(--arrow-length) solid #0002;
+}

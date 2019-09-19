@@ -9,31 +9,30 @@
 	<h1 class='banner w-66 mb-2'>{{ format('message.welcome', account.username) }}</h1>
 
 	<div class='character-row big'>
-			{% for character in account.characters %}
-				
-				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
-					<h4>{{ character.name() }}</h4>
-					<small>
-						<p>{{ character.description()}}</p>
-						<p>Level {{ character.level() }}</p>
-						<p>{{ character.birth|age }}</p>
-					</small>
-					{{ character|icon|raw }}
+		{% for character in account.characters %}
+			
+			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+				<h4>{{ character.name() }}</h4>
+				<small>
+					<p>{{ character.description()}}</p>
+					<p>Level {{ character.level() }}</p>
+					<p>{{ character.birth|age }}</p>
+				</small>
+				{{ character|icon|raw }}
+			</div>
+
+		{% else %}
+			
+			<a href='profile/create'>
+				<div class='character-panel create'>
+					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
 				</div>
+			</a>
 
-			{% else %}
-				
-				<a href='profile/create'>
-					<div class='character-panel create'>
-						<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
-					</div>
-				</a>
-
-			{% endfor %}
-		
-		<div>
-
-			<div class='ml-5'>
+		{% endfor %}
+	
+		<div class='row'>
+			<div class='pl-4'>
 				<div class='row'>
 					{% if account.selected %}
 						<a href='/'><div class='profile-btn fade dungeon-btn'>{{ account.selected.position|icon|raw }}</div></a>
@@ -65,6 +64,18 @@
 						{% endfor %}
 					</div>
 								
+				{% endif %}
+			</div>
+			<div class='bottom pl-2'>
+				{% if account.selected %}
+					<div class='journey'>
+						<h2>Your Journey</h2>
+						<p>{{ format('journey.start') }}</p>
+						{% for class in account.selected.classes %}
+							<p>{{ class.name() }}</p>
+						{% endfor %}
+						<p>{{ format('journey.end') }}</p>
+					</div>
 				{% endif %}
 			</div>
 		</div>

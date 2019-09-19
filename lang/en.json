@@ -24,6 +24,10 @@
 			}
 		}
 	},
+	"journey": {
+		"start": "Blobbed into existance",
+		"end": "The End?"
+	},
 	"stat": {
 		"wisdom": "Wisdom",
 		"strength": "Strength",

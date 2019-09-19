@@ -3,7 +3,7 @@
 	class Clazz extends BaseModel {
 
 		protected $table = 'class';
-		protected $with = ['skills', 'stats', 'starting_weapon'];
+		protected $with = ['skills', 'stats', 'starting_weapon', 'evolvesTo', 'evolvesFrom'];
 		
 		public function evolvesTo() {
 			return $this->belongsToMany(Clazz::class, 'evolution', 'from', 'to')
@@ -21,13 +21,8 @@
 		
 		public function rank() {
 		
-			$class = $this;
-			
-			$rank = 1;
-			for($rank = 1; ($from = $class->evolvesFrom()->first()); $rank++)
-				$class = $from;
-			
-			return $rank;
+			if($this->evolvesFrom->isEmpty()) return 1;
+			return $this->evolvesFrom->first()->rank() + 1;
 			
 		}
 		
@@ -44,8 +39,6 @@
 		}
 
 		public static function registerAll() {
-
-			/*
 
 			$classes = [
 				['id' => 1, 'name' => 'apprentice'],
@@ -111,9 +104,11 @@
 				['id' => 1010, 'name' => 'king', 'from' => [401]]
 			];
 
+			/*
 			global $capsule;
 
 			$capsule->table('evolution')->where('from', '>', 0)->delete();
+
 			static::where('id', '>', 1)->delete();
 
 			foreach($classes as $class) {
@@ -130,7 +125,8 @@
 			foreach($classes as $class) {
 
 				$from = $class['from'] ?? [];
-				foreach($from as $f) $evolutions[] = ['to' => $class['id'], 'from' => $f, 'level' => 1];
+				$level = floor(log10($class['id'])) * 10;
+				foreach($from as $f) $evolutions[] = ['to' => $class['id'], 'from' => $f, 'level' => $level];
 
 			}
 
