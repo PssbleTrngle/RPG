@@ -198,7 +198,7 @@
 			global $capsule;
 
 			if($to) {
-				if($this->canEvolveTo()->contains('id', $to->id)) {
+				if($this->canEvolveTo->contains('id', $to->id)) {
 					$capsule->table('character_classes')->insert(['character_id' => $this->id, 'class_id' => $to->id]);
 					return true;
 				}

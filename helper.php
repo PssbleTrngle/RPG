@@ -47,7 +47,7 @@
 		$title = '';
         if(!isset($img)) {
 			$img = 'missing.png';
-			if(getAccount()->hasStatus('betatester')) $title = $path;
+			if(getAccount()->hasPermission('tester')) $title = $path;
         }
 
         $html = "<div title='$title' class='icon-container'>";
@@ -69,13 +69,13 @@
 	/* Used by pages requiring a certain status like admin or betatester */
 	class NeedsAuthentication {
 	    private $view;
-	    private $accessLevel;
+	    private $permission;
 	    private $post;
 
-	    public function __construct(\Slim\Views\Twig $view, $accessLevel, $post = false) {
+	    public function __construct(\Slim\Views\Twig $view, $name = 'user', $post = false) {
 	        $this->view = $view;
-	        $status = Status::where('name', $accessLevel)->first() ?? Status::find(100);
-	        $this->accessLevel = $status->id;
+	        $permission = Permission::where('name', $name)->first() ?? null;
+	        $this->permission = $permission;
 	        $this->post = $post;
 	    }
 	    public function __invoke($request, $response, $next) {
@@ -86,7 +86,8 @@
 	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not logged in']);
 	            return $response->withRedirect('/login?next=' . $request->getUri()->getPath());
 	        }
-	        if ($account->status->id < $this->accessLevel) {
+
+	        if (!($this->permission && $account->hasPermission($this->permission))) {
 	        	if($this->post) return json_encode(['success' => false, 'message' => 'You are not allowed to do this']);
 	            return $this->view->render($response->withStatus(403), 'handlers/403.twig');
 	        }

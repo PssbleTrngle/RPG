@@ -113,11 +113,6 @@
 
 		$selected = getAccount()->selected;
 
-		if($selected->participant->battle) {
-		}
-		#$selected->participant->addEffect(Effect::find(3));
-		#$selected->participant->addEffect(Effect::find(3));
-
 		if($selected)
 			return $this->view->render($response, 'home.twig', []);
 

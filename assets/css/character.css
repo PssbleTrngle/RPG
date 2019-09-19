@@ -1,12 +1,7 @@
-.character-row {
-
-	display: table;
-	border-spacing: 20px;
-	border-collapse: separate;
-}
-
 .character-panel {
-	display: table-cell;
+
+	display: inline-block;
+	width: calc(33% - 60px);
 	
 	cursor: pointer;
 	border: 3px var(--highlight-dark) solid;
@@ -15,7 +10,14 @@
 	box-shadow: 5px 5px 20px 0 inset #0006;
 	padding: 3% 2%;
 	transition: 0.1s border linear;
+
+	margin: 0 10px;
+	margin-bottom: 10px;
 	
+}
+
+.character-panel.create {
+
 }
 
 .character-panel:hover {
@@ -56,10 +58,6 @@
 
 .character-panel > * {
 	text-align: center;
-}
-
-.character-panel.create > * {
-	margin-top: 65%;
 }
 
 .classes {

@@ -94,6 +94,8 @@
 			$account->save();
 			$account->refresh();
 
+			$account->addPermission(Permission::where('name', 'user')->first());
+
 			$_SESSION['account'] = $account->id;
 			return $response->withRedirect('/');
 			

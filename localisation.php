@@ -68,7 +68,7 @@
 		if(is_null($json))
 			$json = readLangFiles(getLang(), option('default_lang'));
 
-		$unknown = getAccount()->hasStatus('betatester') ? $key : '???';
+		$unknown = getAccount()->hasPermission('tester') ? $key : '???';
 		$translation = $json[$key] ?? $unknown;
 
 		foreach ($formats as $key => $class) {

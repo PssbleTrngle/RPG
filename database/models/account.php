@@ -1,22 +1,18 @@
 <?php
 
-	class Status extends BaseModel {
+	class Permission extends BaseModel {
 		
-		protected $table = 'status';
-		
-		public function accounts() {
-			return $this->hasMany(Account::class, 'status_id');
-		}
+		protected $table = 'permission';
 	
 	}
 
 	class Account extends BaseModel {
    		
 		protected $table = 'account';
-		protected $with = ['status', 'characters', 'selected'];
+		protected $with = ['permissions', 'characters', 'selected'];
 		
-		public function status() {
-			return $this->belongsTo(Status::class, 'status_id');
+		public function permissions() {
+			return $this->belongsToMany(Permission::class, 'account_permissions', 'account_id', 'permission_id');
 		}
 		
 		public function name() {
@@ -46,9 +42,10 @@
 			return false;
 		}
 
-		public function hasStatus($status) {
-			if(is_string($status)) $status = Status::where('name', $status)->first();
-	        return $status && $this->status->id >= $status->id;
+		public function hasPermission($permission) {
+			if(is_string($permission))
+				return $this->permissions->contains('name', $permission);
+			return $this->permissions->contains('id', $permission->id);
 		}
 
 		public function validate() {
@@ -61,6 +58,18 @@
 
 			return true;
 
+		}
+		
+		public function addPermission($permission) {
+			global $capsule;
+
+			if($this->permissions->contains('id', $permission->id)) {
+				$capsule->table('account_permissions')->insert(['account_id' => $this->id, 'permission_id' => $permission->id]);
+				return true;
+			}
+
+			return false;
+			
 		}
 	
 	}

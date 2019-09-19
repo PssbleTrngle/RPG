@@ -49,30 +49,34 @@
 
 		$clazz = $args['class'];
 		$name = $args['name'];
+
+		if($account->characters->isEmpty() || $account->hasPermission('create_chars')) {
 		
-		if($clazz && $name) {
+			if($clazz && $name) {
 
-			if(Character::where('name', $name)->first())
-				return ['success' => false, 'message' => 'Name not available'];
+				if(Character::where('name', $name)->first())
+					return ['success' => false, 'message' => 'Name not available'];
 
-			$clazz = Clazz::find($clazz);
-			if(!$clazz && !$clazz->evolvesFrom->first())
-				return ['success' => false, 'message' => 'Not a starter class'];
+				$clazz = Clazz::find($clazz);
+				if(!$clazz && !$clazz->evolvesFrom->first())
+					return ['success' => false, 'message' => 'Not a starter class'];
 
-			$character = new Character;
-			$character->name = $name;
-			$character->race_id = 1;
-			$character->health = 1000;
-			$character->account_id = $account->id;
+				$character = new Character;
+				$character->name = $name;
+				$character->race_id = 1;
+				$character->health = 1000;
+				$character->account_id = $account->id;
 
-			$character->createPosition();
-			$character->createParticipant();
+				$character->createPosition();
+				$character->createParticipant();
 
-			$character->save();
-			$character->refresh();
+				$character->save();
+				$character->refresh();
 
-			$character->evolve($clazz->id);
-			return ['redirect' => '/profile'];
+				$character->evolve($clazz->id);
+				return ['redirect' => '/profile'];
+
+			}
 
 		}
 		

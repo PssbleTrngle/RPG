@@ -6,32 +6,34 @@
 
 {% block content %}
 	
-	<h1 class='banner w-66 mb-2'>{{ format('message.welcome', account.username) }}</h1>
+	<h1 class='banner w-66 mb-4'>{{ format('message.welcome', account.username) }}</h1>
 
-	<div class='character-row big'>
-		{% for character in account.characters %}
-			
-			<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
-				<h4>{{ character.name() }}</h4>
-				<small>
-					<p>{{ character.description()}}</p>
-					<p>Level {{ character.level() }}</p>
-					<p>{{ character.birth|age }}</p>
-				</small>
-				{{ character|icon|raw }}
-			</div>
-
-		{% else %}
-			
-			<a href='profile/create'>
-				<div class='character-panel create'>
-					<h2 class='text-black center' ><i class="fas fa-plus"></i></h2>
+	<div class='row'>
+		<div class='character-row w-66'>
+			{% for character in account.characters %}
+				
+				<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+					<h4>{{ character.name() }}</h4>
+					<small>
+						<p>{{ character.description()}}</p>
+						<p>Level {{ character.level() }}</p>
+						<p>{{ character.birth|age }}</p>
+					</small>
+					{{ character|icon|raw }}
 				</div>
-			</a>
 
-		{% endfor %}
-	
-		<div class='row'>
+			{% endfor %}
+
+			{% if account.characters.isEmpty() or account.hasPermission('create_chars') %}
+				<div class='character-panel create'>
+					<p>Create</p>
+					{{ icon('icon/create')|raw }}
+				</div>
+			{% endif %}
+
+		</div>
+		
+		<div class='row bottom'>
 			<div class='pl-4'>
 				<div class='row'>
 					{% if account.selected %}
@@ -66,7 +68,7 @@
 								
 				{% endif %}
 			</div>
-			<div class='bottom pl-2'>
+			<div class='pl-2'>
 				{% if account.selected %}
 					<div class='journey'>
 						<h2>Your Journey</h2>
