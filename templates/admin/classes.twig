@@ -20,4 +20,17 @@
 		</tr>
 	</table>
 
+	<script>
+
+    window.classes = {
+		{% for class in classes %}
+       		{{ class.id }}: {label: '{{ class.name() }}', from: 
+       		[{% for from in class.evolvesFrom %}
+       			{{ from.id }},
+       		{% endfor %}]},
+		{% endfor %}
+    };
+
+	</script>
+
 {% endblock %}
