@@ -473,6 +473,14 @@ input.grow {
 }
 
 .diagram {
-	height: 600px;
-	width: 600px;
+	border-collapse: separate;
+	border-spacing: 5px;
+	table-layout: fixed;
+	height: 700px;
+	width: 100%;
+}
+
+.diagram td {
+	width: 50% !important;
+	height: 400px !important;
 }

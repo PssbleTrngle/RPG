@@ -14,8 +14,9 @@
 .slot-text {
 	
 	font-size: 15px;
-	padding: calc(var(--size) / 2 - 10px) 0;
+	padding: calc(var(--size) / 2 - 5px) 0;
 	background-color: #0001;
+	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 
 }
 

@@ -4,86 +4,20 @@
 
 {% block content %}
 
-	<div class='character-row'>
-		<div class='classes mr-3 diagram'></div>
-		{% for class in classes %}
-			<div class='character-panel hidden' id='{{ class.id }}'>
-				<h5>{{ class.name() }}</h5>
-				{{ class|icon|raw }}
-			</div>
-		{% endfor %}
-	</div>
+	<div class='diagram classes mr-3'></div>
+	<table class='diagram mr-3'>
+		<tr>
+			<td class='classes' data-display=1></td>
+			<td class='classes' data-display=2></td>
+		</tr>
+		<tr>
+			<td class='classes' data-display=3></td>
+			<td class='classes' data-display=4></td>
+		</tr>
+		<tr>
+			<td class='classes' data-display=5></td>
+			<td class='' data-display=6></td>
+		</tr>
+	</table>
 
-{% endblock %}
-
-{% block script %}
-<script>
-
-$(window).ready(function() {
-	
-    var nodes = new vis.DataSet([
-		{% for class in classes %}
-       		{id: {{ class.id }}, label: '{{ class.name() }}'},
-		{% endfor %}
-    ]);
-	
-    var edges = new vis.DataSet([
-		{% for class in classes %}
-			{% for to in class.evolvesTo().get() %}
-       			{from: {{ class.id }}, to: {{ to.id }}},
-			{% endfor %}
-		{% endfor %}
-    ]);
-	
-	var options = {
-		autoResize: true,
-		height: '100%',
-		width: '100%',
-		locale: 'en',
-		clickToUse: false,
-		interaction:{
-			keyboard: false,
-			dragNodes: false
-		},
-		nodes: {
-			color: '#e2b11d',
-			fixed: false,
-			font: {
-				color: '#000',
-			},
-			scaling: {
-				label: true
-			},
-			shadow: true
-		},
-		edges: {
-    		arrows: 'to',
-		},
-		layout: {
-			hierarchical: {
-				enabled: false,
-				parentCentralization: true,
-				direction: 'UD',
-				sortMethod: 'hubsize'
-			}
-		}
-	}
-	
-    $('.classes').each(function() {
-	
-		let network = new vis.Network($(this)[0], { nodes: nodes, edges: edges }, options);
-		network.on('click', function(e) {
-			
-			let id = e.nodes[0];
-			
-			$('.character-panel').addClass('hidden');
-			if(id) $('.character-panel#' + id).removeClass('hidden');
-
-		});
-		
-	});
-	
-});
-
-</script>
 {% endblock %}
