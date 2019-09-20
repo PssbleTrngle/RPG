@@ -1,6 +1,6 @@
 <?php
 
-	class Character extends BaseModel {
+	class Character extends ParticipantModel {
    		
 		protected $table = 'character';
 		protected $with = ['classes', 'race', 'position', 'inventory', 'account'];
@@ -13,7 +13,7 @@
 			return $this->belongsTo(Race::class, 'race_id');
 		}
 		
-		public function addLoot($loot) {
+		public function addLoot(array $loot) {
 			
 			if(array_key_exists('xp', $loot))
 				$this->addXp($loot['xp']);
@@ -239,10 +239,6 @@
 
 		public function name() {
 			return $this->name;
-		}
-
-		public function participant() {
-			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
 		public function createPosition() {

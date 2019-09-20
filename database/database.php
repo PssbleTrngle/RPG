@@ -122,9 +122,11 @@
 		
 	}
 
-	foreach (glob("database/models/*.php") as $filename) {
+	foreach (glob("database/interfaces/*.php") as $filename)
 	    include_once $filename;
-	}
+
+	foreach (glob("database/models/*.php") as $filename)
+	    include_once $filename;
 
 	registerAll();
 

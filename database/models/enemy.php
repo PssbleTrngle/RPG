@@ -1,6 +1,6 @@
 <?php
 
-	class Enemy extends BaseModel {
+	class Enemy extends ParticipantModel {
    		
 		protected $table = 'enemy';
 		protected $with = ['npc', 'participant'];
@@ -61,14 +61,6 @@
 		
 		public function npc() {
 			return $this->belongsTo(NPC::class, 'npc_id');
-		}
-		
-		public function effects() {
-			return $this->belongsToMany(Effect::class, 'enemy_id', 'effect_id');
-		}
-
-		public function participant() {
-			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
 		public function validate() {
