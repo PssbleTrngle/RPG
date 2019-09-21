@@ -104,12 +104,13 @@
 				['id' => 1010, 'name' => 'king', 'from' => [401]]
 			];
 
-			/*
+			return;
+
 			global $capsule;
 
-			$capsule->table('evolution')->where('from', '>', 0)->delete();
+			#$capsule->table('evolution')->where('from', '>', 0)->delete();
 
-			static::where('id', '>', 1)->delete();
+			#static::where('id', '>', 1)->delete();
 
 			foreach($classes as $class) {
 
@@ -131,8 +132,6 @@
 			}
 
 			$capsule->table('evolution')->insert($evolutions);
-
-			*/
 
 		}
 	

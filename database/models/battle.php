@@ -53,16 +53,6 @@
 		public function onSide($side) {
 			return $this->participants->where('side', $side);
 		}
-
-		public function enemies($asParticipants = false) {
-			$participants = $this->participants->where('enemy', '!=', null);
-			return $asParticipants ? $participants : $participants->pluck('enemy');
-		}
-
-		public function characters($asParticipants = false) {
-			$participants = $this->participants->where('character', '!=', null);
-			return $asParticipants ? $participants : $participants->pluck('character');
-		}
 		
 		public function delete() {
 			global $capsule;
