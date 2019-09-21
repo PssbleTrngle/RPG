@@ -29,12 +29,11 @@
 			return $this->belongsTo(Race::class, 'race_id');
 		}
 		
-		public function addLoot(array $loot) {
+		public function addLoot(Loot $loot) {
 			
-			if(array_key_exists('xp', $loot))
-				$this->addXp($loot['xp']);
+			$this->addXp($loot->xp);
 			
-			foreach($loot['items'] as $item) {
+			foreach($loot->items as $item) {
 				
 				$item->character_id = $this->id;
 				$item->slot_id = Slot::where('name', 'loot')->first()->id;

@@ -99,24 +99,12 @@
 			return $this->character ?? $this->enemy;
 		}
 		
-		public function maxHealth() {
-			return $this->parent()->maxHealth();
-		}
-		
 		public function name() {
 			return $this->parent()->name();
 		}
 		
-		public function level() {
-			return $this->parent()->level();
-		}
-		
 		public function icon() {
 			return $this->parent()->icon();
-		}
-		
-		public function stats() {
-			return $this->parent()->stats();
 		}
 
 		public function health() {
@@ -181,6 +169,15 @@
 			$this->health = ceil($this->maxHealth() * $amount);
 			$this->save();
 
+		}
+
+		public function __call($method, $args) {
+
+			$parent = $this->parent();
+			if(!method_exists($this, $method) && method_exists($parent, $method))
+				return call_user_func_array([$parent, $method], $args);
+
+			return parent::__call($method, $args);
 		}
 
 	}

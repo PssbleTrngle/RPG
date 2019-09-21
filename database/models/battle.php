@@ -234,15 +234,10 @@
 		
 		public function getLoot() {
 		
-			$loot = [];
-			$loot['xp'] = 0;
-			$loot['items'] = [];
+			$loot = new Loot([]);
+
 			foreach($this->participants as $participant) {
-				$l = $participant->getLoot();
-				if(array_key_exists('xp', $l)) $loot['xp'] += $l['xp'];
-				if(array_key_exists('items', $l)) 
-					foreach ($l['items'] as $item)
-						$loot['items'][] = $item;
+				$loot->add($participant->getLoot());
 			}
 			
 			return $loot;

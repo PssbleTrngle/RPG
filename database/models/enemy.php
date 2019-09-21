@@ -7,13 +7,13 @@
 
 		public function getLoot() {
 
-			$loot = [];
-			$loot['xp'] += pow(1.5, $this->npc->level - 1);
+			$xp = pow(1.5, $this->npc->level - 1);
 			
+			$items = [];
 			foreach($this->npc->loot as $item)
-				$loot['items'][] = Stack::create($item, 1);
+				$items[] = Stack::create($item, 1);
 
-			return $loot;
+			return new Loot($items, $xp);
 
 		}
 		
