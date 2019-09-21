@@ -1,24 +1,39 @@
 <?php
 
-	class Character extends BaseModel {
+	class Character extends ParticipantModel {
    		
 		protected $table = 'character';
-		protected $with = ['clazz', 'race', 'position', 'inventory', 'account'];
+		protected $with = ['classes', 'race', 'position', 'inventory', 'account'];
+		
+		public function loose() {
+
+			$this->message = 'lost';
+			$this->participant->revive();
+			$this->save();
+			
+		}
+		
+		public function win() {
+
+			$character->message = 'won';
+			$this->participant->revive();
+			$this->save();
+			
+		}
 		
 		public function icon() {
-			return $this->clazz->icon();
+			return $this->classes->last()->icon();
 		}
 		
 		public function race() {
 			return $this->belongsTo(Race::class, 'race_id');
 		}
 		
-		public function addLoot($loot) {
+		public function addLoot(Loot $loot) {
 			
-			if(array_key_exists('xp', $loot))
-				$this->addXp($loot['xp']);
+			$this->addXp($loot->xp);
 			
-			foreach($loot['items'] as $item) {
+			foreach($loot->items as $item) {
 				
 				$item->character_id = $this->id;
 				$item->slot_id = Slot::where('name', 'loot')->first()->id;
@@ -53,8 +68,8 @@
 
 				if($this->skillpoints >= $skill->cost) {
 			
-					$capsule::table('character_skills')
-						->insert(['skill_id' => $skill->id, 'character_id' => $this->id]);
+					$capsule::table('participant_skills')
+						->insert(['skill_id' => $skill->id, 'participant_id' => $this->participant->id]);
 
 					$this->skillpoints--;
 					$this->save();
@@ -72,8 +87,8 @@
 			return option('base_bag_size');
 		}
 		
-		public function clazz() {
-			return $this->belongsTo(Clazz::class, 'class_id');
+		public function classes() {
+			return $this->belongsToMany(Clazz::class, 'character_classes', 'character_id', 'class_id');
 		}
 		
 		public function account() {
@@ -85,7 +100,16 @@
 		}
 		
 		public function stats() {
-			return $this->clazz->stats->add($this->race->stats);
+			$stats = $this->race->stats;
+
+			foreach ($this->classes as $class)
+				$stats = $stats->add($class->stats);
+
+			foreach ($this->inventory as $stack) 
+				if($stack->slot->apply_stats)
+					$stats = $stats->add($stack->item->stats);
+
+			return $stats;
 		}
 		
 		public function position() {
@@ -114,6 +138,9 @@
 		}
 		
 		public function travel($location) {
+
+			if($location->id == $this->position->location->id)
+				return ['success' => false, 'message' => 'Already here'];
 			
 			if($location->area->level <= $this->level()) {
 				
@@ -161,9 +188,9 @@
 			if($this && $this->position->dungeon && !$this->participant->battle) {
 			
 				$this->position->dungeon_id = null;
-				$this->position->floor = 1;
+				$this->position->floor = null;
 				$this->position->attempts = 0;
-				$this->position->foundStairs = 0;
+				$this->position->foundStairs = false;
 				$this->position->save();
 				return true;
 				
@@ -183,15 +210,13 @@
 		}
 		
 		public function evolve($to) {
-			if(!$to) return false;
-			
+			global $capsule;
+
 			if($to) {
-				foreach($this->canEvolveTo() as $can)
-					if($can->id == $to->id) {
-						$this->class = $to->id;
-						$this->save();
-						return true;
-					}
+				if($this->canEvolveTo->contains('id', $to->id)) {
+					$capsule->table('character_classes')->insert(['character_id' => $this->id, 'class_id' => $to->id]);
+					return true;
+				}
 			}
 
 			return false;
@@ -200,22 +225,23 @@
 		
 		public function canEvolveTo() {
 			/* TODO Remove Unneccessary Query */
-			return $this->clazz->evolvesTo()->wherePivot('level', '<=', $this->level())->get();
+			if($this->classes->isEmpty()) return Clazz::where('id', '<', 10)->get();
+			return $this->classes->last()->evolvesTo->where('evolution.level', '<=', $this->level());
 		}
 		
-		public function canLearn() {			
-			return $this->clazz->skills()
-				->wherePivot('level', '<=', $this->level())
-				->get()
-				->filter(function($value, $key) {
-					return !$this->skills->contains('id', $value->id);
-				});
-		}
-		
-		public function skills() {		
-			return $this->belongsToMany(Skill::class, 'character_skills', 'character_id', 'skill_id')
-                ->as('usage')
-    			->withPivot('nextUse');
+		public function canLearn() {
+			$skills = collect([]);
+
+			foreach($this->classes as $class) {
+				$skills = $skills->merge(
+					$class->skills()
+						->wherePivot('level', '<=', $this->level())
+						->get()
+						->filter(function($value, $key) {
+							return !$this->participant->skills->contains('id', $value->id);
+						})->all());
+			}		
+			return $skills;
 		}
 		
 		public function maxHealth() {
@@ -223,15 +249,11 @@
 		}
 
 		public function description() {
-			return format('character', [$this->race->name(), $this->clazz->name()]);
+			return format('character', [$this->race->name(), $this->classes->last()->name()]);
 		}
 
 		public function name() {
 			return $this->name;
-		}
-
-		public function participant() {
-			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
 		public function createPosition() {
@@ -254,7 +276,7 @@
 		}
 
 		public function validate() {
-
+			global $capsule;
 			$correct = true;
 
 			if(!$this->position) {
@@ -263,6 +285,11 @@
 			}
 			if(!$this->participant) {
 				$this->createParticipant();
+				$correct = false;
+			}
+
+			if($this->classes->isEmpty()) {
+				$this->evolve(Clazz::find(1));
 				$correct = false;
 			}
 

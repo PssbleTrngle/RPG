@@ -1,12 +1,7 @@
-.character-row {
-
-	display: table;
-	border-spacing: 20px;
-	border-collapse: separate;
-}
-
 .character-panel {
-	display: table-cell;
+
+	display: inline-block;
+	width: calc(33% - 60px);
 	
 	cursor: pointer;
 	border: 3px var(--highlight-dark) solid;
@@ -15,7 +10,14 @@
 	box-shadow: 5px 5px 20px 0 inset #0006;
 	padding: 3% 2%;
 	transition: 0.1s border linear;
+
+	margin: 0 10px;
+	margin-bottom: 10px;
 	
+}
+
+.character-panel.create {
+
 }
 
 .character-panel:hover {
@@ -56,10 +58,6 @@
 
 .character-panel > * {
 	text-align: center;
-}
-
-.character-panel.create > * {
-	margin-top: 65%;
 }
 
 .classes {
@@ -149,4 +147,38 @@
 
 .stat:first-child {
 	padding-right: 40px;
+}
+
+.journey > * {
+	text-align: center;
+	position: relative;
+}
+
+.journey > p:not(:last-child) {
+	--distance: 15px;
+	--arrow-length: 12px;
+	margin-bottom: calc(var(--arrow-length) * 2 + var(--distance) * 2);
+}
+
+.journey > p:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	top: calc(100% + var(--distance));
+	left: calc(50% - var(--arrow-length) / 2);
+	width: var(--arrow-length);
+	height: var(--arrow-length);
+	background-color: #0002;
+}
+
+.journey > p:not(:last-child)::before {
+	content: '';
+	position: absolute;
+	top: calc(100% + var(--distance) + var(--arrow-length));
+	left: calc(50% - var(--arrow-length));
+	width: 0;
+	height: 0;
+
+	border-left: var(--arrow-length) solid transparent;
+	border-right: var(--arrow-length) solid transparent;
+	border-top: var(--arrow-length) solid #0002;
 }

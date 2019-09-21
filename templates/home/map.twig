@@ -21,7 +21,7 @@
 
 		{% import _self as map %}
 
-		{% for area in areas() %}
+		{% for area in 'Area'|all %}
 
 			{{ map.location(area, character.position.location.area.id == area.id, character.level(), 'area') }}
 

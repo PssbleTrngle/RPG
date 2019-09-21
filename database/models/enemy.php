@@ -1,9 +1,21 @@
 <?php
 
-	class Enemy extends BaseModel {
+	class Enemy extends ParticipantModel {
    		
 		protected $table = 'enemy';
 		protected $with = ['npc', 'participant'];
+
+		public function getLoot() {
+
+			$xp = pow(1.5, $this->npc->level - 1);
+			
+			$items = [];
+			foreach($this->npc->loot as $item)
+				$items[] = Stack::create($item, 1);
+
+			return new Loot($items, $xp);
+
+		}
 		
 		public function icon() {
 			return $this->npc->icon();
@@ -27,6 +39,8 @@
 			
 			if($battle) {
 				
+				$skills = $this->participant->useableSkills();
+
 				if(rand(1, 100) < (100 * option('call_chance'))
 					&& $battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
 					
@@ -38,13 +52,11 @@
 					
 					return new Message('called_help', [$this->name()]);
 					
-				} else {
+				} else if($skills->count() > 0) {
 					
+					$skill = $skills->random();
 					$target = $battle->characters(true)->random();
-					$damage = new DamageEvent(2);
-					
-					$target->damage($damage);
-					return new Message('damaged_by', [$this->name(), $damage->amount, $target->name()]);
+					return $skill->use($target, $this->participant);
 					
 				}
 				
@@ -61,14 +73,6 @@
 		
 		public function npc() {
 			return $this->belongsTo(NPC::class, 'npc_id');
-		}
-		
-		public function effects() {
-			return $this->belongsToMany(Effect::class, 'enemy_id', 'effect_id');
-		}
-
-		public function participant() {
-			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
 		public function validate() {

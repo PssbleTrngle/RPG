@@ -49,28 +49,34 @@
 
 		$clazz = $args['class'];
 		$name = $args['name'];
+
+		if($account->characters->isEmpty() || $account->hasPermission('create_chars')) {
 		
-		if($clazz && $name) {
+			if($clazz && $name) {
 
-			if(Character::where('name', $name)->first())
-				return ['success' => false, 'message' => 'Name not available'];
+				if(Character::where('name', $name)->first())
+					return ['success' => false, 'message' => 'Name not available'];
 
-			$clazz = Clazz::find($clazz);
-			if(!$clazz && !$clazz->evolvesFrom->first())
-				return ['success' => false, 'message' => 'Not a starter class'];
+				$clazz = Clazz::find($clazz);
+				if(!$clazz && !$clazz->evolvesFrom->first())
+					return ['success' => false, 'message' => 'Not a starter class'];
 
-			$character = new Character;
-			$character->name = $name;
-			$character->race_id = 1;
-			$character->class_id = $clazz->id;
-			$character->health = 1000;
-			$character->account_id = $account->id;
+				$character = new Character;
+				$character->name = $name;
+				$character->race_id = 1;
+				$character->health = 1000;
+				$character->account_id = $account->id;
 
-			$character->createPosition();
-			$character->createParticipant();
+				$character->createPosition();
+				$character->createParticipant();
 
-			$character->save();
-			return ['redirect' => '/profile'];
+				$character->save();
+				$character->refresh();
+
+				$character->evolve($clazz->id);
+				return ['redirect' => '/profile'];
+
+			}
 
 		}
 		
@@ -184,10 +190,9 @@
 
 			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
-				$skill = $character->skills()
-					->where('id', $skillID)
-					->wherePivot('nextUse', '<=', 0)
-					->first();
+				$skill = $character->participant->useableSkills()
+							->where('id', $skillID)
+							->first();
 				
 				if($skillID && $skill) {
 						
@@ -206,7 +211,7 @@
 					$battle->refresh();
 					
 					if($message) {
-						$skill->timeout($character);
+						$skill->timeout($character->participant);
 						$battle->addMessage($message);
 						$battle->next();
 					}
@@ -261,12 +266,57 @@
 	registerAction('/inventory/take', function($args, $account) {
 			
 		$character = $account->selected;
-		$stack = $args['stack'] ?? null;		
+		$stack = Stack::find($args['stack'] ?? null);
+		$slot = Slot::find($args['slot'] ?? null);	
 
-		if($character && ($stack = Stack::find($stack)) && !$character->battle) {
+		if($character && $stack && $slot && !$character->battle) {
+
+			$fits = $slot->fits($stack, $character);
+
+			if($fits['success']) {
 			
-			$message = $stack->take($character);
-			return ['success' => $message !== false, 'message' => $message, 'reload' => 'inventory'];
+				$stack->slot_id = $slot->id;
+				$stack->save();
+				$character->refresh();
+				Stack::tidy($character);
+				
+			}
+			
+			return result($fits, ['reload' => 'inventory']);
+
+		}
+		
+		return false;
+		
+	});
+
+	registerAction('/inventory/action', function($args, $account) {
+			
+		$character = $account->selected;
+		$stack = Stack::find($args['stack'] ?? null);
+		$action = $args['action'] ?? null;
+
+		if($character && $stack && $action) {
+
+			$target = Participant::find($args['target'] ?? null) ?? $character->participant;
+
+			if($target && $stack->item->can($action)) {
+
+				$battle = $character->participant->battle;
+				if($battle) $battle->prepareTurn();
+
+				$success = $stack->item->$action($stack, $target);
+
+				if($battle && $success) $battle->next();
+				$character->refresh();
+				Stack::tidy($character);
+
+				return $success;
+
+			}
+			
+			
+			return ['success' => false];
 
 		}
 		

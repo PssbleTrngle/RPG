@@ -14,12 +14,19 @@
 		"evolve_2": "Choose an specialization",
 		"battle": {
 			"damaged_by": "§h$1 dealt §h$2 damage to §h$3",
-			"damaged_using": "§h$1's §h$2 dealt §h$3 damage to §h$4",
+			"damaged_using": "§h$1's $2 dealt §h$3 damage to §h$4",
 			"no_effect": "The attack had no effect!",
 			"skipped": "§h$1 skipped",
 			"scared": "§h$1 was to scared to attack",
-			"called_help": "§h$1Called for help"
+			"called_help": "§h$1Called for help",
+			"blocked": {
+				"asleep": "§1$1 had a wonderful sleep"
+			}
 		}
+	},
+	"journey": {
+		"start": "Blobbed into existance",
+		"end": "The End?"
 	},
 	"stat": {
 		"wisdom": "Wisdom",
@@ -69,10 +76,18 @@
 		"skull": "Floating Skull",
 		"slime": "Generic Slime"
 	},
-	"item": {
-		"honey": "Honey Comb",
-		"weapon": {
-			"format": "$2 $1",
+	"slot": {
+		"inventory": "Inventory",
+		"left_hand": "Left Hand",
+		"right_hand": "Right Hand",
+		"loot": "Loot"
+ 	},
+	"itemtype": {
+		"weapon": "Weapon",
+		"potion": "Potion",
+		"object": "Object",
+		"weapons": {
+			"two_handed": "Two-Handed",
 			"blade": "Blade",
 			"bow": "Bow",
 			"florett": "Florett",
@@ -84,11 +99,18 @@
 			"club": "Club",
 			"dagger": "Dagger",
 			"hammer": "Hammer"
+		}
+	},
+	"item": {
+		"honey": "Honey Comb",
+		"weapon": {
+			"format": "$2 $1"
 		},
 		"potion": {
 			"health_potion": "Health Potion",
-			"poison": "Poison"
-
+			"poison_potion": "Poison",
+			"sleep_potion": "Sleep Powder",
+			"ambrosia": "Ambrosia"
 		}
 	},
 	"rarity": {
@@ -102,5 +124,13 @@
 	},
 	"dungeon": {
 		"some_crypt": "Some Crypt"
+	},
+	"action": {
+		"use": "Use",
+		"leave": "Exit",
+		"skip": "Skip",
+		"attack": "Attack",
+		"run": "Run",
+		"down": "Down"
 	}
 }

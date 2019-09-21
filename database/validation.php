@@ -59,8 +59,7 @@
 		foreach(Clazz::all() as $class) {
 			$total = $class->stats->total();
 			$rank = $class->rank();
-			$per_rank = 10;
-			$reference = 100 + $per_rank * ($rank-1);
+			$reference = $rank == 1 ? 100 : 10;
 			
 			if($total != $reference) {
 				if(hasLevel($debug_level, 1)) $out .= info($class->name.' total stats are not  '.$reference.' ('.$total.')', 'red');

@@ -45,7 +45,7 @@
 		global $default;
 		
 		if(!is_null($lang)) return $lang;
-		if(isset($_SESSION['lang'])) {
+		if($_SESSION['lang'] ?? null) {
 			$lang = $_SESSION['lang'];
 			return $lang;
 		}
@@ -68,7 +68,7 @@
 		if(is_null($json))
 			$json = readLangFiles(getLang(), option('default_lang'));
 
-		$unknown = getAccount()->hasStatus('betatester') ? $key : '???';
+		$unknown = getAccount()->hasPermission('tester') ? $key : '???';
 		$translation = $json[$key] ?? $unknown;
 
 		foreach ($formats as $key => $class) {

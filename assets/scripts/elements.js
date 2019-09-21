@@ -41,7 +41,7 @@ $(window).ready(function() {
 		let parent = element.attr('data-parent');
 		if(parent) parent = $('.option#' + parent);
 			
-		if(parent && options) {
+		if(parent && parent[0] && options[0]) {
 		
 			parent.click(function() {
 				
@@ -74,20 +74,21 @@ $(window).ready(function() {
 		
 	});
 
-	onLoad('[data-popup]', function(element) {
-		element.attr('data-max', element.maxHeight());
-		if(element.innerHeight())
-			element.css({ height: element.attr('data-max') });
-	});
+	onLoad('[data-popup]', function(popup) {
+		window.setTimeout(function() {
 
-	$('[data-popup]').each(function() {
-	
-		let popup = $(this);
-		let btn = $(popup.attr('data-popup'));
+			popup.attr('data-max', popup.maxHeight());
+			if(popup.innerHeight())
+				popup.css({ height: popup.attr('data-max') });
 
-		popup.reload();
+		}, 500);
 		
+		let identifier = popup.attr('data-popup');
+		let btn = $(identifier);
+
 		if(btn) btn.click(function() {
+
+			popup = $('[data-popup=\'' + identifier + '\']');
 
 			if(popup.innerHeight()) {
 
@@ -104,7 +105,7 @@ $(window).ready(function() {
 			popup.addClass('moving');
 			window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
 
-		});		
+		});	
 	});
 	
 });

@@ -52,14 +52,14 @@
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('styles', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/css/*.css");
-	    	$lang = glob("assets/css/$lang/*.css");
+	    	$lang = $lang ? glob("assets/css/$lang/*.css") : [];
 			return array_merge($general, $lang);
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/scripts/*.js");
-	    	$lang = glob("assets/scripts/$lang/*.js");
+	    	$lang = $lang ? glob("assets/scripts/$lang/*.js") : [];
 			return array_merge($general, $lang);
 	    }));
 
@@ -89,8 +89,14 @@
 	        return getAccount();
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('areas', function () {
-	        return Area::all();
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('all', function ($class) {
+	        if(is_subclass_of($class, 'BaseModel')) return $class::all();
+	        return collect([]);
+	    }));
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('byName', function ($class, $name) {
+	        if(is_subclass_of($class, 'BaseModel')) return $class::where('name', $name)->first();
+	        return null;
 	    }));
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
@@ -106,11 +112,6 @@
 	$app->get('/', function(Request $request, Response $response, array $args) {
 
 		$selected = getAccount()->selected;
-
-		if($selected->participant->battle) {
-		}
-		#$selected->participant->addEffect(Effect::find(3));
-		#$selected->participant->addEffect(Effect::find(3));
 
 		if($selected)
 			return $this->view->render($response, 'home.twig', []);
