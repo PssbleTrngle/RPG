@@ -22,6 +22,7 @@
    		
 		protected $table = 'battle';
 		protected $with = ['participants', 'active', 'position', 'messages'];
+		public $sides = [1, 2];
 
 		public function addMessage($message) {
 
@@ -47,6 +48,10 @@
 		
 		public function participants() {
 			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
+		}
+
+		public function onSide($side) {
+			return $this->participants->where('side', $side);
 		}
 
 		public function enemies($asParticipants = false) {
@@ -82,28 +87,22 @@
 			
 		}
 		
-		public function win() {
+		public function win($side) {
 			
-			foreach($this->characters() as $character) {
-				$character->message = 'won';
-				$character->addLoot($this->getLoot());
+			$loot = $this->getLoot();
+			foreach($this->onSide($side) as $participant) {
+				$participant->addLoot($loot);
+				$participant->win();
 			}
 			
-			$this->refresh();
 			$this->delete();
 			
 		}
 		
-		public function loose() {
+		public function loose($side) {
 			
-			foreach($this->characters() as $character) {
-				$character->message = 'lost';
-				$character->participant->revive();
-				$character->save();
-				/* TODO loose something */
-			}
-			
-			$this->delete();
+			foreach($this->onSide($side) as $participant)
+				$participant->loose();
 			
 		}
 		
@@ -119,15 +118,12 @@
 
 				$this->refresh();
 
-				if($this->characters()->count() > 0) {
-					$this->next($character->name.' ran away');
+				$this->addMessage($character->name.' ran away');
 
-					$this->save();
-					$this->refresh();
-
-				} else {
+				if($this->validate())
+					$this->next();
+				else
 					$this->delete();
-				}
 
 				return true;
 			
@@ -223,14 +219,17 @@
 		
 		public function addCharacter($character) {			
 			if($character) {
+				$character->message = null;
 				$character->participant->battle_id = $this->id;
+				$character->participant->side = 1;
 				$character->participant->save();
 				$character->participant->refresh();
+				$character->save();
 			}
 		}
 		
 		public function addNPC($npc) {			
-			$enemy = $npc->createEnemy($this);
+			$npc->createEnemy($this, 2);
 		}
 		
 		public function getLoot() {
@@ -238,14 +237,12 @@
 			$loot = [];
 			$loot['xp'] = 0;
 			$loot['items'] = [];
-			foreach($this->enemies() as $enemy) {
-			
-				$npc = $enemy->npc;
-				$loot['xp'] += pow(1.5, $npc->level - 1);
-				
-				foreach($npc->loot as $item)
-					$loot['items'][] = Stack::create($item, 1);
-				
+			foreach($this->participants as $participant) {
+				$l = $participant->getLoot();
+				if(array_key_exists('xp', $l)) $loot['xp'] += $l['xp'];
+				if(array_key_exists('items', $l)) 
+					foreach ($l['items'] as $item)
+						$loot['items'][] = $item;
 			}
 			
 			return $loot;
@@ -254,26 +251,30 @@
 
 		public function validate() {
 
-			if($this->characters()->count() == 0) {
+			$remainingSides = collect([]);
+
+			foreach($this->sides as $side) {
+
+				$living = $this->onSide($side)->filter(function($p, $k) {
+					return $p->health() > 0;
+				});
+
+				if($living->isEmpty())
+					$this->loose($side);
+				else 
+					$remainingSides[] = $side;
+
+			}
+
+			/* Nobody left in the battle */
+			if($remainingSides->count() == 0) {
 				$this->delete();
 				return false;
 			}
 
-			$lost = true;
-			foreach($this->characters(true) as $participant)
-				$lost &= $participant->health() <= 0;
-			
-			if($lost) {
-				$this->loose();
-				return false;	
-			}
-
-			$won = true;
-			foreach($this->enemies(true) as $participant)
-				$won &= $participant->health() <= 0;
-
-			if($won) {
-				$this->win();
+			/* One side left battle */
+			if($remainingSides->count() == 1) {
+				$this->win($remainingSides->first());
 				return false;
 			}
 

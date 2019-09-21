@@ -4,6 +4,18 @@
    		
 		protected $table = 'enemy';
 		protected $with = ['npc', 'participant'];
+
+		public function getLoot() {
+
+			$loot = [];
+			$loot['xp'] += pow(1.5, $this->npc->level - 1);
+			
+			foreach($this->npc->loot as $item)
+				$loot['items'][] = Stack::create($item, 1);
+
+			return $loot;
+
+		}
 		
 		public function icon() {
 			return $this->npc->icon();

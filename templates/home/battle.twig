@@ -31,16 +31,18 @@
 			<p class='right'>Round {{ battle.round }}</p>
 			<p class='right feedback'></p>
 
-			<div class='participants'>
-				{% for par in battle.enemies(true) if par.health() > 0 or par.died %}
+			{% for side in battle.sides if side != character.participant.side %}
+				<div class='participants'>
+					{% for par in battle.onSide(side) if par.health() > 0 or par.died %}
 
-					{{ self.participant(par) }}
+						{{ self.participant(par) }}
 
-				{% endfor %}
+					{% endfor %}
 			</div>
+			{% endfor %}
 
 			<div class='participants'>
-				{% for par in battle.characters(true) %}
+				{% for par in battle.onSide(character.participant.side) %}
 
 					{{ self.participant(par) }}
 

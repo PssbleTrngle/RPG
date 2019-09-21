@@ -20,7 +20,7 @@
 	
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		
-		$log = json_encode(Dungeon::find(1)->npcs->where('floor.minFloor', 2));
+		$log = json_encode(Battle::first());
 		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));

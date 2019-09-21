@@ -5,6 +5,22 @@
 		protected $table = 'character';
 		protected $with = ['classes', 'race', 'position', 'inventory', 'account'];
 		
+		public function loose() {
+
+			$this->message = 'lost';
+			$this->participant->revive();
+			$this->save();
+			
+		}
+		
+		public function win() {
+
+			$character->message = 'won';
+			$this->participant->revive();
+			$this->save();
+			
+		}
+		
 		public function icon() {
 			return $this->classes->last()->icon();
 		}

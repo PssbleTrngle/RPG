@@ -24,7 +24,7 @@
 			return $this->belongsToMany(Skill::class, 'npc_skills', 'npc_id', 'skill_id');
 		}
 		
-		public function createEnemy($battle) {
+		public function createEnemy($battle, $side) {
 			global $capsule;
 
 			$enemy = new Enemy;
@@ -32,6 +32,7 @@
 
 			$participant->health = $this->maxHealth;
 			$participant->battle_id = $battle->id;
+			$participant->side = $side;
 
 			$participant->save();
 			$participant->refresh();
