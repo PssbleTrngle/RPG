@@ -1,5 +1,43 @@
 {% extends 'base.twig' %}
 
+{% macro list(object, relation, pivots = []) %}
+
+	<div class='relation-box' data-table='{{ object|call(relation).table }}'>
+		<h3>{{ relation|removeCamel }}</h3>
+
+		<table>
+			{% for value in attribute(object, relation) %}
+				<tr>
+					<td><a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a></td>
+
+					{% for pivot in pivots %}
+						<td>{{ attribute(attribute(value, pivot|split('.')[0]), pivot|split('.')[1])|json_encode }}</td>
+					{% endfor %}
+
+				</tr>
+			{% endfor %}
+
+			<tr>
+				<td>
+					<select>
+						<option>select {{ object.relatesTo(relation)|capitalize }}</option>
+						{% for option in object.relatesTo(relation)|all %}
+							<option data-id='{{ option.id }}'>{{ option.name() }}</option>
+						{% endfor %}
+					</select>
+				</td>
+
+				{% for pivot in pivots %}
+					<td><input type='number'></input></td>
+				{% endfor %}
+			</tr>
+
+		</table>
+
+	</div>
+
+{% endmacro %}
+
 {% block title %}List{% endblock %}
 
 {% block content %}
@@ -25,25 +63,13 @@
 		</div>
 
 		<div class='row center mb-2'>
-			{% for relation, array in object.relations if array is iterable %}
 
-				<div class='relation-box' data-table='{{ object|call(relation).table }}'>
-					<h3>{{ relation|removeCamel }}</h3>
-					{% for value in array %}
-						<div>
-							<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
-						</div>
-					{% endfor %}
-					{{ object|call(relation).table|json_encode }}
-					<select>
-						<option>select {{ object.relatesTo(relation)|capitalize }}</option>
-						{% for option in object.relatesTo(relation)|all %}
-							<option data-id='{{ option.id }}'>{{ option.name() }}</option>
-						{% endfor %}
-					</select>
-				</div>
+			{% import _self as edit %}
 
-			{% endfor %}
+			{{ edit.list(object, 'skills', ['pivot.level']) }}
+			{{ edit.list(object, 'evolvesFrom', ['evolution.level']) }}
+			{{ edit.list(object, 'evolvesTo', ['evolution.level']) }}
+
 		</div>
 
 		<div class='submit'>Save</div>
