@@ -1,0 +1,57 @@
+{% extends 'base.twig' %}
+
+{% block title %}List{% endblock %}
+
+{% block content %}
+
+	{% if object %}
+	
+		<a href='../{{ class|lower }}'><div class='back'>{{ class|capitalize }}</div></a>
+		<h2>{{ object.name() }}</h2>
+
+		<div class='row center mb-2'>
+			{% for relation, value in object.relations if value is not iterable %}
+
+				<div class='relation-box'>
+					<h3>{{ relation|removeCamel }}</h3>
+					<div>
+						{% if value %}
+							<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
+						{% endif %}
+					</div>
+				</div>
+
+			{% endfor %}
+		</div>
+
+		<div class='row center mb-2'>
+			{% for relation, array in object.relations if array is iterable %}
+
+				<div class='relation-box' data-table='{{ object|call(relation).table }}'>
+					<h3>{{ relation|removeCamel }}</h3>
+					{% for value in array %}
+						<div>
+							<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
+						</div>
+					{% endfor %}
+					{{ object|call(relation).table|json_encode }}
+					<select>
+						<option>select {{ object.relatesTo(relation)|capitalize }}</option>
+						{% for option in object.relatesTo(relation)|all %}
+							<option data-id='{{ option.id }}'>{{ option.name() }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+			{% endfor %}
+		</div>
+
+		<div class='submit'>Save</div>
+
+	{% else %}
+
+		<h2>Not found in {{ class|capitalize }}</h2>
+
+	{% endif %}
+
+{% endblock %}

@@ -2,6 +2,17 @@
 	transition: background-color 0.1s linear, opacity 0.1s linear;
 	font-family: 'Roboto Slab', serif;
 	user-select: none;
+	color: #000;
+}
+
+a {
+	color: #000;
+	text-decoration: none;
+	transition: color 0.1s linear, opacity 0.1s linear;
+}
+
+a:hover {
+	opacity: 0.7;
 }
 
 .row {
@@ -57,6 +68,11 @@ body {
 
 .text-red {
 	color: var(--red);
+}
+
+
+.text-yellow {
+	color: var(--yellow);
 }
 
 .text-green {
@@ -469,7 +485,7 @@ input.grow {
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .diagram {

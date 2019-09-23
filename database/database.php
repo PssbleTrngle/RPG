@@ -107,7 +107,16 @@
 		}
 		
 		public function name() {
-			return format($this->table.'.'.$this->name);
+			
+			if(array_key_exists('name', $this->attributes))
+				return format($this->table.'.'.$this->name);
+			return $this->id;
+			
+		}
+
+		function relatesTo($relation) {
+			$from = $this->$relation()->getQuery()->getQuery()->from;
+			return preg_replace('/([cC])lass/', '$1lazz', $from);
 		}
 		
 	}

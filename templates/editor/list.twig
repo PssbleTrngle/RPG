@@ -1,0 +1,25 @@
+{% extends 'base.twig' %}
+
+{% block title %}List{% endblock %}
+
+{% block content %}
+
+	<input class='search w-100 mb-2' type='text' placeholder='search'></input>
+
+	<div class='inventory'>
+		{% for object in objects %}
+
+			<div class='slot'>
+				{% if account().hasPermission('editor') %}<a href='{{ class|lower }}/{{ object.id }}'>{% endif %}
+					<div>{{ object|icon|raw }}</div>
+				{% if account().hasPermission('editor') %}</a>{% endif %}
+				<p id='name'>{{ object.name() }}</p>
+			</div>
+
+		{% else %}
+			<h2>Nothing found in {{ class|capitalize }}</h2>
+		{% endfor %}
+
+	</div>
+
+{% endblock %}
