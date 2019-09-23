@@ -20,9 +20,12 @@
 
 }
 
+.slot, .slot > a {
+	cursor: pointer;
+}
+
 .slot {
 	font-size: 10px;
-	cursor: pointer;
 	transition: transform 0.2s linear;	
 }
 

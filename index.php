@@ -19,8 +19,9 @@
 	$app = new \Slim\App($container);
 
 	/* Twig Template engine */
-	$loader = new \Twig\Loader\FilesystemLoader("templates");
-	$twig = new \Twig\Environment($loader);
+	$loader = new \Twig\Loader\FilesystemLoader('templates');
+	$twig = new \Twig\Environment($loader, [ 'debug' => true]);
+	$twig->addExtension(new \Twig\Extension\DebugExtension());
 
 	$container['view'] = function ($container) {
 
@@ -42,6 +43,13 @@
 				return toRoman($number);
 			}
 			return '?';
+	    }));
+
+
+		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('removeCamel', function ($camel) {
+			$camel = preg_replace('/([A-Z])/', ' $1', $camel);
+			$camel = preg_replace('/_([a-zA-Z])/', ' $1', $camel);
+			return ucfirst($camel);
 	    }));
 
 	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('format', function ($key, $vars = []) {
@@ -92,6 +100,14 @@
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('all', function ($class) {
 	        if(is_subclass_of($class, 'BaseModel')) return $class::all();
 	        return collect([]);
+	    }));
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('call', function ($class, $method) {
+	        return $class->$method();
+	    }));
+
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('class', function ($object) {
+	        return (new \ReflectionClass($object))->getShortName();
 	    }));
 
 	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('byName', function ($class, $name) {
@@ -153,6 +169,7 @@
 
 	include_once 'actions.php';
 	include_once 'admin.php';
+	include_once 'editor.php';
 	include_once 'account.php';
 
 	$container['notFoundHandler'] = function ($container) {

@@ -16,12 +16,14 @@
 		$success = strpos($msg, 'changed') !== false;
 		return ['success' => $success, 'message' => $msg];
 
-	}, 'admin');
+	}, 'editor');
 	
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
-		
-		$log = json_encode(Battle::first());
-		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		global $capsule;
+
+		echo '<pre>';
+		var_dump($capsule->table('participant_effects')->get());
+		echo '</pre>';
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
