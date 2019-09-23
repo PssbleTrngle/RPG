@@ -47,7 +47,7 @@
 			
 			$suffix = 'A';
 
-			foreach($battle->enemies() as $other) if($other->npc->id == $this->id)
+			foreach($battle->participants->where('enemy', '!=', null) as $other) if($other->enemy->npc->id == $this->id)
 				if($other->suffix && ord($other->suffix) >= ord($suffix)) 
 					$suffix = chr(ord($other->suffix) + 1);
 			

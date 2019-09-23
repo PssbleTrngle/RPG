@@ -137,7 +137,7 @@
 	
 		public function validate() {
 
-			if(($this->enemy_id && !$this->battle_id) || !$this->parent()) {
+			if(!$this->parent()) {
 				$this->delete();
 				return false;
 			}

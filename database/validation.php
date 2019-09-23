@@ -18,7 +18,11 @@
 				$corrected = 0;
 
 				foreach ($class::all() as $instance) {
-					if(!$instance->validate()) $corrected++;
+					try {
+						if(!$instance->validate()) $corrected++;
+					} catch(Exception $e) {
+						$corrected++;
+					}
 				}
 
 				if(hasLevel($debug_level, 1) && $corrected > 0) $out .= info($corrected.' '.$class.' not correct', 'red');

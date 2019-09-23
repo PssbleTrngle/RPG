@@ -21,6 +21,10 @@
 	
 		public static function registerAll() {
 
+			global $capsule;
+			$capsule->table('class_skills')->where('class_id', '>', 0)->delete();
+			$relations = [];
+
 			/* ------------------------  ATTACKS  ------------------------ */
 			
 			static::register(['id' => 1, 'name' => 'slash', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Skill $skill, Target $target, Participant $user) {
@@ -71,6 +75,7 @@
 				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 				
 			}]);
+			$relations[] = ['class_id' => 1, 'skill_id' => 101, 'level' => 0];
 			
 			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'group' => true], ['use' => function(Skill $skill, Target $target, Participant $user) {
 
@@ -78,12 +83,15 @@
 				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 
 			}]);
+			$relations[] = ['class_id' => 1, 'skill_id' => 102, 'level' => 0];
 
 			/* ------------------------  MISC  ------------------------ */
 			
 			static::register(['id' => 500, 'name' => 'glow', 'timeout' => 0, 'cost' => 2, 'group' => true], ['use' => function(Skill $skill, Target $target, Participant $user) {}]);
 
 			/* ------------------------  ENEMIES  ------------------------ */
+
+			$capsule->table('class_skills')->insert($relations);
 			
 		}
 		

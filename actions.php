@@ -196,27 +196,28 @@
 				
 				if($skillID && $skill) {
 						
-					if($skill->group) {
-						if($target->character) $target = $battle->characters(true);
-						else if($target->enemy) $target = $battle->enemies(true);
-					} else $target = collect([$target]);
+					if($skill->group)
+						$target = $battle->onSide($target->side);
+					else 
+						$target = collect([$target]);
 						
 					if(!$skill->affectDead)
 						$target = $target->where('health', '>', '0');
-
-					if(!$skill->group) $target = $target->first();
 					
 					$battle->prepareTurn();
-					$message = $skill->use($target, $character->participant);
+
+					foreach($target as $single) {
+						$message = $skill->use($single, $character->participant);
+						$battle->addMessage($message);
+					}
 					$battle->refresh();
 					
 					if($message) {
 						$skill->timeout($character->participant);
-						$battle->addMessage($message);
 						$battle->next();
 					}
 
-					return ['success' => $message !== false, 'message' => $message];
+					return ['success' => true];
 				}
 
 				return ['success' => false, 'message' => 'Choose a skill'];

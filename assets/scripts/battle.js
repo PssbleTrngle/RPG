@@ -18,7 +18,7 @@ $(window).ready(function() {
 		
 		if(window.battle_action) {
 			if(group)
-				$(this).closest('.row').find('.participant').addClass('selected');
+				$(this).closest('.participants').find('.participant').addClass('selected');
 			else 
 				$(this).addClass('selected');
 		}

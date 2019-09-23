@@ -241,7 +241,7 @@
 			foreach($this->sides as $side) {
 
 				$living = $this->onSide($side)->filter(function($p, $k) {
-					return $p->health() > 0;
+					return $p->validate() && $p->health() > 0;
 				});
 
 				if($living->isEmpty())
