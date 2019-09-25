@@ -1,34 +1,52 @@
 {% extends 'base.twig' %}
 
-{% macro list(object, relation, pivots = []) %}
+{% macro list(object, many) %}
 
-	<div class='relation-box' data-table='{{ object|call(relation).table }}'>
-		<h3>{{ relation|removeCamel }}</h3>
+	<div class='relation-box' data-table='{{ object|call(many.relation).table }}' data-key='{{ many.key }}'>
+		<h3>{{ many.relation|removeCamel }}</h3>
 
 		<table>
-			{% for value in attribute(object, relation) %}
-				<tr>
-					<td><a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a></td>
 
-					{% for pivot in pivots %}
-						<td>{{ attribute(attribute(value, pivot|split('.')[0]), pivot|split('.')[1])|json_encode }}</td>
+			<tr>
+				{% for pivot, values in many.pivots %}
+					<th>{{ pivot }}</th>
+				{% endfor %}
+			</tr>
+
+			{% for value in attribute(object, many.relation) %}
+				<tr>
+					{% for pivot, values in many.pivots %}
+						<td>
+							{% if values == 'number' %}
+								{{ attribute(attribute(value, pivot|split('.')[0]), pivot|split('.')[1])|json_encode }}
+							{% else %}
+								<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
+							{% endif %}
+						</td>
 					{% endfor %}
 
 				</tr>
 			{% endfor %}
 
 			<tr>
-				<td>
-					<select>
-						<option>select {{ object.relatesTo(relation)|capitalize }}</option>
-						{% for option in object.relatesTo(relation)|all %}
-							<option data-id='{{ option.id }}'>{{ option.name() }}</option>
-						{% endfor %}
-					</select>
-				</td>
+				
+				{% for pivot, values in many.pivots %}
+					<td>
+						{% if values == 'number' %}
 
-				{% for pivot in pivots %}
-					<td><input type='number'></input></td>
+							<input class='pivot' id='{{ pivot }}' type='number'></input>
+
+						{% else %}
+
+							<select class='pivot' id='{{ pivot }}'>
+								<option>select {{ object.relatesTo(many.relation)|capitalize }}</option>
+								{% for option in values %}
+									<option id='{{ option.id }}'>{{ option.name() }}</option>
+								{% endfor %}
+							</select>
+
+						{% endif %}
+					</td>
 				{% endfor %}
 			</tr>
 
@@ -43,11 +61,14 @@
 {% block content %}
 
 	{% if object %}
+
+		<input id='value' hidden value='{{ object.id }}'></input>
 	
 		<a href='../{{ class|lower }}'><div class='back'>{{ class|capitalize }}</div></a>
 		<h2>{{ object.name() }}</h2>
+		<small class='description'>{{ object.description() }}</small>
 
-		<div class='row center mb-2'>
+		<div class='row my-2 relations'>
 			{% for relation, value in object.relations if value is not iterable %}
 
 				<div class='relation-box'>
@@ -62,17 +83,17 @@
 			{% endfor %}
 		</div>
 
-		<div class='row center mb-2'>
+		<div class='row mb-2 relations'>
 
 			{% import _self as edit %}
 
-			{{ edit.list(object, 'skills', ['pivot.level']) }}
-			{{ edit.list(object, 'evolvesFrom', ['evolution.level']) }}
-			{{ edit.list(object, 'evolvesTo', ['evolution.level']) }}
+			{% for many in manys %}
+				{{ edit.list(object, many) }}
+			{% endfor %}
 
 		</div>
 
-		<div class='submit'>Save</div>
+		<div class='option save'>Save</div>
 
 	{% else %}
 

@@ -22,7 +22,7 @@
 		global $capsule;
 
 		echo '<pre>';
-		var_dump($capsule->table('participant_effects')->get());
+		var_dump(Clazz::find(1)->skills());
 		echo '</pre>';
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));

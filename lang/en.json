@@ -37,69 +37,225 @@
 	},
 	"character": "$1 $2",
 	"class": {
-		"apprentice": "Apprentice",
-		"traveller": "Traveller",
-		"wild": "Wild",
-		"fighter": "Fighter",
-		"psychic": "Psychic",
+		"apprentice": {
+			"name": "Apprentice",
+			"description": "None"
+		},
+		"traveller": {
+			"name": "Traveller",
+			"description": "None"
+		},
+		"wild": {
+			"name": "Wild",
+			"description": "None"
+		},
+		"fighter": {
+			"name": "Fighter",
+			"description": "None"
+		},
+		"psychic": {
+			"name": "Psychic",
+			"description": "None"
+		},
 
-		"druid": "Druid",
-		"mage": "Mage",
-		"alchemist": "Alchemist",
+		"druid": {
+			"name": "Druid",
+			"description": "None"
+		},
+		"mage": {
+			"name": "Mage",
+			"description": "None"
+		},
+		"alchemist": {
+			"name": "Alchemist",
+			"description": "None"
+		},
 
-		"duelist": "Duelist",
-		"warrior": "Warrior",
-		"focused": "Focused",
+		"duelist": {
+			"name": "Duelist",
+			"description": "None"
+		},
+		"warrior": {
+			"name": "Warrior",
+			"description": "None"
+		},
+		"focused": {
+			"name": "Focused",
+			"description": "None"
+		},
 
-		"ranger": "Ranger",
-		"hermit": "Hermit",
+		"ranger": {
+			"name": "Ranger",
+			"description": "None"
+		},
+		"hermit": {
+			"name": "Hermit",
+			"description": "None"
+		},
 
-		"rogue": "Rogue",
-		"barde": "Barde",
-		"smith": "Smith",
+		"rogue": {
+			"name": "Rogue",
+			"description": "None"
+		},
+		"barde": {
+			"name": "Barde",
+			"description": "None"
+		},
+		"smith": {
+			"name": "Smith",
+			"description": "None"
+		},
 
-		"priest": "Priest",
-		"medium": "Medium",
-		"telepath": "Telepath",
+		"priest": {
+			"name": "Priest",
+			"description": "None"
+		},
+		"medium": {
+			"name": "Medium",
+			"description": "None"
+		},
+		"telepath": {
+			"name": "Telepath",
+			"description": "None"
+		},
 
-		"shaman": "Shaman",
-		"necromancer": "Necromancer",
-		"wizard": "Wizard",
-		"elementalist": "Elementalist",
-		"infused": "Infused",
-		"ritualist": "Ritualist",
-		"astromancer": "Astromancer",
+		"shaman": {
+			"name": "Shaman",
+			"description": "None"
+		},
+		"necromancer": {
+			"name": "Necromancer",
+			"description": "None"
+		},
+		"wizard": {
+			"name": "Wizard",
+			"description": "None"
+		},
+		"elementalist": {
+			"name": "Elementalist",
+			"description": "None"
+		},
+		"infused": {
+			"name": "Infused",
+			"description": "None"
+		},
+		"ritualist": {
+			"name": "Ritualist",
+			"description": "None"
+		},
+		"astromancer": {
+			"name": "Astromancer",
+			"description": "None"
+		},
 
-		"rebel": "Rebel",
-		"hero": "Hero",
-		"knight": "Knight",
-		"berserk": "Berserk",
+		"rebel": {
+			"name": "Rebel",
+			"description": "None"
+		},
+		"hero": {
+			"name": "Hero",
+			"description": "None"
+		},
+		"knight": {
+			"name": "Knight",
+			"description": "None"
+		},
+		"berserk": {
+			"name": "Berserk",
+			"description": "None"
+		},
 
-		"tamer": "Tamer",
-		"hunter": "Hunter",
-		"monk": "Monk",
+		"tamer": {
+			"name": "Tamer",
+			"description": "None"
+		},
+		"hunter": {
+			"name": "Hunter",
+			"description": "None"
+		},
+		"monk": {
+			"name": "Monk",
+			"description": "None"
+		},
 
-		"assassin": "Assassin",
-		"swift": "Swift",
-		"inventor": "Inventor",
-		"fool": "Fool",
-		"performer": "Performer",
+		"assassin": {
+			"name": "Assassin",
+			"description": "None"
+		},
+		"swift": {
+			"name": "Swift",
+			"description": "None"
+		},
+		"inventor": {
+			"name": "Inventor",
+			"description": "None"
+		},
+		"fool": {
+			"name": "Fool",
+			"description": "None"
+		},
+		"performer": {
+			"name": "Performer",
+			"description": "None"
+		},
 
-		"cleric": "Cleric",
-		"thaumaturge": "Thaumaturge",
-		"summoner": "Summoner",
-		"temporal": "Temporal",
+		"cleric": {
+			"name": "Cleric",
+			"description": "None"
+		},
+		"thaumaturge": {
+			"name": "Thaumaturge",
+			"description": "None"
+		},
+		"summoner": {
+			"name": "Summoner",
+			"description": "None"
+		},
+		"temporal": {
+			"name": "Temporal",
+			"description": "None"
+		},
 
-		"possessed": "Possessed",
-		"sage": "Sage",
-		"beast": "Beast",
-		"fallen": "Fallen",
-		"guardian": "Guardian",
-		"chosen": "Chosen",
-		"insane": "Insane",
-		"narrator": "Narrator",
-		"imposter": "Imposter",
-		"king": "King"
+		"possessed": {
+			"name": "Possessed",
+			"description": "None"
+		},
+		"sage": {
+			"name": "Sage",
+			"description": "None"
+		},
+		"beast": {
+			"name": "Beast",
+			"description": "None"
+		},
+		"fallen": {
+			"name": "Fallen",
+			"description": "None"
+		},
+		"guardian": {
+			"name": "Guardian",
+			"description": "None"
+		},
+		"chosen": {
+			"name": "Chosen",
+			"description": "None"
+		},
+		"insane": {
+			"name": "Insane",
+			"description": "None"
+		},
+		"narrator": {
+			"name": "Narrator",
+			"description": "None"
+		},
+		"imposter": {
+			"name": "Imposter",
+			"description": "None"
+		},
+		"king": {
+			"name": "King",
+			"description": "None"
+		}
 	},
 	"race": {
 		"human": "Human",
@@ -146,13 +302,13 @@
 			"format": "$2 $1"
 		},
 		"potion": {
-			"health_potion": "Health Potion",
+			"health_potion": {
+				"name": "Health Potion",
+				"description": "Restores some life"
+			},
 			"poison_potion": "Poison",
 			"sleep_potion": "Sleep Powder",
 			"ambrosia": "Ambrosia"
-		},
-		"description": {
-			"health_potion": "Test"
 		}
 	},
 	"enemy": {
