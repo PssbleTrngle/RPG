@@ -48,6 +48,10 @@
 				</table>
 			</div>
 
+			{% if stack.item.description() %}
+				<p class='mt-1 description'>{{ stack.item.description() }}</p>
+			{% endif %}
+
 		</div>
 
 	</div>

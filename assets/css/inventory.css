@@ -73,3 +73,7 @@
 	--size: 50px;
 
 }
+
+.description {
+	font-style: italic;
+}

@@ -113,6 +113,18 @@
 			return $this->id;
 			
 		}
+		
+		public function description() {
+			
+			if(array_key_exists('name', $this->attributes)) {
+				$key = $this->table.'.description.'.$this->name;
+				if(translationExists($key))
+					return format($key);
+			}
+
+			return false;			
+			
+		}
 
 		function relatesTo($relation) {
 			$from = $this->$relation()->getQuery()->getQuery()->from;

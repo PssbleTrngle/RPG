@@ -60,6 +60,17 @@
 		return true;
 	}
 
+	function translationExists($key) {
+		global $json;
+
+		$key = strtolower($key);
+
+		if(is_null($json))
+			$json = readLangFiles(getLang(), option('default_lang'));
+
+		return array_key_exists($key, $json);
+	}
+
 	function format($key, $vars = []) {
 		global $json;
 		global $formats;

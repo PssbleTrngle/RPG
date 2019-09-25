@@ -149,6 +149,9 @@
 			"poison_potion": "Poison",
 			"sleep_potion": "Sleep Powder",
 			"ambrosia": "Ambrosia"
+		},
+		"description": {
+			"health_potion": "Test"
 		}
 	},
 	"rarity": {
