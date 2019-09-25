@@ -60,18 +60,25 @@
 		public function delete() {
 			global $capsule;
 			
-			foreach($this->participants as $participant)
+			foreach($this->participants as $participant) {
+				
+				$capsule::table('participant_skills')
+					->where('participant_id', $participant->id)
+					->update(['nextUse' => 0]);
+				
+				$capsule::table('charging_skills')
+					->where('participant_id', $participant->id)
+					->delete();
+
 				if($participant->character) {
+
 					$participant->battle_id = null;
 					$participant->save();
-				
-					$capsule::table('participant_skills')
-						->where('participant_id', $participant->id)
-						->update(['nextUse' => 0]);
 
 				} else {
 					$participant->delete();
 				}
+			}
 
 			foreach ($this->messages as $message)
 				$message->delete();

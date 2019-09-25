@@ -301,6 +301,10 @@
 
 			}
 
+			if($this->account->hasPermission('tester'))
+				foreach ($this->canLearn() as $skill)
+					$this->learn($skill);
+
 			return $correct;
 		}
 		

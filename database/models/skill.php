@@ -7,8 +7,8 @@
 				$damage = new DamageEvent($user->stats()->apply($damage, $stat));
 
 				foreach($effects as $effect => $chance)
-					if(rand(1, 100) <= $chance)
-						$target->addEffect(Effect::where('name', $effect));
+					if(rand(1, 100) <= $chance * 100)
+						$target->addEffect(Effect::where('name', $effect)->first());
 
 				if($target->damage($damage))
 					return new Translation('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]);
@@ -27,14 +27,14 @@
 
 		return function(Skill $skill, Target $target, Participant $user) use($health, $stat, $effects, $failMsg) {
 
-				$health = $user->stats()->apply(15, 'wisdom');
+				$amount = $user->stats()->apply(15, 'wisdom');
 
 				foreach($effects as $effect => $chance)
-					if(rand(1, 100) <= $chance)
-						$target->addEffect(Effect::where('name', $effect));
+					if(rand(1, 100) <= $chance * 100)
+						$target->addEffect(Effect::where('name', $effect)->first());
 
-				if($target->heal($health))
-					return new Translation('healed_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]);
+				if($target->heal($amount))
+					return new Translation('healed_using', [$user->name(), $skill->name(), $amount, $target->name()]);
 
 				return $failMsg;
 
@@ -58,6 +58,19 @@
 				
 			}			
 		}
+
+		function use(Target $target, Participant $user) {
+			global $capsule;
+
+			if($this->charge <= 0)
+				return result($this->__call('use', [$target, $user]));
+
+			$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'countdown' => $this->charge];
+			$capsule->table('charging_skills')->insert($charging);
+
+			return 'charging';
+
+		}
 	
 		public static function registerAll() {
 
@@ -74,7 +87,7 @@
 			static::register(['id' => 51, 'name' => "heal", 'timeout' => 0, 'cost' => 2, 'group' => false],
 				['use' => simpleHeal(15)]);
 			
-			static::register(['id' => 52, 'name' => "cleansing Rain", 'timeout' => 0, 'cost' => 2, 'group' => true],
+			static::register(['id' => 52, 'name' => "cleansing_rain", 'timeout' => 0, 'cost' => 2, 'group' => true],
 				['use' => simpleHeal(8)]);
 
 			static::register(['id' => 53, 'name' => "revive", 'timeout' => 0, 'cost' => 5, 'group' => false, 'affectDead' => true],
@@ -91,6 +104,9 @@
 			
 			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'group' => true],
 				['use' => spellDamage(5)]);
+			
+			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'group' => false, 'charge' => 1],
+				['use' => spellDamage(1, ['stunned' => 0.1])]);
 
 			/* ------------------------  MISC  ------------------------ */
 			

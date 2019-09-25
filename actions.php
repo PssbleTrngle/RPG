@@ -238,7 +238,7 @@
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 			
 			$battle->prepareTurn();
-			$battle->addMessage(new Message('skipped', [$character->name()]));
+			$battle->addMessage(new Translation('skipped', [$character->name()]));
 			$success = $battle->next();
 			return ['success' => $success];
 

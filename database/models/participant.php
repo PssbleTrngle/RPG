@@ -13,6 +13,7 @@
 
 			$capsule->table('participant_effects')->where('participant_id', $this->id)->delete();
 			$capsule->table('participant_skills')->where('participant_id', $this->id)->delete();
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->delete();
 
 			parent::delete();
 
