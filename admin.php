@@ -21,9 +21,16 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		echo '<pre>';
-		var_dump(Clazz::find(1)->skills());
-		echo '</pre>';
+		foreach(Clazz::all() as $class) {
+			echo '"'.$class->name.'": {';
+			echo '<br>';
+			echo '!tab"name": "'.ucfirst($class->name).'",';
+			echo '<br>';
+			echo '!tab"description": "None"';
+			echo '<br>';
+			echo '},';
+			echo '<br>';
+		}
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
@@ -38,7 +45,7 @@
 		$this->view->render($response, 'admin/post.twig', []);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
-	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
+	$app->get('/view/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	

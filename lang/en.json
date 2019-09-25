@@ -57,7 +57,6 @@
 			"name": "Psychic",
 			"description": "None"
 		},
-
 		"druid": {
 			"name": "Druid",
 			"description": "None"
@@ -70,7 +69,26 @@
 			"name": "Alchemist",
 			"description": "None"
 		},
-
+		"rogue": {
+			"name": "Rogue",
+			"description": "None"
+		},
+		"barde": {
+			"name": "Barde",
+			"description": "None"
+		},
+		"merchant": {
+			"name": "Merchant",
+			"description": "None"
+		},
+		"ranger": {
+			"name": "Ranger",
+			"description": "None"
+		},
+		"hermit": {
+			"name": "Hermit",
+			"description": "None"
+		},
 		"duelist": {
 			"name": "Duelist",
 			"description": "None"
@@ -83,29 +101,6 @@
 			"name": "Focused",
 			"description": "None"
 		},
-
-		"ranger": {
-			"name": "Ranger",
-			"description": "None"
-		},
-		"hermit": {
-			"name": "Hermit",
-			"description": "None"
-		},
-
-		"rogue": {
-			"name": "Rogue",
-			"description": "None"
-		},
-		"barde": {
-			"name": "Barde",
-			"description": "None"
-		},
-		"smith": {
-			"name": "Smith",
-			"description": "None"
-		},
-
 		"priest": {
 			"name": "Priest",
 			"description": "None"
@@ -118,7 +113,6 @@
 			"name": "Telepath",
 			"description": "None"
 		},
-
 		"shaman": {
 			"name": "Shaman",
 			"description": "None"
@@ -147,7 +141,58 @@
 			"name": "Astromancer",
 			"description": "None"
 		},
-
+		"warlock": {
+			"name": "Warlock",
+			"description": "None"
+		},
+		"illusionist": {
+			"name": "Illusionist",
+			"description": "None"
+		},
+		"assassin": {
+			"name": "Assassin",
+			"description": "None"
+		},
+		"derwish": {
+			"name": "Derwish",
+			"description": "None"
+		},
+		"bandit": {
+			"name": "Bandit",
+			"description": "None"
+		},
+		"inventor": {
+			"name": "Inventor",
+			"description": "None"
+		},
+		"fool": {
+			"name": "Fool",
+			"description": "None"
+		},
+		"performer": {
+			"name": "Performer",
+			"description": "None"
+		},
+		"charmer": {
+			"name": "Charmer",
+			"description": "None"
+		},
+		"artificer": {
+			"name": "Artificer",
+			"description": "None"
+		},
+		"tamer": {
+			"name": "Tamer",
+			"description": "None"
+		},
+		"hunter": {
+			"name": "Hunter",
+			"description": "None"
+		},
+		"monk": {
+			"name": "Monk",
+			"description": "None"
+		},
 		"rebel": {
 			"name": "Rebel",
 			"description": "None"
@@ -164,41 +209,14 @@
 			"name": "Berserk",
 			"description": "None"
 		},
-
-		"tamer": {
-			"name": "Tamer",
+		"mercenary": {
+			"name": "Mercenary",
 			"description": "None"
 		},
-		"hunter": {
-			"name": "Hunter",
+		"blockade": {
+			"name": "Blockade",
 			"description": "None"
 		},
-		"monk": {
-			"name": "Monk",
-			"description": "None"
-		},
-
-		"assassin": {
-			"name": "Assassin",
-			"description": "None"
-		},
-		"swift": {
-			"name": "Swift",
-			"description": "None"
-		},
-		"inventor": {
-			"name": "Inventor",
-			"description": "None"
-		},
-		"fool": {
-			"name": "Fool",
-			"description": "None"
-		},
-		"performer": {
-			"name": "Performer",
-			"description": "None"
-		},
-
 		"cleric": {
 			"name": "Cleric",
 			"description": "None"
@@ -207,15 +225,10 @@
 			"name": "Thaumaturge",
 			"description": "None"
 		},
-		"summoner": {
-			"name": "Summoner",
-			"description": "None"
-		},
 		"temporal": {
 			"name": "Temporal",
 			"description": "None"
 		},
-
 		"possessed": {
 			"name": "Possessed",
 			"description": "None"
@@ -254,6 +267,34 @@
 		},
 		"king": {
 			"name": "King",
+			"description": "None"
+		},
+		"spirit": {
+			"name": "Spirit",
+			"description": "None"
+		},
+		"touched": {
+			"name": "Touched",
+			"description": "None"
+		},
+		"oracle": {
+			"name": "Oracle",
+			"description": "None"
+		},
+		"slayer": {
+			"name": "Slayer",
+			"description": "None"
+		},
+		"creator": {
+			"name": "Creator",
+			"description": "None"
+		},
+		"corrupted": {
+			"name": "Corrupted",
+			"description": "None"
+		},
+		"conquerer": {
+			"name": "Conquerer",
 			"description": "None"
 		}
 	},

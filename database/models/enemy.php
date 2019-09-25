@@ -22,7 +22,7 @@
 		}
 		
 		public function key() {
-			return new Translation('enemy.format', $this->npc->name(), $this->suffix);
+			return new Translation('enemy.format', [$this->npc->name(), $this->suffix]);
 		}
 
 		public function stats() {

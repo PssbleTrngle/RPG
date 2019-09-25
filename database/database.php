@@ -119,7 +119,7 @@
 			if(is_string($translation)) $translation = new Translation($translation);
 
 			if($translation) {
-				if(!translationExists($translation->key))
+				if(translationExists($translation->key.'.name'))
 					$translation->key .= '.name';
 				return $translation->format();
 			}
