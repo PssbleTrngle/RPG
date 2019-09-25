@@ -41,16 +41,5 @@
 	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
-
-	$app->get('/admin/list/{class}', function (Request $request, Response $response, array $args) {
-
-		$class = $args['class'];
-		$objects = [];
-
-		if(is_subclass_of($class, 'BaseModel')) $objects = $class::all();
-
-		return $this->view->render($response, 'admin/list.twig', ['objects' => $objects, 'search' => $class]);
-
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
-
+	
 ?>

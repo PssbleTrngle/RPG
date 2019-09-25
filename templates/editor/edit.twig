@@ -11,6 +11,7 @@
 				{% for pivot, values in many.pivots %}
 					<th>{{ pivot }}</th>
 				{% endfor %}
+				<th></th>
 			</tr>
 
 			{% for value in attribute(object, many.relation) %}
@@ -18,7 +19,7 @@
 					{% for pivot, values in many.pivots %}
 						<td>
 							{% if values == 'number' %}
-								{{ attribute(attribute(value, pivot|split('.')[0]), pivot|split('.')[1])|json_encode }}
+								{{ attribute(attribute(value, pivot|split('.')[0]), pivot|split('.')[1]) }}
 							{% else %}
 								<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
 							{% endif %}
@@ -28,27 +29,33 @@
 				</tr>
 			{% endfor %}
 
-			<tr>
-				
-				{% for pivot, values in many.pivots %}
-					<td>
-						{% if values == 'number' %}
+			{% if account().hasPermission('editor') %}
 
-							<input class='pivot' id='{{ pivot }}' type='number'></input>
+				<tr>
+					
+					{% for pivot, values in many.pivots %}
+						<td>
+							{% if values == 'number' %}
 
-						{% else %}
+								<input class='pivot' id='{{ pivot }}' type='number'></input>
 
-							<select class='pivot' id='{{ pivot }}'>
-								<option>select {{ object.relatesTo(many.relation)|capitalize }}</option>
-								{% for option in values %}
-									<option id='{{ option.id }}'>{{ option.name() }}</option>
-								{% endfor %}
-							</select>
+							{% else %}
 
-						{% endif %}
-					</td>
-				{% endfor %}
-			</tr>
+								<select class='pivot' id='{{ pivot }}'>
+									<option>select {{ object.relatesTo(many.relation)|capitalize }}</option>
+									{% for option in values %}
+										<option id='{{ option.id }}'>{{ option.name() }}</option>
+									{% endfor %}
+								</select>
+
+							{% endif %}
+						</td>
+
+						</td>
+					{% endfor %}
+				</tr>
+
+			{% endif %}
 
 		</table>
 
@@ -62,38 +69,47 @@
 
 	{% if object %}
 
-		<input id='value' hidden value='{{ object.id }}'></input>
-	
-		<a href='../{{ class|lower }}'><div class='back'>{{ class|capitalize }}</div></a>
-		<h2>{{ object.name() }}</h2>
-		<small class='description'>{{ object.description() }}</small>
+		<div class='view'>
 
-		<div class='row my-2 relations'>
-			{% for relation, value in object.relations if value is not iterable %}
+			<input id='value' hidden value='{{ object.id }}'></input>
+		
+			<a href='../{{ class|lower }}'><div class='back'>{{ class|capitalize }}</div></a>
+			<h2>{{ object.name() }}</h2>
+			<small class='description'>{{ object.description() }}</small>
 
-				<div class='relation-box'>
-					<h3>{{ relation|removeCamel }}</h3>
-					<div>
-						{% if value %}
-							<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
-						{% endif %}
+			<div class='edit-icon'>{{ object|icon|raw }}</div>
+
+			<div class='row my-2 relations'>
+				{% for relation, value in object.relations if value is not iterable %}
+
+					<div class='relation-box'>
+						<h3>{{ relation|removeCamel }}</h3>
+						<div>
+							{% if value %}
+								<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
+							{% endif %}
+						</div>
 					</div>
-				</div>
 
-			{% endfor %}
+				{% endfor %}
+			</div>
+
+			<div class='row mb-2 relations'>
+
+				{% import _self as edit %}
+
+				{% for many in manys %}
+					{{ edit.list(object, many) }}
+				{% endfor %}
+
+			</div>
+
+
+			{% if account().hasPermission('editor') %}
+				<div class='option save'>Save</div>
+			{% endif %}
+
 		</div>
-
-		<div class='row mb-2 relations'>
-
-			{% import _self as edit %}
-
-			{% for many in manys %}
-				{{ edit.list(object, many) }}
-			{% endfor %}
-
-		</div>
-
-		<div class='option save'>Save</div>
 
 	{% else %}
 

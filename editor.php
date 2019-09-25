@@ -35,7 +35,7 @@
 		$objects = is_subclass_of($class, 'BaseModel') ? $class::all() : [];
 		$this->view->render($response, 'editor/list.twig', ['objects' => $objects, 'class' => $class]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'editor'));
+	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
 	$app->get('/edit/{class}/{id}', function (Request $request, Response $response, array $args) {
 		
@@ -46,16 +46,16 @@
 		$object = is_subclass_of($class, 'BaseModel') ? $class::find($id) : null;
 		$this->view->render($response, 'editor/edit.twig', ['object' => $object, 'manys' => $manys, 'class' => $class]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'editor'));
+	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
 	function manysFor($class) {
 
 		switch(strtolower($class)) {
 
 			case 'clazz': return [
-				['relation' => 'skills', 'key' => 'class_id', 'pivots' => ['skill_id' => Skill::all(),'pivot.level' => 'number']],
-				/*['relation' => 'evolvesFrom', 'pivots' => ['evolution.level']],
-				['relation' => 'evolvesTo', 'pivots' => ['evolution.level']]*/];
+				['key' => 'class_id', 'relation' => 'skills', 'pivots' => ['skill_id' => Skill::all(),'pivot.level' => 'number']],
+				['key' => 'to', 'relation' => 'evolvesFrom', 'pivots' => ['from' => Clazz::all(), 'evolution.level' => 'number']],
+				['key' => 'from', 'relation' => 'evolvesTo', 'pivots' => ['to' => Clazz::all(), 'evolution.level' => 'number']]];
 
 		}
 

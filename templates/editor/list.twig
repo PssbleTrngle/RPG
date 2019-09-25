@@ -10,9 +10,9 @@
 		{% for object in objects %}
 
 			<div class='slot'>
-				{% if account().hasPermission('editor') %}<a href='{{ class|lower }}/{{ object.id }}'>{% endif %}
+				<a href='{{ class|lower }}/{{ object.id }}'>
 					<div>{{ object|icon|raw }}</div>
-				{% if account().hasPermission('editor') %}</a>{% endif %}
+				</a>
 				<p id='name'>{{ object.name() }}</p>
 			</div>
 
