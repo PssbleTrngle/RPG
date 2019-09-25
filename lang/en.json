@@ -140,6 +140,7 @@
 		}
 	},
 	"item": {
+		"format": "$1x $2",
 		"honey": "Honey Comb",
 		"weapon": {
 			"format": "$2 $1"
@@ -153,6 +154,9 @@
 		"description": {
 			"health_potion": "Test"
 		}
+	},
+	"enemy": {
+		"format": "$1 $2"
 	},
 	"rarity": {
 		"rusty": "Rusty",

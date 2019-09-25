@@ -1,6 +1,6 @@
 <?php
 
-	class Message extends BaseModel {
+	class Translation extends BaseModel {
 
 		protected $table = 'battle_messages';
 		private static $glue = ';';
@@ -13,7 +13,7 @@
 
 		public function format() {
 			$args = $this->args ? explode(static::$glue, $this->args) : [];
-			return format('message.battle.'.$this->key, $args);
+			return format($this->key, $args);
 		}
 
 	}
@@ -27,15 +27,16 @@
 		public function addMessage($message) {
 
 			if(is_string($message))
-				$message = new Message($message);
+				$message = new Translation($message);
 
+			$message->key = 'message.battle.'.$message->key;
 			$message->battle_id = $this->id;
 			$message->save();
 
 		}
 		
 		public function messages() {
-			return $this->hasMany(Message::class, 'battle_id')->orderBy('id', 'desc');
+			return $this->hasMany(Translation::class, 'battle_id')->orderBy('id', 'desc');
 		}
 
 		public function active() {

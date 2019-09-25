@@ -88,7 +88,7 @@
 			foreach ($this->effects as $effect)
 				if($effect->block) {
 					if($this->battle)
-						$this->battle->addMessage(new Message('blocked.'.$effect->name, $this->name()));
+						$this->battle->addMessage(new Translation('blocked.'.$effect->name, $this->name()));
 					return false;
 				}
 
@@ -99,8 +99,8 @@
 			return $this->character ?? $this->enemy;
 		}
 		
-		public function name() {
-			return $this->parent()->name();
+		public function key() {
+			return $this->parent()->key();
 		}
 		
 		public function icon() {

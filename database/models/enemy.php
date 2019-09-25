@@ -21,8 +21,8 @@
 			return $this->npc->icon();
 		}
 		
-		public function name() {
-			return $this->npc->name() .' '. $this->suffix;
+		public function key() {
+			return new Translation('enemy.format', $this->npc->name(), $this->suffix);
 		}
 
 		public function stats() {
@@ -50,7 +50,7 @@
 					$battle->addNPC($called);
 					$called->save();
 					
-					return new Message('called_help', [$this->name()]);
+					return new Translation('called_help', [$this->name()]);
 					
 				} else if($skills->count() > 0) {
 					
@@ -65,7 +65,7 @@
 					
 				}
 				
-				return new Message('scared', [$this->name()]);
+				return new Translation('scared', [$this->name()]);
 				
 			}
 		

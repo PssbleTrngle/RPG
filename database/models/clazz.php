@@ -38,11 +38,6 @@
 			return $this->belongsTo(Stats::class, 'stats_id');
 		}
 
-		/* TODO remove */
-		public function name() {
-			return ucfirst($this->name);
-		}
-
 		public static function registerAll() {
 
 			return;

@@ -30,7 +30,7 @@
 			static::register(['id' => 1, 'name' => 'slash', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Skill $skill, Target $target, Participant $user) {
 
 				$damage = new DamageEvent($user->stats()->apply(8, 'strength'));
-				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
+				return $target->damage($damage) ? new Translation('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 
 			}]);
 			
@@ -41,7 +41,7 @@
 				if(rand(1, 100) < 0.1)
 					$target->addEffect(Effect::where('name', 'poison'));
 
-				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
+				return $target->damage($damage) ? new Translation('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 				
 			}]);
 
@@ -72,7 +72,7 @@
 			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'group' => false], ['use' => function(Skill $skill, Target $target, Participant $user) {
 
 				$damage = new DamageEvent($user->stats()->apply(8, 'wisdom'));
-				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
+				return $target->damage($damage) ? new Translation('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 				
 			}]);
 			$relations[] = ['class_id' => 1, 'skill_id' => 101, 'level' => 0];
@@ -80,7 +80,7 @@
 			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'group' => true], ['use' => function(Skill $skill, Target $target, Participant $user) {
 
 				$damage = new DamageEvent($user->stats()->apply(5, 'wisdom'));
-				return $target->damage($damage) ? new Message('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
+				return $target->damage($damage) ? new Translation('damaged_using', [$user->name(), $skill->name(), $damage->amount, $target->name()]) : 'no_effect';
 
 			}]);
 			$relations[] = ['class_id' => 1, 'skill_id' => 102, 'level' => 0];
