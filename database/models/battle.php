@@ -50,8 +50,10 @@
 			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
 		}
 
-		public function onSide($side) {
-			return $this->participants->where('side', $side);
+		public function onSide($side, $living = false) {
+			$all = $this->participants->where('side', $side);
+			if($living) $all = $all->where('health', '>', 0);
+			return $all;
 		}
 		
 		public function delete() {

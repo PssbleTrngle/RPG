@@ -42,7 +42,7 @@
 				$skills = $this->participant->useableSkills();
 
 				if(rand(1, 100) < (100 * option('call_chance'))
-					&& $battle->onSide($this->side)->where('health', '>', '0')->count() < option('max_enemies')) {
+					&& $battle->onSide($this->side, true)->count() < option('max_enemies')) {
 					
 					$position = $battle->position;
 					
@@ -60,7 +60,7 @@
 					})->random();
 
 					$skill = $skills->random();
-					$target = $battle->onSide($targetSide)->random();
+					$target = $battle->onSide($targetSide, true)->random();
 					return $skill->use($target, $this->participant);
 					
 				}

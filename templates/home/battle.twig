@@ -33,7 +33,7 @@
 
 			{% for side in battle.sides if side != character.participant.side %}
 				<div class='participants'>
-					{% for par in battle.onSide(side) if par.health() > 0 or par.died %}
+					{% for par in battle.onSide(side, true) %}
 
 						{{ self.participant(par) }}
 
