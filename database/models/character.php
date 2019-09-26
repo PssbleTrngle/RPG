@@ -64,20 +64,22 @@
 		public function learn($skill) {
 			global $capsule;
 
-			if($skill && $this->canLearn()->contains('id', $skill->id)) {
+			if(!$this->participant->skills->contains('id', $skill->id)) {
+				if($skill && $this->canLearn()->contains('id', $skill->id)) {
 
-				if($this->skillpoints >= $skill->cost) {
-			
-					$capsule::table('participant_skills')
-						->insert(['skill_id' => $skill->id, 'participant_id' => $this->participant->id]);
+					if($this->skillpoints >= $skill->cost) {
+				
+						$capsule::table('participant_skills')
+							->insert(['skill_id' => $skill->id, 'participant_id' => $this->participant->id]);
 
-					$this->skillpoints--;
-					$this->save();
+						$this->skillpoints--;
+						$this->save();
 
-					return true;
+						return true;
+
+					}
 
 				}
-
 			}
 
 			return false;

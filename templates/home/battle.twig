@@ -55,9 +55,14 @@
 			{% if battle.active.id == character.id %}
 
 				<div class='options w-100'>
-					<div class='option' id='attack'>Attack</div>
-					<div class='option' data-action='battle/skip'>Skip</div>
-					<div class='option' data-action='battle/run'>Run</div>
+
+					{% if character.participant.canTakeTurn() %}
+						<div class='option' id='attack'>Attack</div>
+						<div class='option' data-action='battle/skip'>Skip</div>
+						<div class='option' data-action='battle/run'>Run</div>
+					{% else %}
+						<div class='option' data-action='battle/skip'>Skip</div>
+					{% endif %}
 
 					{% for skill in character.participant.skills %}
 						<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}' data-skill='{{ skill.id }}' data-group='{{ skill.group }}' data-parent='attack'>{{ skill.name() }}</div>

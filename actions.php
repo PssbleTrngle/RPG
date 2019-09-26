@@ -12,7 +12,7 @@
 
 	function result($in, $adds = []) {
 
-		if(is_bool($in)) $in = ['success' => $in];
+		if(!is_array($in)) $in = ['success' => $in];
 		return array_merge($in, $adds);
 	
 	}
@@ -190,37 +190,41 @@
 
 			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
-				$skill = $character->participant->useableSkills()
-							->where('id', $skillID)
-							->first();
-				
-				if($skillID && $skill) {
-						
-					if($skill->group)
-						$target = $battle->onSide($target->side);
-					else 
-						$target = collect([$target]);
-						
-					if(!$skill->affectDead)
-						$target = $target->where('health', '>', '0');
-					
-					$battle->prepareTurn();
+				if($character->participant->canTakeTurn()) {
 
-					foreach($target as $single) {
-						$message = $skill->use($single, $character->participant);
-						$battle->addMessage($message);
-					}
-					$battle->refresh();
+					$skill = $character->participant->useableSkills()
+								->where('id', $skillID)
+								->first();
 					
-					if($message) {
-						$skill->timeout($character->participant);
-						$battle->next();
+					if($skill) {
+							
+						if($skill->group)
+							$target = $battle->onSide($target->side);
+						else 
+							$target = collect([$target]);
+							
+						if(!$skill->affectDead)
+							$target = $target->where('health', '>', '0');
+						
+						$battle->prepareTurn();
+
+						foreach($target as $single) {
+							$message = $skill->use($single, $character->participant);
+							$battle->addMessage($message);
+						}
+						$battle->refresh();
+						
+						if($message) {
+							$skill->timeout($character->participant);
+							$battle->next();
+						}
+
+						return ['success' => true];
 					}
 
-					return ['success' => true];
+					return ['success' => false, 'message' => 'Choose a skill'];
+
 				}
-
-				return ['success' => false, 'message' => 'Choose a skill'];
 
 			}
 			return ['success' => false, 'message' => 'It\' not your turn'];
@@ -253,10 +257,14 @@
 		$character = $account->selected;
 
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
+
+			if($character->participant->canTakeTurn()) {
 			
-			$battle->prepareTurn();
-			$message = $battle->run($character);
-			return ['success' => $message !== false, 'message' => $message];
+				$battle->prepareTurn();
+				$message = $battle->run($character);
+				return ['success' => $message !== false, 'message' => $message];
+
+			}
 
 		}
 		
@@ -299,23 +307,25 @@
 
 		if($character && $stack && $action) {
 
-			$target = Participant::find($args['target'] ?? null) ?? $character->participant;
+			if($character->participant->canTakeTurn()) {
 
-			if($target && $stack->item->can($action)) {
+				$target = Participant::find($args['target'] ?? null) ?? $character->participant;
 
-				$battle = $character->participant->battle;
-				if($battle) $battle->prepareTurn();
+				if($target && $stack->item->can($action)) {
 
-				$success = $stack->item->$action($stack, $target);
+					$battle = $character->participant->battle;
+					if($battle) $battle->prepareTurn();
 
-				if($battle && $success) $battle->next();
-				$character->refresh();
-				Stack::tidy($character);
+					$success = $stack->item->$action($stack, $target);
 
-				return $success;
+					if($battle && $success) $battle->next();
+					$character->refresh();
+					Stack::tidy($character);
 
-			}
-			
+					return $success;
+
+				}
+			}			
 			
 			return ['success' => false];
 

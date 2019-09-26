@@ -59,16 +59,21 @@
 			}			
 		}
 
-		function use(Target $target, Participant $user) {
+		function use(Target $target, Participant $user, $charged = false) {
 			global $capsule;
 
-			if($this->charge <= 0)
-				return result($this->__call('use', [$target, $user]));
+			if($this->charge <= 0 || $charged)
+				return $this->__call('use', [$target, $user]);
 
-			$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'countdown' => $this->charge];
-			$capsule->table('charging_skills')->insert($charging);
+			if(is_a($target, 'Participant')) {
+				
+				$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'target_id' => $target->id, 'countdown' => $this->charge];
+				$capsule->table('charging_skills')->insert($charging);
 
-			return 'charging';
+				return new Translation('started_charging', [$user->name(), $this->name()]);
+			}
+
+			return false;
 
 		}
 	
@@ -105,8 +110,8 @@
 			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'group' => true],
 				['use' => spellDamage(5)]);
 			
-			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'group' => false, 'charge' => 1],
-				['use' => spellDamage(1, ['stunned' => 0.1])]);
+			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'group' => false, 'charge' => 3],
+				['use' => spellDamage(12, ['stunned' => 0.1])]);
 
 			/* ------------------------  MISC  ------------------------ */
 			

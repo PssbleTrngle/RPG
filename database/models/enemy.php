@@ -42,7 +42,7 @@
 				$skills = $this->participant->useableSkills();
 
 				if(rand(1, 100) < (100 * option('call_chance'))
-					&& $battle->onSide($this->side, true)->count() < option('max_enemies')) {
+					&& $battle->onSide($this->participant->side, true)->count() < option('max_enemies')) {
 					
 					$position = $battle->position;
 					
@@ -69,6 +69,7 @@
 				
 			}
 		
+			return false;
 			
 		}
 		

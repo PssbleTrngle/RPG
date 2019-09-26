@@ -3,7 +3,7 @@
 	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
-		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills'];
+		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills', 'charging'];
 
 		public function delete() {
 			global $capsule;
@@ -17,6 +17,11 @@
 
 			parent::delete();
 
+		}
+		
+		public function charging() {	
+			return $this->belongsToMany(Skill::class, 'charging_skills', 'participant_id', 'skill_id')
+    			->withPivot('countdown', 'target_id');
 		}
 		
 		public function skills() {	
@@ -86,6 +91,8 @@
 		public function canTakeTurn() {
 			if($this->health <= 0) return false;
 
+			if(!$this->charging->isEmpty()) return false;
+
 			foreach ($this->effects as $effect)
 				if($effect->block) {
 					if($this->battle)
@@ -153,9 +160,20 @@
 		}
 
 		public function afterTurn() {
+			global $capsule;
 
 			foreach($this->effects as $effect)
 				$effect->apply($this);
+
+			foreach ($this->charging as $skill)
+				if($skill->pivot->countdown == 0) {
+					$target = Participant::find($skill->pivot->target_id);
+					if($target)
+						$this->battle->addMessage($skill->use($target, $this, true));
+				}
+
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->where('countdown', 0)->delete();
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->where('countdown', '>', 0)->decrement('countdown');
 
 			$this->save();
 			$this->refresh();

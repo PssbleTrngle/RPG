@@ -25,14 +25,14 @@
 		public $sides = [1, 2];
 
 		public function addMessage($message) {
+			if($message) {
+				if(is_string($message))
+					$message = new Translation($message);
 
-			if(is_string($message))
-				$message = new Translation($message);
-
-			$message->key = 'message.battle.'.$message->key;
-			$message->battle_id = $this->id;
-			$message->save();
-
+				$message->key = 'message.battle.'.$message->key;
+				$message->battle_id = $this->id;
+				$message->save();
+			}
 		}
 		
 		public function messages() {
@@ -156,20 +156,22 @@
 		}
 		
 		public function next() {
+
+			/* Apply effects */
+			$this->active->participant->afterTurn();
 		
 			$count = $this->participants->count();
-
-			$this->active->participant->afterTurn();
 			
 			$index = ($this->activeIndex() + 1) % $count;
 			while(is_null(($next = $this->participants[$index])->character)) {
 				
-				if($next->enemy && $next->canTakeTurn()) {
-					$msg = $next->enemy->takeTurn();
-					if($msg) $this->addMessage($msg);
-					$next->enemy->refresh();
+				/* Take their turn */
+				if($next->canTakeTurn()) {
+					$this->addMessage($next->takeTurn());
+					$next->refresh();
 				}
 
+				/* Apply effects */
 				$next->afterTurn();
 				
 				$index = ($index + 1) % $count;
