@@ -52,26 +52,16 @@
 	margin-bottom: 10px;
 }
 
-.slot:hover, .slot.active {
+.slot:hover, .slot.selected {
 	transform: scale(1.15, 1.15);
 }
 
-.item-popup {
+.info-popup {
 	display: none;
 }
 
-.item-popup.active {
+.info-popup.active {
 	display: block;
-}
-
-.battle-inventory {
-	width: 200px;
-}
-
-.battle-inventory .slot {
-
-	--size: 50px;
-
 }
 
 .description {

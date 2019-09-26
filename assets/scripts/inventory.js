@@ -14,23 +14,21 @@ $(window).ready(function() {
 			
 		});
 	});
-	
-	onLoad('.inventory', function(bar) {
-		bar.not('.loot').find('.slot').each(function() {
-		
-			let element = $(this);
-			let popup = $('.item-popup[data-item=' + element.attr('id') + ']');
 
-			element.click(function() {
-				if(popup) {
-					$('.item-popup').removeClass('active');
-					$('.slot').removeClass('active');
-					popup.addClass('active')
-					element.addClass('active')
-				}
-			
-			});			
-		});
+	onLoad('.info-popup[data-source]', function(popup) {
+
+		let source = $(popup.attr('data-source'));
+
+		source.click(function() {
+			if(popup) {
+				$('.info-popup').removeClass('active');
+				$('.selected').removeClass('active');
+				popup.addClass('active');
+				source.addClass('selected');
+			}
+		
+		});	
+
 	});
 
 	onLoad('.option', function(element) {
@@ -41,7 +39,7 @@ $(window).ready(function() {
 		if(slot || action)
 			element.click(function() {
 
-				let stack = element.closest('.item-popup').attr('data-item');
+				let stack = element.closest('.info-popup').attr('data-item');
 				window.params.stack = stack;
 
 				if(slot) {

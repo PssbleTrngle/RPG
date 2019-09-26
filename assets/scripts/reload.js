@@ -7,6 +7,7 @@ function onLoad(query, func) {
 
 }
 
+/*
 $.fn.click = function(func) {
 	
 	if(func) for(e of $(this)) if(!e.hasClickEvent) {
@@ -15,6 +16,7 @@ $.fn.click = function(func) {
 	}
 
 };
+*/
 
 $.fn.reload = function() {
 	

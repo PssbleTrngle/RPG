@@ -1,3 +1,29 @@
+{% macro popup(skill) %}
+
+	<div class='info-popup center mt-2' data-source='.skill[data-skill={{ skill.id }}]'>
+
+		<div class='darken pb-2 pt-1 mt-1'>
+
+			<h3>{{ skill.name() }}</h3>
+
+			{% if skill.usage.nextUse > 0 %}
+				<p>Use again in {{ skill.usage.nextUse }}</p>
+			{% endif %}
+
+			{% if skill.charge > 0 %}
+				<p>Needs {{ skill.charge }} rounds to charge</p>
+			{% endif %}
+
+			{% if skill.description() %}
+				<p class='mt-1 description'>{{ skill.description() }}</p>
+			{% endif %}
+
+		</div>
+
+	</div>
+
+{% endmacro %}
+
 {% macro participant(par) %}
 	
 	<div class='participant
@@ -5,7 +31,7 @@
 			{% if par.died %}died{% endif %}'
 			id='{{ par.id }}'>
 
-		<p>{{par.name() }} [lvl: {{ par.level() }}]</p>
+		<p>{{par.name() }}</p>
 		<div class='bar health' data-amount='{{ par.health() / par.maxHealth() }}'></div>
 
 		<div class='participant-icon {% for effect in par.effects %}{{ effect.name }} {% endfor %}'>{{ par|icon|raw }}</div>
@@ -26,32 +52,41 @@
 
 <div class='battle'>
 
-	<div class='row'>
-		<div class='battlefield'>
-			<p class='right'>Round {{ battle.round }}</p>
-			<p class='right feedback'></p>
+	<div class='row w-100'>
 
-			{% for side in battle.sides if side != character.participant.side %}
+		<div>
+			<div class='battlefield'>
+				<p class='right'>Round {{ battle.round }}</p>
+				<p class='right feedback'></p>
+
+				{% for side in battle.sides if side != character.participant.side %}
+					<div class='participants'>
+						{% for par in battle.onSide(side, true) %}
+
+							{{ self.participant(par) }}
+
+						{% endfor %}
+				</div>
+				{% endfor %}
+
 				<div class='participants'>
-					{% for par in battle.onSide(side, true) %}
+					{% for par in battle.onSide(character.participant.side) %}
 
 						{{ self.participant(par) }}
 
 					{% endfor %}
+				</div>
+
 			</div>
-			{% endfor %}
-
-			<div class='participants'>
-				{% for par in battle.onSide(character.participant.side) %}
-
-					{{ self.participant(par) }}
-
+		
+			<div class='mt-2'>
+				{% for key in battle.messages.take(5) %}
+				<p>{{ key.format()|raw }}</p>	
 				{% endfor %}
 			</div>
-
 		</div>
 
-		<div class='top px-1'>
+		<div class='top px-1 battle-bar'>
 			{% if battle.active.id == character.id %}
 
 				{% for skill in character.participant.charging %}
@@ -82,7 +117,7 @@
 
 				{% import 'home/inventory.twig' as inventory %}
 
-				<div class='inventory battle-inventory mt-3'>
+				<div class='inventory battle-inventory mx-a mt-3'>
 					{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
 
 						{{ inventory.slot(stack) }}
@@ -90,11 +125,12 @@
 					{% endfor %}
 				</div>
 
-
 				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
-
 					{{ inventory.popup(stack, character, false) }}
+				{% endfor %}
 
+				{% for skill in character.participant.skills %}
+					{{ self.popup(skill) }}
 				{% endfor %}
 			
 			{% else %}
@@ -104,12 +140,6 @@
 			{% endif %}
 		</div>
 
-	</div>
-	
-	<div class='mt-2'>
-		{% for key in battle.messages.take(5) %}
-		<p>{{ key.format()|raw }}</p>	
-		{% endfor %}
 	</div>
 	
 </div>
