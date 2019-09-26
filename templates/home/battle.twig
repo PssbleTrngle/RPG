@@ -54,6 +54,17 @@
 		<div class='top px-1'>
 			{% if battle.active.id == character.id %}
 
+				{% for skill in character.participant.charging %}
+					<div class='charging'>
+						<p>{{ skill.name() }}</p>
+						<div>
+							{% for i in skill.charge..1 %}
+								<div class='charge {% if i > skill.pivot.countdown %}done{% endif %}'></div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endfor %}
+
 				<div class='options w-100'>
 
 					{% if character.participant.canTakeTurn() %}
