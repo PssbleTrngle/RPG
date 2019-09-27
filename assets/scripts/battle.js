@@ -57,11 +57,11 @@ $(window).ready(function() {
 		window.battle_action = 'battle/skill';
 		let range = $(this).attr('data-range');
 
-		$('.field').removeClass('fade');
+		$('.field').removeClass('disabled');
 
 		$('.field').filter(function() {
 			return !$(this).inRange(charX, charY, range);
-		}).addClass('fade');
+		}).addClass('disabled');
 
 	});
 

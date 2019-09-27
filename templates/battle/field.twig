@@ -11,10 +11,20 @@
 				<div class='hex'></div>
 
 				{% if field.participant.exists %}
+					
 					<div class='bar health' data-amount='{{ field.participant.health() / field.participant.maxHealth() }}'></div>
 					<div class='participant-icon'>
 						{{ field.participant|icon|raw }}
 					</div>
+
+					<div>
+						{% for effect in par.effects %}
+							<div class='effect orbit'>
+								{{ effect|icon|raw }}
+							</div>
+						{% endfor %}
+					</div>
+
 				{% endif %}
 			</div>
 
