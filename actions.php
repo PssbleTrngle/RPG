@@ -182,11 +182,11 @@
 
 	registerAction('/battle/skill', function($args, $account) {
 		
-		$target = Participant::find($args['target'] ?? null);
+		$field = Field::find($args['target'] ?? null);
 		$skillID = $args['skill'] ?? null;
+		$character = $account->selected;
 			
-		if($target) {
-			$character = $account->selected;
+		if($field && $target = $field->participant) {
 
 			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
@@ -309,7 +309,8 @@
 
 			if($character->participant->canTakeTurn()) {
 
-				$target = Participant::find($args['target'] ?? null) ?? $character->participant;
+				$target = Field::find($args['target'] ?? null) ?? $character;
+				if($target) $target = $target->participant;
 
 				if($target && $stack->item->can($action)) {
 

@@ -21,16 +21,7 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		foreach(Clazz::all() as $class) {
-			echo '"'.$class->name.'": {';
-			echo '<br>';
-			echo '!tab"name": "'.ucfirst($class->name).'",';
-			echo '<br>';
-			echo '!tab"description": "None"';
-			echo '<br>';
-			echo '},';
-			echo '<br>';
-		}
+		echo json_encode(getAccount()->selected->participant->battle->fieldAt(0,0));
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
@@ -47,6 +38,14 @@
 
 	$app->get('/view/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
+	})->add(new NeedsAuthentication($container['view'], 'tester'));
+
+	$app->get('/test/battle', function (Request $request, Response $response, array $args) {
+
+		$battle = new Battlefield;
+
+		return $this->view->render($response, 'battle.twig', ['battle' => $battle]);		
+	
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
 ?>

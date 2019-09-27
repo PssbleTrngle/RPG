@@ -21,7 +21,7 @@
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position', 'messages'];
+		protected $with = ['participants', 'active', 'position', 'messages', 'fields'];
 		public $sides = [1, 2];
 
 		public function addMessage($message) {
@@ -33,6 +33,10 @@
 				$message->battle_id = $this->id;
 				$message->save();
 			}
+		}
+		
+		public function fields() {
+			return $this->hasMany(Field::class, 'battle_id')->without('battle');
 		}
 		
 		public function messages() {
@@ -82,6 +86,9 @@
 
 			foreach ($this->messages as $message)
 				$message->delete();
+
+			foreach ($this->fields as $field)
+				$field->delete();
 			
 			parent::delete();
 			
@@ -203,35 +210,82 @@
 			$this->round++;
 			
 		}
+
+		public function createHex($radius, $centerX = 0, $centerY = 0) {
+
+			for($x = -$radius; $x <= $radius; $x++)
+				for($y = -$radius; $y <= $radius; $y++)
+					if(abs($x + $y) <= $radius) {
+
+						if(!$this->fieldAt($centerX + $x, $centerY + $y)) {
+
+							$field = new Field;
+							$field->x = $centerX + $x;
+							$field->y = $centerY + $y;
+							$field->battle_id = $this->id;
+							$field->save();
+						
+						}
+					}
+
+			$this->refresh();
+
+		}
 		
 		public static function start($character) {
 			
 			if($character) {
+
 				$battle = new Battle;
 				$battle->active_id = $character->id;
 				$battle->position_id = $character->id;
 				$battle->save();
 				$battle->refresh();
+
+				$battle->createHex(2, -2);
+				$battle->createHex(2, 2);
+
 				$battle->addCharacter($character);
+
 				return $battle;
 			}
 			
 			return false;
 		}
+
+		public function fieldAt($x, $y) {
+			return $this->fields->where('x', $x)->where('y', $y)->first();
+		}
 		
 		public function addCharacter($character) {			
 			if($character) {
+
+				$field = $this->fieldAt(0, 0);
+				if($field) {
+					$field->participant_id = $character->participant->id;
+					$field->save();
+				}
+
 				$character->message = null;
 				$character->participant->battle_id = $this->id;
 				$character->participant->side = 1;
 				$character->participant->save();
-				$character->participant->refresh();
 				$character->save();
 			}
 		}
 		
 		public function addNPC($npc) {			
-			$npc->createEnemy($this, 2);
+			$enemy = $npc->createEnemy($this, 2);
+
+			if($enemy) {
+
+				$field = $this->fieldAt(1, 0);
+				if($field) {
+					$field->participant_id = $enemy->participant->id;
+					$field->save();
+				}
+
+			}
 		}
 		
 		public function getLoot() {
@@ -279,6 +333,32 @@
 
 		}
 		
-	}	
+	}
+
+	class Battlefield {
+
+		public $fields;
+		public $active;
+
+		public function __construct() {
+
+		}
+
+	}
+
+	class Field extends BaseModel {
+   		
+		protected $table = 'field';
+		protected $with = ['participant', 'battle'];
+		
+		public function participant() {
+			return $this->belongsTo(Participant::class, 'participant_id')->without('battle', 'field');
+		}
+		
+		public function battle() {
+			return $this->belongsTo(Battle::class, 'battle_id');
+		}
+
+	}
 
 ?>
