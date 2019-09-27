@@ -31,7 +31,7 @@
 		}
 		
 		public function starting_weapon() {
-			return $this->belongsTo(Item::class, 'starting_weapon_id');
+			return $this->belongsTo(Item::class, 'start_weapon_id');
 		}
 		
 		public function stats() {

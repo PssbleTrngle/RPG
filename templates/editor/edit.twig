@@ -5,11 +5,11 @@
 	<div class='relation-box' data-table='{{ object|call(many.relation).table }}' data-key='{{ many.key }}'>
 		<h3>{{ many.relation|removeCamel }}</h3>
 
-		<table>
+		<table class='ml-2'>
 
 			<tr>
 				{% for pivot, values in many.pivots %}
-					<th>{{ pivot }}</th>
+					<th>{{ pivot|split('.')[pivot|split('.')|length - 1]|removeCamel }}</th>
 				{% endfor %}
 				<th></th>
 			</tr>
@@ -69,22 +69,43 @@
 
 	{% if object %}
 
-		<div class='view'>
+		<input hidden id='next' value='{{ next.id }}'></input>
+		<input hidden id='previous' value='{{ previous.id }}'></input>
+
+		<div class='view pt-1'>
 
 			<input id='value' hidden value='{{ object.id }}'></input>
 		
-			<a href='../{{ class|lower }}'><div class='back'>{{ class|capitalize }}</div></a>
+			<a href='../{{ class|lower }}'><span class='view-back'>{{ class|capitalize }}</span></a>
 			<h2>{{ object.name() }}</h2>
 			<small class='description'>{{ object.description() }}</small>
 
 			<div class='edit-icon'>{{ object|icon|raw }}</div>
 
 			<div class='row my-2 relations'>
+				{% for attribute, value in object.attributes %}
+					{% if attribute ends with '_id' == false %}
+
+						<div class='relation-box small'>
+							<h3>{{ attribute|removeCamel }}</h3>
+							<div class='pl-2'>
+								{% if value %}
+									{{ value }}
+								{% endif %}
+							</div>
+						</div>
+
+					{% endif %}
+
+				{% endfor %}
+			</div>
+
+			<div class='row mb-2 relations'>
 				{% for relation, value in object.relations if value is not iterable %}
 
 					<div class='relation-box'>
 						<h3>{{ relation|removeCamel }}</h3>
-						<div>
+						<div class='pl-2'>
 							{% if value %}
 								<a href='../{{ value|class|lower }}/{{ value.id }}'>{{ value.name() }}</a>
 							{% endif %}

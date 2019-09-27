@@ -4,6 +4,29 @@
 
 $(window).ready(function() {
 
+	$(this).keyup(function(e) {
+
+		let id = null;
+
+		switch(e.keyCode) {
+
+			case 37:
+			case 65:
+				id = $('#previous').val();
+				break;
+
+			case 39:
+			case 68:
+				id = $('#next').val();
+				break;
+
+		}
+
+		if(id)
+			window.open(id, '_self');
+
+	})
+
 	onLoad('.save', function(element) {
 
 		element.click(function() {

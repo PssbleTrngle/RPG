@@ -43,15 +43,15 @@
 		},
 		"traveller": {
 			"name": "Traveller",
-			"description": "None"
+			"description": ""
 		},
 		"wild": {
 			"name": "Wild",
-			"description": "None"
+			"description": ""
 		},
 		"fighter": {
 			"name": "Fighter",
-			"description": "None"
+			"description": ""
 		},
 		"psychic": {
 			"name": "Psychic",
@@ -59,243 +59,243 @@
 		},
 		"druid": {
 			"name": "Druid",
-			"description": "None"
+			"description": ""
 		},
 		"mage": {
 			"name": "Mage",
-			"description": "None"
+			"description": ""
 		},
 		"alchemist": {
 			"name": "Alchemist",
-			"description": "None"
+			"description": ""
 		},
 		"rogue": {
 			"name": "Rogue",
-			"description": "None"
+			"description": ""
 		},
 		"barde": {
 			"name": "Barde",
-			"description": "None"
+			"description": ""
 		},
 		"merchant": {
 			"name": "Merchant",
-			"description": "None"
+			"description": ""
 		},
 		"ranger": {
 			"name": "Ranger",
-			"description": "None"
+			"description": ""
 		},
 		"hermit": {
 			"name": "Hermit",
-			"description": "None"
+			"description": ""
 		},
 		"duelist": {
 			"name": "Duelist",
-			"description": "None"
+			"description": ""
 		},
 		"warrior": {
 			"name": "Warrior",
-			"description": "None"
+			"description": ""
 		},
 		"focused": {
 			"name": "Focused",
-			"description": "None"
+			"description": ""
 		},
 		"priest": {
 			"name": "Priest",
-			"description": "None"
+			"description": ""
 		},
 		"medium": {
 			"name": "Medium",
-			"description": "None"
+			"description": ""
 		},
 		"telepath": {
 			"name": "Telepath",
-			"description": "None"
+			"description": ""
 		},
 		"shaman": {
 			"name": "Shaman",
-			"description": "None"
+			"description": ""
 		},
 		"necromancer": {
 			"name": "Necromancer",
-			"description": "None"
+			"description": ""
 		},
 		"wizard": {
 			"name": "Wizard",
-			"description": "None"
+			"description": ""
 		},
 		"elementalist": {
 			"name": "Elementalist",
-			"description": "None"
+			"description": ""
 		},
 		"infused": {
 			"name": "Infused",
-			"description": "None"
+			"description": ""
 		},
 		"ritualist": {
 			"name": "Ritualist",
-			"description": "None"
+			"description": ""
 		},
 		"astromancer": {
 			"name": "Astromancer",
-			"description": "None"
+			"description": ""
 		},
 		"warlock": {
 			"name": "Warlock",
-			"description": "None"
+			"description": ""
 		},
 		"illusionist": {
 			"name": "Illusionist",
-			"description": "None"
+			"description": ""
 		},
 		"assassin": {
 			"name": "Assassin",
-			"description": "None"
+			"description": ""
 		},
 		"derwish": {
 			"name": "Derwish",
-			"description": "None"
+			"description": ""
 		},
 		"bandit": {
 			"name": "Bandit",
-			"description": "None"
+			"description": ""
 		},
 		"inventor": {
 			"name": "Inventor",
-			"description": "None"
+			"description": ""
 		},
 		"fool": {
 			"name": "Fool",
-			"description": "None"
+			"description": ""
 		},
 		"performer": {
 			"name": "Performer",
-			"description": "None"
+			"description": ""
 		},
 		"charmer": {
 			"name": "Charmer",
-			"description": "None"
+			"description": ""
 		},
 		"artificer": {
 			"name": "Artificer",
-			"description": "None"
+			"description": ""
 		},
 		"tamer": {
 			"name": "Tamer",
-			"description": "None"
+			"description": ""
 		},
 		"hunter": {
 			"name": "Hunter",
-			"description": "None"
+			"description": ""
 		},
 		"monk": {
 			"name": "Monk",
-			"description": "None"
+			"description": ""
 		},
 		"rebel": {
 			"name": "Rebel",
-			"description": "None"
+			"description": ""
 		},
 		"hero": {
 			"name": "Hero",
-			"description": "None"
+			"description": ""
 		},
 		"knight": {
 			"name": "Knight",
-			"description": "None"
+			"description": ""
 		},
 		"berserk": {
 			"name": "Berserk",
-			"description": "None"
+			"description": ""
 		},
 		"mercenary": {
 			"name": "Mercenary",
-			"description": "None"
+			"description": ""
 		},
 		"blockade": {
 			"name": "Blockade",
-			"description": "None"
+			"description": ""
 		},
 		"cleric": {
 			"name": "Cleric",
-			"description": "None"
+			"description": ""
 		},
 		"thaumaturge": {
 			"name": "Thaumaturge",
-			"description": "None"
+			"description": ""
 		},
 		"temporal": {
 			"name": "Temporal",
-			"description": "None"
+			"description": ""
 		},
 		"possessed": {
 			"name": "Possessed",
-			"description": "None"
+			"description": ""
 		},
 		"sage": {
 			"name": "Sage",
-			"description": "None"
+			"description": ""
 		},
 		"beast": {
 			"name": "Beast",
-			"description": "None"
+			"description": ""
 		},
 		"fallen": {
 			"name": "Fallen",
-			"description": "None"
+			"description": ""
 		},
 		"guardian": {
 			"name": "Guardian",
-			"description": "None"
+			"description": ""
 		},
 		"chosen": {
 			"name": "Chosen",
-			"description": "None"
+			"description": ""
 		},
 		"insane": {
 			"name": "Insane",
-			"description": "None"
+			"description": ""
 		},
 		"narrator": {
 			"name": "Narrator",
-			"description": "None"
+			"description": ""
 		},
 		"imposter": {
 			"name": "Imposter",
-			"description": "None"
+			"description": ""
 		},
 		"king": {
 			"name": "King",
-			"description": "None"
+			"description": ""
 		},
 		"spirit": {
 			"name": "Spirit",
-			"description": "None"
+			"description": ""
 		},
 		"touched": {
 			"name": "Touched",
-			"description": "None"
+			"description": ""
 		},
 		"oracle": {
 			"name": "Oracle",
-			"description": "None"
+			"description": ""
 		},
 		"slayer": {
 			"name": "Slayer",
-			"description": "None"
+			"description": ""
 		},
 		"creator": {
 			"name": "Creator",
-			"description": "None"
+			"description": ""
 		},
 		"corrupted": {
 			"name": "Corrupted",
-			"description": "None"
+			"description": ""
 		},
 		"conquerer": {
 			"name": "Conquerer",
-			"description": "None"
+			"description": ""
 		}
 	},
 	"race": {

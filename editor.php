@@ -44,7 +44,19 @@
 		$manys = manysFor($class);
 
 		$object = is_subclass_of($class, 'BaseModel') ? $class::find($id) : null;
-		$this->view->render($response, 'editor/edit.twig', ['object' => $object, 'manys' => $manys, 'class' => $class]);
+
+		if($object) {
+			$next = $class::where('id', '>', $id)->first();
+			$previous = $class::where('id', '<', $id)->orderBy('id', 'desc')->first();
+		}
+
+		$this->view->render($response, 'editor/edit.twig', [
+			'object' => $object,
+			'manys' => $manys,
+			'class' => $class,
+			'next' => $next,
+			'previous' => $previous
+		]);
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
