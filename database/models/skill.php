@@ -59,6 +59,30 @@
 
 	}
 
+	function areaStar($radius = 1, $centerX = 0, $centerY = 0) {
+
+		return function(Skill $skill) use($radius, $centerX, $centerY) {
+
+			$neighboors = [];
+
+			for($x = -$radius; $x <= $radius; $x++) 
+				if($x != $centerX)
+					$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY];
+
+			for($y = -$radius; $y <= $radius; $y++) 
+				if($y != $centerY)
+					$neighboors[] = ['x' => $centerX, 'y' => $centerY + $y];
+
+			for($y = -$radius; $y <= $radius; $y++) 
+				if($y != $centerY)
+					$neighboors[] = ['x' => $centerX - $y, 'y' => $centerY + $y];
+
+			return collect($neighboors);
+
+		};
+
+	}
+
 	function areaSingle() {
 
 		return function(Skill $skill) {
@@ -137,6 +161,12 @@
 			
 			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'range' => 2, 'charge' => 3],
 				['use' => spellDamage(12, ['stunned' => 0.1]), 'area' => areaSingle()]);
+			
+			static::register(['id' => 120, 'name' => 'blast', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 1],
+				['use' => spellDamage(6, ['burned' => 0.1]), 'area' => areaStar(2)]);
+			
+			static::register(['id' => 121, 'name' => 'kamikaze', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 1],
+				['use' => spellDamage(12, ['burned' => 0.1]), 'area' => areaStar(2)]);
 
 			/* ------------------------  MISC  ------------------------ */
 			
