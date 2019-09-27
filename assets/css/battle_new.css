@@ -1,0 +1,57 @@
+.field {
+	--size: 40px;
+
+	position: absolute;
+
+	width: var(--size);
+	height: calc(var(--size) * 1.15);
+
+	top: 50%;
+	left: 50%;
+
+	display: none;
+	transform: translate(-50%, -50%) scale(0, 0);
+	/* transition: left 0.8s linear, top 0.8s linear; */
+
+	animation: field-grow 1.2s linear forwards;
+
+}
+
+@keyframes field-grow {
+	to {
+		transform: translate(-50%, -50%) scale(1, 1);
+	}
+}
+
+.field > * {
+	position: absolute;
+	pointer-events: none;
+}
+
+.field .hex {
+
+	background-color: var(--bg);
+
+	width: 100%;
+	height: 100%;
+
+	margin: auto;
+
+	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+
+}
+
+.field.hover .hex {
+	opacity: 0.65;
+}
+
+.participant.hover .participant-icon {
+	/* filter: drop-shadow(0 0 4px var(--highlight)); */
+}
+
+.battlefield {
+
+	position: relative;
+	height: 600px;
+
+}

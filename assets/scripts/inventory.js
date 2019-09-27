@@ -22,7 +22,7 @@ $(window).ready(function() {
 		source.click(function() {
 			if(popup) {
 				$('.info-popup').removeClass('active');
-				$('.selected').removeClass('active');
+				$('.selected').removeClass('selected');
 				popup.addClass('active');
 				source.addClass('selected');
 			}

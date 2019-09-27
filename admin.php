@@ -48,5 +48,13 @@
 	$app->get('/view/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
+
+	$app->get('/test/battle', function (Request $request, Response $response, array $args) {
+
+		$battle = new Battlefield;
+
+		return $this->view->render($response, 'battle.twig', ['battle' => $battle]);		
+	
+	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
 ?>

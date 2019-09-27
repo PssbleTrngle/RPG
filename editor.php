@@ -29,7 +29,7 @@
 
 	}, 'editor');
 	
-	$app->get('/edit/{class}', function (Request $request, Response $response, array $args) {
+	$app->get('/view/{class}', function (Request $request, Response $response, array $args) {
 		
 		$class = $args['class'];
 		$objects = is_subclass_of($class, 'BaseModel') ? $class::all() : [];
@@ -37,7 +37,7 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
-	$app->get('/edit/{class}/{id}', function (Request $request, Response $response, array $args) {
+	$app->get('/view/{class}/{id}', function (Request $request, Response $response, array $args) {
 		
 		$class = $args['class'];
 		$id = $args['id'];

@@ -1,0 +1,24 @@
+<div class='w-75'>
+	<div class='battlefield'>
+
+		{% for field in battle.fields %}
+
+			<div data-x='{{ field.x }}' data-y='{{ field.y }}' class='field participant 
+				{% if field.participant.character.exists and battle.active.id == field.participant.character.id %}active{% endif %}
+				{% if field.participant.died %}died{% endif %}'
+				id='{{ field.participant.id }}'>
+
+				<div class='hex'></div>
+
+				{% if field.participant %}
+					<div class='bar health' data-amount='{{ field.participant.health() / field.participant.maxHealth() }}'></div>
+					<div class='participant-icon'>
+						{{ field.participant|icon|raw }}
+					</div>
+				{% endif %}
+			</div>
+
+		{% endfor %}
+
+	</div>
+</div>

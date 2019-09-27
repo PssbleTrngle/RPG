@@ -55,7 +55,7 @@
 	pointer-events: none; 
 
 }
-
+/*
 .participants {
 	color: #000;
 	padding: 20px;
@@ -80,8 +80,9 @@
 .participant.selected {
 	 filter: drop-shadow(0 0 4px var(--highlight));
 }
+*/
 
-.participant.active > .participant-icon .icon {
+.participant.active .participant-icon .icon {
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 
@@ -186,4 +187,9 @@
 
 .battle-inventory .slot {
 	--size: 50px;
+}
+
+.skill.selected {
+	background-color: var(--highlight);
+	border-color: var(--highlight);
 }

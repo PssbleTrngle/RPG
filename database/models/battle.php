@@ -279,6 +279,57 @@
 
 		}
 		
-	}	
+	}
+
+	class Battlefield {
+
+		public $fields;
+		public $active;
+
+		public function __construct() {
+
+			$this->fields = collect([]);
+
+			$radius = 2;
+			$participants = Participant::all();
+			$this->active = Character::find(4);
+
+			for($x = -$radius; $x <= $radius; $x++)
+				for($y = -$radius; $y <= $radius; $y++)
+					if(abs($x + $y) <= $radius && rand(1, 6) > 1) {
+						$field = new Field($x, $y);
+						if(rand(1, 10) == 1) $field->participant = $participants->random();
+						$this->fields[] = $field;
+					}
+
+		}
+
+		public function neighboors($x, $y, $radius) {
+
+			$neighboors = [];
+
+			for($x1 = -$radius; $x1 <= $radius; $x1++)
+				for($y1 = -$radius; $y1 <= $radius; $y1++)
+					if(abs($x + $y) <= $radius)
+						$neighboors[] = $this->fields->where('x', $x + $x1)->where('y', $y + $y1);
+
+			return collect($neighboors);
+
+		}
+
+	}
+
+	class Field {
+
+		public $x;
+		public $y;
+		public $participant;
+
+		public function __construct($x, $y) {
+			$this->x = $x;
+			$this->y = $y;
+		}
+
+	}
 
 ?>

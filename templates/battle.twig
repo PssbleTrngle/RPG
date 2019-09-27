@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block title %}Battle{% endblock %}
+
+{% set character = account().selected %}
+
+{% block content %}
+
+	<div class='battle'>
+		<div class='row w-100'>
+			{% include 'battle/field.twig' with {'battle': battle, 'character': character} %}
+			{% include 'battle/bar.twig' with {'battle': battle, 'character': character} %}
+		</div>
+	</div>
+
+{% endblock %}
