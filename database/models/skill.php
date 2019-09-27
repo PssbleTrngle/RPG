@@ -42,6 +42,31 @@
 
 	}
 
+	function areaHexagon($radius = 1, $centerX = 0, $centerY = 0) {
+
+		return function(Skill $skill) use($radius, $centerX, $centerY) {
+
+			$neighboors = [];
+
+			for($x = -$radius; $x <= $radius; $x++)
+				for($y = -$radius; $y <= $radius; $y++)
+					if(abs($x + $y) <= $radius)
+						$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY + $y];
+
+			return collect($neighboors);
+
+		};
+
+	}
+
+	function areaSingle() {
+
+		return function(Skill $skill) {
+			return [['x' => 0, 'y' => 0]];
+		};
+
+	}
+
 	class Skill extends BaseModel {
    		
 		protected $table = 'skill';
@@ -81,41 +106,41 @@
 
 			/* ------------------------  ATTACKS  ------------------------ */
 			
-			static::register(['id' => 1, 'name' => 'slash', 'timeout' => 0, 'cost' => 1, 'group' => false],
-				['use' => simpleDamage(8)]);
+			static::register(['id' => 1, 'name' => 'slash', 'timeout' => 0, 'cost' => 1, 'range' => 1],
+				['use' => simpleDamage(8), 'area' => areaSingle()]);
 			
-			static::register(['id' => 2, 'name' => 'backstab', 'timeout' => 0, 'cost' => 1, 'group' => false],
-				['use' => simpleDamage(8, ['poison' => 0.1])]);
+			static::register(['id' => 2, 'name' => 'backstab', 'timeout' => 0, 'cost' => 1, 'range' => 1],
+				['use' => simpleDamage(8, ['poison' => 0.1]), 'area' => areaSingle()]);
 
 			/* ------------------------  HEALING  ------------------------ */
 			
-			static::register(['id' => 51, 'name' => "heal", 'timeout' => 0, 'cost' => 2, 'group' => false],
-				['use' => simpleHeal(15)]);
+			static::register(['id' => 51, 'name' => "heal", 'timeout' => 0, 'cost' => 2, 'range' => 2],
+				['use' => simpleHeal(15), 'area' => areaSingle()]);
 			
-			static::register(['id' => 52, 'name' => "cleansing_rain", 'timeout' => 0, 'cost' => 2, 'group' => true],
-				['use' => simpleHeal(8)]);
+			static::register(['id' => 52, 'name' => "cleansing_rain", 'timeout' => 0, 'cost' => 2, 'range' => 1],
+				['use' => simpleHeal(8), 'area' => areaHexagon()]);
 
-			static::register(['id' => 53, 'name' => "revive", 'timeout' => 0, 'cost' => 5, 'group' => false, 'affectDead' => true],
+			static::register(['id' => 53, 'name' => "revive", 'timeout' => 0, 'cost' => 5, 'range' => 1, 'affectDead' => true],
 				['use' => function(Skill $skill, Target $target, Participant $user) {
 
 				return $target->revive($user) ? 'You revived '.$target->name() : 'The spell failed!';
 			
-			}]);
+			}, 'area' => areaSingle()]);
 
 			/* ------------------------  ATTACK SPELLS  ------------------------ */
 			
-			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'group' => false],
-				['use' => spellDamage(8)]);
+			static::register(['id' => 101, 'name' => 'pulse', 'timeout' => 0, 'cost' => 1, 'range' => 2],
+				['use' => spellDamage(8), 'area' => areaSingle()]);
 			
-			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'group' => true],
-				['use' => spellDamage(5)]);
+			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'range' => 1],
+				['use' => spellDamage(5), 'area' => areaHexagon()]);
 			
-			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'group' => false, 'charge' => 3],
-				['use' => spellDamage(12, ['stunned' => 0.1])]);
+			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'range' => 2, 'charge' => 3],
+				['use' => spellDamage(12, ['stunned' => 0.1]), 'area' => areaSingle()]);
 
 			/* ------------------------  MISC  ------------------------ */
 			
-			static::register(['id' => 500, 'name' => 'glow', 'timeout' => 0, 'cost' => 2, 'group' => true]);
+			static::register(['id' => 500, 'name' => 'glow', 'timeout' => 0, 'cost' => 2, 'range' => 4]);
 
 			/* ------------------------  ENEMIES  ------------------------ */
 			

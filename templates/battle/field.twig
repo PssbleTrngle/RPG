@@ -6,11 +6,11 @@
 			<div data-x='{{ field.x }}' data-y='{{ field.y }}' class='field participant 
 				{% if field.participant.character.exists and battle.active.id == field.participant.character.id %}active{% endif %}
 				{% if field.participant.died %}died{% endif %}'
-				id='{{ field.participant.id }}'>
+				id='{{ field.id }}'>
 
 				<div class='hex'></div>
 
-				{% if field.participant %}
+				{% if field.participant.exists %}
 					<div class='bar health' data-amount='{{ field.participant.health() / field.participant.maxHealth() }}'></div>
 					<div class='participant-icon'>
 						{{ field.participant|icon|raw }}
@@ -21,4 +21,11 @@
 		{% endfor %}
 
 	</div>
+		
+	<div class='mt-2'>
+		{% for key in battle.messages.take(5) %}
+		<p>{{ key.format()|raw }}</p>	
+		{% endfor %}
+	</div>
+
 </div>

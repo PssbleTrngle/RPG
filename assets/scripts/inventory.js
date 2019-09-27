@@ -40,6 +40,7 @@ $(window).ready(function() {
 			element.click(function() {
 
 				let stack = element.closest('.info-popup').attr('data-item');
+				window.params = {};
 				window.params.stack = stack;
 
 				if(slot) {
@@ -51,7 +52,6 @@ $(window).ready(function() {
 
 					let inBattle = element.closest('.battle')[0];
 
-					window.params.slot = slot;
 					window.params.action = action;
 
 					if(inBattle)

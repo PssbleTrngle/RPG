@@ -6,6 +6,9 @@
 
 {% block content %}
 
+	<input id='x' hidden value='{{ character.participant.field.x }}'>
+	<input id='y' hidden value='{{ character.participant.field.y }}'>
+
 	<div class='battle'>
 		<div class='row w-100'>
 			{% include 'battle/field.twig' with {'battle': battle, 'character': character} %}

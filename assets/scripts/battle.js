@@ -1,19 +1,38 @@
 $(window).ready(function() {
 
+	let charX = parseInt($('#x').val());
+	let charY = parseInt($('#y').val());
+
 	onLoad('.participant', function(element) {
+
+		let x = parseInt(element.attr('data-x'));
+		let y = parseInt(element.attr('data-y'));
 
 		element.mouseover(function() {
 
 			let skill = $('.skill.selected').attr('data-skill');
-			let group = $('.skill.selected').attr('data-group') != 0;
-			if(skill) {
+			let item = $('.slot.selected').attr('id');
+			let area = $('.selected').attr('data-area');
+			let range = $('.selected').attr('data-range');
+			
+			if(!range) range = 1;
+			if(area) area = JSON.parse(area);
+
+			if(skill || item) {
 
 				$('.field').removeClass('hover');
-				
-				element.addClass('hover');
-				if(group)
-					for(let neighboor of element.neighboors(1))
-						neighboor.addClass('hover');
+
+				let inRange = (Math.abs(charX - x) <= range) && (Math.abs(charY - y) <= range) && (Math.abs((charX - x) + (charY - y)) <= range);
+
+				if(inRange) {
+					if(area)
+						for(let pos of area)
+							element.parent()
+								.find('.field[data-x=' + (x + pos.x) + '][data-y=' + (y + pos.y) + ']')
+								.addClass('hover');
+					else
+						element.addClass('hover');
+				}
 
 			}
 
@@ -22,8 +41,10 @@ $(window).ready(function() {
 		element.click(function() {
 		
 			if(window.battle_action) {
-				window.params.target = $(this).attr('id');		
+
+				window.params.target = element.attr('id');
 				sendAction(window.battle_action);
+
 			}
 
 		});
@@ -32,19 +53,28 @@ $(window).ready(function() {
 	
 	$('.skill').click(function() {
 
-		window.params.skill = $(this).attr('data-skill');
+		window.params = { skill: $(this).attr('data-skill') };
 		window.battle_action = 'battle/skill';
+		let range = $(this).attr('data-range');
+
+		$('.field').removeClass('fade');
+
+		$('.field').filter(function() {
+			return !$(this).inRange(charX, charY, range);
+		}).addClass('fade');
 
 	});
 
 	onLoad('.field', function(element) {
 
 		let battlefield = element.parent();
-		let radius = battlefield.radius();
+		let fieldsize = battlefield.size();
 
 		let totalW = battlefield.innerWidth();
 		let totalH = battlefield.innerHeight();
-		let size = Math.min(totalW, totalH) / (radius * 2 + 1) * 0.8;
+		let sizeW = totalW / (fieldsize.x * 2 + 1) * 0.8;
+		let sizeH = totalH / (fieldsize.y * 2 + 1) * 0.8;
+		let size = Math.min(sizeW, sizeH);
 
 		let y = parseInt(element.attr('data-y'));
 		let x = parseInt(element.attr('data-x')) + 0.5 * y;
@@ -67,27 +97,21 @@ $(window).ready(function() {
 	
 });
 
-$.fn.neighboors = function(radius) {
-	if(!radius) radius = 1;
+$.fn.inRange = function(charX, charY, range) {
+	if(!range) range = 1;
 
-	let y = parseInt($(this).attr('data-y'));
 	let x = parseInt($(this).attr('data-x'));
+	let y = parseInt($(this).attr('data-y'));
 
-	let neighboors = [];
+	return (Math.abs(charX - x) <= range) && (Math.abs(charY - y) <= range) && (Math.abs((charX - x) + (charY - y)) <= range);
 
-	for(let x1 = -radius; x1 <= radius; x1++)
-		for(let y1 = -radius; y1 <= radius; y1++)
-			if(Math.abs(x1 + y1) <= radius)
-				neighboors.push($('.field[data-x=' + (x + x1) + '][data-y=' + (y + y1) + ']'));
+}
 
-	return neighboors;
-
-};
-
-$.fn.radius = function() {
+$.fn.size = function() {
 	
-	let radius = $(this).attr('data-radius');
-	if(radius) return radius;
+	try {
+		return JSON.parse($(this).attr('data-size'));
+	} catch(e) {}
 
 	let maxX = 0;
 	let maxY = 0;
@@ -102,8 +126,8 @@ $.fn.radius = function() {
 	}
 
 
-	radius = Math.max(maxX, maxY);
-	$(this).attr('data-radius', radius);
-	return radius;
+	size = {x: maxX, y: maxY};
+	$(this).attr('data-size', JSON.stringify(size));
+	return size;
 
 };

@@ -21,16 +21,7 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		foreach(Clazz::all() as $class) {
-			echo '"'.$class->name.'": {';
-			echo '<br>';
-			echo '!tab"name": "'.ucfirst($class->name).'",';
-			echo '<br>';
-			echo '!tab"description": "None"';
-			echo '<br>';
-			echo '},';
-			echo '<br>';
-		}
+		echo json_encode(getAccount()->selected->participant->battle->fieldAt(0,0));
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	

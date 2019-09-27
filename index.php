@@ -129,8 +129,11 @@
 
 		$selected = getAccount()->selected;
 
-		if($selected)
+		if($selected) {
+			if($selected->participant->battle) 
+				return $this->view->render($response, 'battle.twig', ['battle' => $selected->participant->battle]);
 			return $this->view->render($response, 'home.twig', []);
+		}
 
 		return $response->withRedirect('/profile');
 		

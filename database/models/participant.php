@@ -3,7 +3,7 @@
 	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
-		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills', 'charging'];
+		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills', 'charging', 'field'];
 
 		public function delete() {
 			global $capsule;
@@ -17,6 +17,10 @@
 
 			parent::delete();
 
+		}
+		
+		public function field() {
+			return $this->hasOne(Field::class, 'participant_id')->without('battle', 'participant');
 		}
 		
 		public function charging() {	
