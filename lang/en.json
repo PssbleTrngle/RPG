@@ -39,7 +39,7 @@
 	"class": {
 		"apprentice": {
 			"name": "Apprentice",
-			"description": "None"
+			"description": "A pupil devoted to studying the mystic force lying within this world, making use of arcane scrolls and ancient knowledge"
 		},
 		"traveller": {
 			"name": "Traveller",
@@ -55,7 +55,7 @@
 		},
 		"psychic": {
 			"name": "Psychic",
-			"description": "None"
+			"description": "Having a strong connection to the fabric between realms, this mortal is able to sense things unseen by his kind"
 		},
 		"druid": {
 			"name": "Druid",
