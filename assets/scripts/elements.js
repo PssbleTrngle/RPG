@@ -63,6 +63,7 @@ $(window).ready(function() {
 			back.addClass('option');
 			back.text('Back');
 			back.click(function() {
+				$(window).unselect();
 				element.find('.option').css({'display': 'block'});
 				element.find('.option[data-parent]').css({'display': 'none'});
 				element.find('.option.back').css({'display': 'none'});
@@ -127,5 +128,13 @@ $.fn.maxHeight = function() {
 	$(this).css({ height: current });
 
 	return max;
+
+};
+
+$.fn.unselect = function() {
+
+	$('.selected').removeClass('selected');
+	$('.participant.disabled').removeClass('disabled');
+	$('.info-popup').removeClass('active');
 
 };
