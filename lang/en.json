@@ -18,7 +18,7 @@
 			"no_effect": "The attack had no effect!",
 			"skipped": "§h$1 skipped",
 			"scared": "§h$1 was to scared to attack",
-			"called_help": "§h$1Called for help",
+			"called_help": "§h$1 called for help",
 			"blocked": {
 				"asleep": "§1$1 had a wonderful sleep"
 			}
