@@ -108,19 +108,53 @@
 			}			
 		}
 
-		function use(Target $target, Participant $user, $charged = false) {
+		function use($target, Participant $user, $charged = false) {
 			global $capsule;
 
-			if($this->charge <= 0 || $charged)
-				return $this->__call('use', [$target, $user]);
+			if(!$target || !$user) return false;
 
-			if(is_a($target, 'Participant')) {
+			$battle = $user->battle;
+			if($battle && is_a($target, 'Field')) {
+
+				$battle->prepareTurn();
+
+				$targets = $battle->fieldsIn($this->area(), $target->x, $target->y)->pluck('participant')->filter();
+							
+				if(!$this->affectDead)
+					$targets = $targets->where('health', '>', '0');
+
+				if($this->charge <= 0 || $charged) {
+					/* Does not need charging or is charged */
+
+					$success = false;
+					foreach($targets as $target) {
+						$message = $this->__call('use', [$target, $user]);
+						$battle->addMessage($message);
+						$success = $success || $message;
+					}
+
+					$battle->participants->fresh();
+
+					if($success) {
+						$this->timeout($user);
+						if(!$charged) $battle->next();
+					}
+
+					return $success;
+
+				} else {
+					/* Start charging */
 				
-				$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'target_id' => $target->id, 'countdown' => $this->charge];
-				$capsule->table('charging_skills')->insert($charging);
+					$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'field_id' => $target->id, 'countdown' => $this->charge];
+					$capsule->table('charging_skills')->insert($charging);
 
-				return new Translation('started_charging', [$user->name(), $this->name()]);
-			}
+					$battle->addMessage(Translation('started_charging', [$user->name(), $this->name()]));
+					return true;
+
+				}
+
+			} else if(is_a($target, 'Target'))
+				return $this->__call('use', [$target, $user]);
 
 			return false;
 

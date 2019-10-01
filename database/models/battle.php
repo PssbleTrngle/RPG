@@ -1,23 +1,5 @@
 <?php
 
-	class Translation extends BaseModel {
-
-		protected $table = 'battle_messages';
-		private static $glue = ';';
-
-		public function __construct($key = '', $args = null) {
-			$this->key = $key;
-			if(is_string($args)) $args = [$args];
-			if($args) $this->args = implode(static::$glue, str_replace(static::$glue, ',', $args));
-		}
-
-		public function format() {
-			$args = $this->args ? explode(static::$glue, $this->args) : [];
-			return format($this->key, $args);
-		}
-
-	}
-
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
@@ -253,8 +235,26 @@
 			return false;
 		}
 
-		public function fieldAt($x, $y) {
+		public function fieldAt(int $x, int $y) {
 			return $this->fields->where('x', $x)->where('y', $y)->first();
+		}
+
+		public function fieldsIn($range, int $x, int $y) {
+			if(is_array($range)) $range = collect($range);
+
+			$range->each(function($value, $key) use($range, $x, $y) {
+
+				$value['x'] += $x;
+				$value['y'] += $y;
+				$range[$key] = $value;
+
+			});
+
+			$xs = $range->pluck('x');			
+			$ys = $range->pluck('y');
+
+			return $this->fields->whereIn('x', $xs)->whereIn('y', $ys);
+
 		}
 		
 		public function addCharacter($character) {			
@@ -329,21 +329,16 @@
 				return false;
 			}
 
+			/* One side left battle */
+			if($this->fields->isEmpty()) {
+				$this->delete();
+				return false;
+			}
+
 			return true;
 
 		}
 		
-	}
-
-	class Battlefield {
-
-		public $fields;
-		public $active;
-
-		public function __construct() {
-
-		}
-
 	}
 
 	class Field extends BaseModel {
