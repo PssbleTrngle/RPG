@@ -34,7 +34,7 @@
 		{% for skill in character.participant.charging %}
 			<div class='charging'>
 				<p>{{ skill.name() }}</p>
-				<div>
+				<div class='charges'>
 					{% for i in skill.charge..1 %}
 						<div class='charge {% if i > skill.pivot.countdown %}done{% endif %}'></div>
 					{% endfor %}
