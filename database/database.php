@@ -25,33 +25,7 @@
 		'collation' => 'utf8_unicode_ci',
 		'prefix'    => '',
 	]);
-
-	class DamageEvent {
-
-		public $amount;
-		public $source;
-		public $element;
-
-		public function __construct($amount, $source = null, $element = null) {
-			$this->amount = abs($amount);
-			$this->source = $source;
-			$this->element = $element;
-		}
-
-	}
-
-	interface Target {
-   		
-		public function damage(DamageEvent $event);
-   		
-		public function heal($amount);
-   		
-		public function revive(Participant $by = null);
-   		
-		public function addEffect($effect);
 	
-	}
-
 	class BaseModel extends Model {
 
    		public $timestamps = false;
@@ -160,7 +134,7 @@
 		
 	}
 
-	foreach (glob("database/interfaces/*.php") as $filename)
+	foreach (glob("database/classes/*.php") as $filename)
 	    include_once $filename;
 
 	foreach (glob("database/models/*.php") as $filename)

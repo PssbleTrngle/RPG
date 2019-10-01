@@ -25,7 +25,7 @@
 		
 		public function charging() {	
 			return $this->belongsToMany(Skill::class, 'charging_skills', 'participant_id', 'skill_id')
-    			->withPivot('countdown', 'target_id');
+    			->withPivot('countdown', 'field_id');
 		}
 		
 		public function skills() {	
@@ -171,9 +171,8 @@
 
 			foreach ($this->charging as $skill)
 				if($skill->pivot->countdown == 0) {
-					$target = Participant::find($skill->pivot->target_id);
-					if($target)
-						$this->battle->addMessage($skill->use($target, $this, true));
+					$field = Field::find($skill->pivot->field_id);
+					$skill->use($field, $this, true);
 				}
 
 			$capsule->table('charging_skills')->where('participant_id', $this->id)->where('countdown', 0)->delete();

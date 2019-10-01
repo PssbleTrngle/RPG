@@ -186,7 +186,7 @@
 		$skillID = $args['skill'] ?? null;
 		$character = $account->selected;
 			
-		if($field && $target = $field->participant) {
+		if($field) {
 
 			if($character && ($battle = $character->participant->battle) && ($battle->active->id == $character->id)) {
 
@@ -196,31 +196,8 @@
 								->where('id', $skillID)
 								->first();
 					
-					if($skill) {
-							
-						if($skill->group)
-							$target = $battle->onSide($target->side);
-						else 
-							$target = collect([$target]);
-							
-						if(!$skill->affectDead)
-							$target = $target->where('health', '>', '0');
-						
-						$battle->prepareTurn();
-
-						foreach($target as $single) {
-							$message = $skill->use($single, $character->participant);
-							$battle->addMessage($message);
-						}
-						$battle->refresh();
-						
-						if($message) {
-							$skill->timeout($character->participant);
-							$battle->next();
-						}
-
-						return ['success' => true];
-					}
+					if($skill)
+						return $skill->use($field, $character->participant);
 
 					return ['success' => false, 'message' => 'Choose a skill'];
 

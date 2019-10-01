@@ -21,7 +21,7 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		echo json_encode(getAccount()->selected->participant->battle->fieldAt(0,0));
+		echo json_encode(Battle::first()->fieldsIn(Skill::areaHexagon()(), 1, 0));
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
