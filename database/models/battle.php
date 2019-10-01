@@ -199,7 +199,7 @@
 				for($y = -$radius; $y <= $radius; $y++)
 					if(abs($x + $y) <= $radius) {
 
-						$field = $this->fieldAt($center->x + $x, $center->y + $y) ?? new Field;
+						$field = $this->fieldAt($center->add($x, $y)) ?? new Field;
 
 						if($side && $x == 0 && $y == 0) $field->spawn = $side;
 
@@ -222,7 +222,7 @@
 
 					$spawn = $spawn->random();
 					$hex = Skill::areaHexagon()();
-					$fields = $this->fieldsIn($hex, $spawn->x, $spawn->y)->where('participant', NULL);
+					$fields = $this->fieldsIn($hex, $spawn->pos())->where('participant', NULL);
 					if(!$fields->isEmpty())
 						return $fields;
 
@@ -282,7 +282,7 @@
 			$spawns = $this->possibleSpawns($side);
 			if($spawns) $field = $spawns->random();
 
-			if($field && !$field->participant) {
+			if($field && $field->canMoveOn()) {
 				if($character) {
 
 					$character->message = null;
@@ -396,6 +396,10 @@
 
 		public function pos() {
 			return new Vec2i($this->x, $this->y);
+		}
+
+		public function canMoveOn() {
+			return is_null($this->participant);
 		}
 
 	}

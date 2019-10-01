@@ -6,7 +6,7 @@
 
 			{% if character.participant.canTakeTurn() %}
 				{% for action in ['use', 'apply'] if stack.item.can(action) %}
-					<div class='option small' data-item-action='{{ action }}'>{{ format('action.' ~ action) }}</div>
+					<div class='option small' data-select-action='inventory/action' data-item-action='{{ action }}'>{{ format('action.' ~ action) }}</div>
 				{% endfor %}
 
 				{% if canMove and character %}

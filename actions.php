@@ -232,13 +232,31 @@
 	registerAction('/battle/move', function($args, $account) {
 			
 		$character = $account->selected;
+		$field = Field::find($args['target'] ?? null);
 
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
-			
-			$battle->prepareTurn();
-			$battle->addMessage(new Translation('skipped', [$character->name()]));
-			$success = $battle->next();
-			return ['success' => $success];
+
+			if($character->participant->canTakeTurn() && $field) {
+
+				if($field && $field->canMoveOn()) {
+					$battle->prepareTurn();
+
+					$character->participant->field->participant_id = null;
+					$character->participant->field->save();
+					$field->participant_id = $character->participant->id;
+					$field->save();
+
+					$battle->refresh();
+					$battle->addMessage(new Translation('moved', [$character->name()]));
+					$battle->next();
+
+					return true;
+
+				}
+
+				return ['success' => false, 'message' => 'Select an empty field'];
+
+			}
 
 		}
 		
@@ -249,18 +267,12 @@
 	registerAction('/battle/run', function($args, $account) {
 			
 		$character = $account->selected;
-		$x = $args['x'] ?? null;
-		$y = $args['y'] ?? null;
 
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
 
-			if($character->participant->canTakeTurn() && !is_null($x) && !is_null($y)) {
+			if($character->participant->canTakeTurn()) {
 			
-				$pos = new Vec2i($x, $y);
-
 				$battle->prepareTurn();
-				return false;
-				
 				$message = $battle->run($character);
 				return ['success' => $message !== false, 'message' => $message];
 

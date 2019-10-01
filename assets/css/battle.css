@@ -163,7 +163,7 @@
 	--size: 50px;
 }
 
-.skill.selected {
+.option.selected {
 	background-color: var(--highlight);
 	border-color: var(--highlight);
 }
@@ -242,6 +242,9 @@
 .field.hover {
 	opacity: 1;
 	margin-top: -10px;
+}
+
+.field:hover:not(.disabled) {
 	cursor: pointer;
 }
 

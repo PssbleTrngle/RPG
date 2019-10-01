@@ -54,9 +54,7 @@ $(window).ready(function() {
 
 					window.params.action = action;
 
-					if(inBattle)
-						window.battle_action = '/inventory/action';
-					else
+					if(!inBattle)
 						sendAction('/inventory/action');
 
 				}

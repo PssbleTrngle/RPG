@@ -136,5 +136,6 @@ $.fn.unselect = function() {
 	$('.selected').removeClass('selected');
 	$('.participant.disabled').removeClass('disabled');
 	$('.info-popup').removeClass('active');
+	window.battle_action = undefined;
 
 };
