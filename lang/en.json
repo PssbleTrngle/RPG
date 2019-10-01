@@ -18,7 +18,7 @@
 			"no_effect": "The attack had no effect!",
 			"skipped": "§h$1 skipped",
 			"scared": "§h$1 was to scared to attack",
-			"called_help": "§h$1Called for help",
+			"called_help": "§h$1 called for help",
 			"blocked": {
 				"asleep": "§1$1 had a wonderful sleep"
 			}
@@ -37,31 +37,266 @@
 	},
 	"character": "$1 $2",
 	"class": {
-		"apprentice": "Apprentice",
-		"warrior": "Warrior",
-		"rogue": "Rogue",
-		"wild": "Wild",
-		"knight": "Knight",
-		"shaman": "Shaman",
-		"ranger": "Ranger",
-		"mage": "Mage",
-		"alchemist": "Alchemist",
-		"tamer": "Tamer",
-		"berserk": "Berserk",
-		"assassin": "Assassin",
-		"traveller": "Traveller",
-		"fighter": "Fighter",
-		"reaper": "Reaper",
-		"swift": "Swift",
-		"focused": "Focused",
-		"guardian": "Guardian",
-		"fallen": "Fallen",
-		"kamikaze": "Kamikaze",
-		"hunter": "Hunter",
-		"beast": "Beast",
-		"infused": "Infused",
-		"elementalist": "Elementalist",
-		"sage": "Sage"
+		"apprentice": {
+			"name": "Apprentice",
+			"description": "A pupil devoted to studying the mystic force lying within this world, making use of arcane scrolls and ancient knowledge"
+		},
+		"traveller": {
+			"name": "Traveller",
+			"description": ""
+		},
+		"wild": {
+			"name": "Wild",
+			"description": ""
+		},
+		"fighter": {
+			"name": "Fighter",
+			"description": ""
+		},
+		"psychic": {
+			"name": "Psychic",
+			"description": "Having a strong connection to the fabric between realms, this mortal is able to sense things unseen by his kind"
+		},
+		"druid": {
+			"name": "Druid",
+			"description": ""
+		},
+		"mage": {
+			"name": "Mage",
+			"description": ""
+		},
+		"alchemist": {
+			"name": "Alchemist",
+			"description": ""
+		},
+		"rogue": {
+			"name": "Rogue",
+			"description": ""
+		},
+		"barde": {
+			"name": "Barde",
+			"description": ""
+		},
+		"merchant": {
+			"name": "Merchant",
+			"description": ""
+		},
+		"ranger": {
+			"name": "Ranger",
+			"description": ""
+		},
+		"hermit": {
+			"name": "Hermit",
+			"description": ""
+		},
+		"duelist": {
+			"name": "Duelist",
+			"description": ""
+		},
+		"warrior": {
+			"name": "Warrior",
+			"description": ""
+		},
+		"focused": {
+			"name": "Focused",
+			"description": ""
+		},
+		"priest": {
+			"name": "Priest",
+			"description": ""
+		},
+		"medium": {
+			"name": "Medium",
+			"description": ""
+		},
+		"telepath": {
+			"name": "Telepath",
+			"description": ""
+		},
+		"shaman": {
+			"name": "Shaman",
+			"description": ""
+		},
+		"necromancer": {
+			"name": "Necromancer",
+			"description": ""
+		},
+		"wizard": {
+			"name": "Wizard",
+			"description": ""
+		},
+		"elementalist": {
+			"name": "Elementalist",
+			"description": ""
+		},
+		"infused": {
+			"name": "Infused",
+			"description": ""
+		},
+		"ritualist": {
+			"name": "Ritualist",
+			"description": ""
+		},
+		"astromancer": {
+			"name": "Astromancer",
+			"description": ""
+		},
+		"warlock": {
+			"name": "Warlock",
+			"description": ""
+		},
+		"illusionist": {
+			"name": "Illusionist",
+			"description": ""
+		},
+		"assassin": {
+			"name": "Assassin",
+			"description": ""
+		},
+		"derwish": {
+			"name": "Derwish",
+			"description": ""
+		},
+		"bandit": {
+			"name": "Bandit",
+			"description": ""
+		},
+		"inventor": {
+			"name": "Inventor",
+			"description": ""
+		},
+		"fool": {
+			"name": "Fool",
+			"description": ""
+		},
+		"performer": {
+			"name": "Performer",
+			"description": ""
+		},
+		"charmer": {
+			"name": "Charmer",
+			"description": ""
+		},
+		"artificer": {
+			"name": "Artificer",
+			"description": ""
+		},
+		"tamer": {
+			"name": "Tamer",
+			"description": ""
+		},
+		"hunter": {
+			"name": "Hunter",
+			"description": ""
+		},
+		"monk": {
+			"name": "Monk",
+			"description": ""
+		},
+		"rebel": {
+			"name": "Rebel",
+			"description": ""
+		},
+		"hero": {
+			"name": "Hero",
+			"description": ""
+		},
+		"knight": {
+			"name": "Knight",
+			"description": ""
+		},
+		"berserk": {
+			"name": "Berserk",
+			"description": ""
+		},
+		"mercenary": {
+			"name": "Mercenary",
+			"description": ""
+		},
+		"blockade": {
+			"name": "Blockade",
+			"description": ""
+		},
+		"cleric": {
+			"name": "Cleric",
+			"description": ""
+		},
+		"thaumaturge": {
+			"name": "Thaumaturge",
+			"description": ""
+		},
+		"temporal": {
+			"name": "Temporal",
+			"description": ""
+		},
+		"possessed": {
+			"name": "Possessed",
+			"description": ""
+		},
+		"sage": {
+			"name": "Sage",
+			"description": ""
+		},
+		"beast": {
+			"name": "Beast",
+			"description": ""
+		},
+		"fallen": {
+			"name": "Fallen",
+			"description": ""
+		},
+		"guardian": {
+			"name": "Guardian",
+			"description": ""
+		},
+		"chosen": {
+			"name": "Chosen",
+			"description": ""
+		},
+		"insane": {
+			"name": "Insane",
+			"description": ""
+		},
+		"narrator": {
+			"name": "Narrator",
+			"description": ""
+		},
+		"imposter": {
+			"name": "Imposter",
+			"description": ""
+		},
+		"king": {
+			"name": "King",
+			"description": ""
+		},
+		"spirit": {
+			"name": "Spirit",
+			"description": ""
+		},
+		"touched": {
+			"name": "Touched",
+			"description": ""
+		},
+		"oracle": {
+			"name": "Oracle",
+			"description": ""
+		},
+		"slayer": {
+			"name": "Slayer",
+			"description": ""
+		},
+		"creator": {
+			"name": "Creator",
+			"description": ""
+		},
+		"corrupted": {
+			"name": "Corrupted",
+			"description": ""
+		},
+		"conquerer": {
+			"name": "Conquerer",
+			"description": ""
+		}
 	},
 	"race": {
 		"human": "Human",
@@ -102,16 +337,23 @@
 		}
 	},
 	"item": {
+		"format": "$1x $2",
 		"honey": "Honey Comb",
 		"weapon": {
 			"format": "$2 $1"
 		},
 		"potion": {
-			"health_potion": "Health Potion",
+			"health_potion": {
+				"name": "Health Potion",
+				"description": "Restores some life"
+			},
 			"poison_potion": "Poison",
 			"sleep_potion": "Sleep Powder",
 			"ambrosia": "Ambrosia"
 		}
+	},
+	"enemy": {
+		"format": "$1 $2"
 	},
 	"rarity": {
 		"rusty": "Rusty",

@@ -3,7 +3,7 @@
 	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
-		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills'];
+		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills', 'charging', 'field'];
 
 		public function delete() {
 			global $capsule;
@@ -13,9 +13,19 @@
 
 			$capsule->table('participant_effects')->where('participant_id', $this->id)->delete();
 			$capsule->table('participant_skills')->where('participant_id', $this->id)->delete();
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->delete();
 
 			parent::delete();
 
+		}
+		
+		public function field() {
+			return $this->hasOne(Field::class, 'participant_id')->without('battle', 'participant');
+		}
+		
+		public function charging() {	
+			return $this->belongsToMany(Skill::class, 'charging_skills', 'participant_id', 'skill_id')
+    			->withPivot('countdown', 'field_id');
 		}
 		
 		public function skills() {	
@@ -85,10 +95,12 @@
 		public function canTakeTurn() {
 			if($this->health <= 0) return false;
 
+			if(!$this->charging->isEmpty()) return false;
+
 			foreach ($this->effects as $effect)
 				if($effect->block) {
 					if($this->battle)
-						$this->battle->addMessage(new Message('blocked.'.$effect->name, $this->name()));
+						$this->battle->addMessage(new Translation('blocked.'.$effect->name, $this->name()));
 					return false;
 				}
 
@@ -99,8 +111,8 @@
 			return $this->character ?? $this->enemy;
 		}
 		
-		public function name() {
-			return $this->parent()->name();
+		public function key() {
+			return $this->parent()->key();
 		}
 		
 		public function icon() {
@@ -137,13 +149,8 @@
 	
 		public function validate() {
 
-			if(($this->enemy_id && !$this->battle_id) || !$this->parent()) {
+			if(!$this->parent()) {
 				$this->delete();
-				return false;
-			}
-
-			if($this->health <= 0) {
-				$this->revive();
 				return false;
 			}
 
@@ -152,9 +159,19 @@
 		}
 
 		public function afterTurn() {
+			global $capsule;
 
 			foreach($this->effects as $effect)
 				$effect->apply($this);
+
+			foreach ($this->charging as $skill)
+				if($skill->pivot->countdown == 0) {
+					$field = Field::find($skill->pivot->field_id);
+					$skill->use($field, $this, true);
+				}
+
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->where('countdown', 0)->delete();
+			$capsule->table('charging_skills')->where('participant_id', $this->id)->where('countdown', '>', 0)->decrement('countdown');
 
 			$this->save();
 			$this->refresh();

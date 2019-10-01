@@ -14,12 +14,12 @@
 
 		}
 
-		public function name() {
+		public function key() {
 			
 			if($this->dungeon)
-				return $this->dungeon->name();
+				return $this->dungeon->key();
 			
-			return $this->location->name();
+			return $this->location->key();
 
 		}
 		

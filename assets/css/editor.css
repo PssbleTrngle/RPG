@@ -1,0 +1,74 @@
+.relation-box {
+	width: 300px;
+	background-color: #0002;
+	padding-bottom: 10px;
+	padding-top: 0;
+}
+
+.relation-box h3 {
+	margin: 0;
+	padding: 10px;
+	padding-left: 10px;
+	background-color: #0002;
+	margin-bottom: 10px;
+}
+
+.relation-box table {
+	border-spacing: 5px;
+	border-collapse: separate;
+}
+
+.relation-box.small {
+	border-spacing: 5px;
+	border-collapse: separate;
+	width: 200px;
+}
+
+.relation-box:hover {
+	background-color: #0001;
+}
+
+.relation-box td {
+	text-align: center;
+	min-width: 150px;
+	height: 25px;
+}
+
+.relation-box td > * {
+	height: 100%;
+}
+
+.relations {
+	border-collapse: separate;
+	border-spacing: 10px;
+}
+
+.edit-icon {
+
+	position: absolute;
+	right: 0;
+	top: 0;
+
+	width: 140px;
+
+}
+
+.view {
+	position: relative;;
+}
+
+.view-back::before {
+	content: '<  ';
+}
+
+.view-back {
+
+	font-size: 0.6rem;
+	background-color: #0002;
+	padding: 8px;
+
+}
+
+.relation-box a:hover {	
+	color: var(--highlight);
+}

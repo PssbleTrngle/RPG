@@ -1,41 +1,28 @@
 <?php
 
-	class Message extends BaseModel {
-
-		protected $table = 'battle_messages';
-		private static $glue = ';';
-
-		public function __construct($key = '', $args = null) {
-			$this->key = $key;
-			if(is_string($args)) $args = [$args];
-			if($args) $this->args = implode(static::$glue, str_replace(static::$glue, ',', $args));
-		}
-
-		public function format() {
-			$args = $this->args ? explode(static::$glue, $this->args) : [];
-			return format('message.battle.'.$this->key, $args);
-		}
-
-	}
-
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position', 'messages'];
+		protected $with = ['participants', 'active', 'position', 'messages', 'fields'];
 		public $sides = [1, 2];
 
 		public function addMessage($message) {
+			if($message) {
+				if(is_string($message))
+					$message = new Translation($message);
 
-			if(is_string($message))
-				$message = new Message($message);
-
-			$message->battle_id = $this->id;
-			$message->save();
-
+				$message->key = 'message.battle.'.$message->key;
+				$message->battle_id = $this->id;
+				$message->save();
+			}
+		}
+		
+		public function fields() {
+			return $this->hasMany(Field::class, 'battle_id')->without('battle');
 		}
 		
 		public function messages() {
-			return $this->hasMany(Message::class, 'battle_id')->orderBy('id', 'desc');
+			return $this->hasMany(Translation::class, 'battle_id')->orderBy('id', 'desc');
 		}
 
 		public function active() {
@@ -50,28 +37,40 @@
 			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
 		}
 
-		public function onSide($side) {
-			return $this->participants->where('side', $side);
+		public function onSide($side, $living = false) {
+			$all = $this->participants->where('side', $side);
+			if($living) $all = $all->where('health', '>', 0);
+			return $all;
 		}
 		
 		public function delete() {
 			global $capsule;
 			
-			foreach($this->participants as $participant)
+			foreach($this->participants as $participant) {
+				
+				$capsule::table('participant_skills')
+					->where('participant_id', $participant->id)
+					->update(['nextUse' => 0]);
+				
+				$capsule::table('charging_skills')
+					->where('participant_id', $participant->id)
+					->delete();
+
 				if($participant->character) {
+
 					$participant->battle_id = null;
 					$participant->save();
-				
-					$capsule::table('participant_skills')
-						->where('participant_id', $participant->id)
-						->update(['nextUse' => 0]);
 
 				} else {
 					$participant->delete();
 				}
+			}
 
 			foreach ($this->messages as $message)
 				$message->delete();
+
+			foreach ($this->fields as $field)
+				$field->delete();
 			
 			parent::delete();
 			
@@ -146,20 +145,22 @@
 		}
 		
 		public function next() {
+
+			/* Apply effects */
+			$this->active->participant->afterTurn();
 		
 			$count = $this->participants->count();
-
-			$this->active->participant->afterTurn();
 			
 			$index = ($this->activeIndex() + 1) % $count;
 			while(is_null(($next = $this->participants[$index])->character)) {
 				
-				if($next->enemy && $next->canTakeTurn()) {
-					$msg = $next->enemy->takeTurn();
-					if($msg) $this->addMessage($msg);
-					$next->enemy->refresh();
+				/* Take their turn */
+				if($next->canTakeTurn()) {
+					$this->addMessage($next->takeTurn());
+					$next->refresh();
 				}
 
+				/* Apply effects */
 				$next->afterTurn();
 				
 				$index = ($index + 1) % $count;
@@ -191,35 +192,129 @@
 			$this->round++;
 			
 		}
+
+		public function createHex($radius, Vec2i $center, $side = null) {
+
+			for($x = -$radius; $x <= $radius; $x++)
+				for($y = -$radius; $y <= $radius; $y++)
+					if(abs($x + $y) <= $radius) {
+
+						$field = $this->fieldAt($center->add($x, $y)) ?? new Field;
+
+						if($side && $x == 0 && $y == 0) $field->spawn = $side;
+
+						$field->x = $center->x + $x;
+						$field->y = $center->y + $y;
+						$field->battle_id = $this->id;
+						$field->save();
+					
+					}
+
+			$this->refresh();
+
+		}
+
+		public function possibleSpawns($side) {
+
+			if($side) {
+				$spawn = $this->fields->where('spawn', $side);
+				if(!$spawn->isEmpty()) {
+
+					$spawn = $spawn->random();
+					$hex = Skill::areaHexagon()();
+					$fields = $this->fieldsIn($hex, $spawn->pos())->where('participant', NULL);
+					if(!$fields->isEmpty())
+						return $fields;
+
+				}
+
+				return null;
+
+			}
+
+			return null;
+			$all = $this->fields->where('participant', NULL);
+			if($all->isEmpty()) return null;
+			return $all;	
+
+		}
 		
 		public static function start($character) {
 			
 			if($character) {
+
 				$battle = new Battle;
 				$battle->active_id = $character->id;
 				$battle->position_id = $character->id;
 				$battle->save();
 				$battle->refresh();
+
+				$battle->createHex(2, new Vec2i(-1, 0), $battle->sides[0]);
+				$battle->createHex(2, new Vec2i(+1, 0), $battle->sides[1]);
+
 				$battle->addCharacter($character);
+
 				return $battle;
 			}
 			
 			return false;
 		}
+
+		public function fieldAt(Vec2i $at) {
+			return $this->fields->where('x', $at->x)->where('y', $at->y)->first();
+		}
+
+		public function fieldsIn($range, Vec2i $at) {
+			if(is_array($range)) $range = collect($range);
+
+			$range->each(function($value, $key) use($range, $at) {
+				$range[$key] = $value->add($at->x, $at->y);
+			});
+
+			return $this->fields->filter(function($field) use($range) {
+				return $range->contains($field->pos());
+			});
+
+		}
 		
-		public function addCharacter($character) {			
-			if($character) {
-				$character->message = null;
-				$character->participant->battle_id = $this->id;
-				$character->participant->side = 1;
-				$character->participant->save();
-				$character->participant->refresh();
-				$character->save();
+		public function addCharacter($character, $side = 1) {	
+
+			$spawns = $this->possibleSpawns($side);
+			if($spawns) $field = $spawns->random();
+
+			if($field && $field->canMoveOn()) {
+				if($character) {
+
+					$character->message = null;
+					$character->participant->battle_id = $this->id;
+					$character->participant->side = 1;
+					$character->participant->save();
+					$field->participant_id = $character->participant->id;
+					$field->save();
+					
+					$character->save();
+				}
+
 			}
 		}
 		
-		public function addNPC($npc) {			
-			$npc->createEnemy($this, 2);
+		public function addNPC($npc, $field = null, $side = 2) {
+
+			if(is_null($field)) {
+				$spawns = $this->possibleSpawns($side);
+				if($spawns) $field = $spawns->random();
+			}
+
+			if($field && !$field->participant) {
+
+				$enemy = $npc->createEnemy($this, $side);
+
+				if($enemy) {
+					$field->participant_id = $enemy->participant->id;
+					$field->save();
+				}
+
+			}
 		}
 		
 		public function getLoot() {
@@ -241,7 +336,7 @@
 			foreach($this->sides as $side) {
 
 				$living = $this->onSide($side)->filter(function($p, $k) {
-					return $p->health() > 0;
+					return $p->validate() && $p->health() > 0;
 				});
 
 				if($living->isEmpty())
@@ -263,10 +358,50 @@
 				return false;
 			}
 
+			/* One side left battle */
+			if($this->fields->isEmpty()) {
+				$this->delete();
+				return false;
+			}
+
 			return true;
 
 		}
 		
-	}	
+	}
+
+	class Field extends BaseModel {
+   		
+		protected $table = 'field';
+		protected $with = ['participant', 'battle'];
+		
+		public function participant() {
+			return $this->belongsTo(Participant::class, 'participant_id')->without('battle', 'field');
+		}
+		
+		public function battle() {
+			return $this->belongsTo(Battle::class, 'battle_id');
+		}
+
+		public function validate() {
+
+			if(!$this->battle) {
+				$this->delete();
+				return false;
+			}
+
+			return true;
+
+		}
+
+		public function pos() {
+			return new Vec2i($this->x, $this->y);
+		}
+
+		public function canMoveOn() {
+			return is_null($this->participant);
+		}
+
+	}
 
 ?>

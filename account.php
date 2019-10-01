@@ -18,8 +18,10 @@
 	    if (isset($_SESSION['account'])) {
 
 	    	$account = Account::where('id', $_SESSION['account'])->first();
-			Stack::tidy($account->selected);
-			$account->selected->validate();
+			if($account->selected) {
+				Stack::tidy($account->selected);
+				$account->selected->validate();	
+			}
 
 			$ACCOUNT = $account;
 			return $ACCOUNT;

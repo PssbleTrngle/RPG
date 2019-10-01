@@ -21,8 +21,8 @@
 			return $this->npc->icon();
 		}
 		
-		public function name() {
-			return $this->npc->name() .' '. $this->suffix;
+		public function key() {
+			return new Translation('enemy.format', [$this->npc->name(), $this->suffix]);
 		}
 
 		public function stats() {
@@ -42,7 +42,7 @@
 				$skills = $this->participant->useableSkills();
 
 				if(rand(1, 100) < (100 * option('call_chance'))
-					&& $battle->enemies()->where('health', '>', '0')->count() < option('max_enemies')) {
+					&& $battle->onSide($this->participant->side, true)->count() < option('max_enemies')) {
 					
 					$position = $battle->position;
 					
@@ -50,20 +50,26 @@
 					$battle->addNPC($called);
 					$called->save();
 					
-					return new Message('called_help', [$this->name()]);
+					return new Translation('called_help', [$this->name()]);
 					
 				} else if($skills->count() > 0) {
 					
+					$side = $this->participant->side;
+					$targetSide = collect($battle->sides)->reject(function ($value, $key) use($side) {
+					    return $value == $side;
+					})->random();
+
 					$skill = $skills->random();
-					$target = $battle->characters(true)->random();
+					$target = $battle->onSide($targetSide, true)->random();
 					return $skill->use($target, $this->participant);
 					
 				}
 				
-				return new Message('scared', [$this->name()]);
+				return new Translation('scared', [$this->name()]);
 				
 			}
 		
+			return false;
 			
 		}
 		

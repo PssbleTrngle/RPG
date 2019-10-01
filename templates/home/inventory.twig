@@ -1,17 +1,19 @@
 {% macro popup(stack, character, canMove = true) %}
 
-	<div class='item-popup center mt-2' data-item='{{ stack.id }}'>
+	<div class='info-popup center mt-2' data-source='.slot#{{ stack.id }}' data-item='{{ stack.id }}'>
 
 		<div class='options horizontal'>
 
-			{% for action in ['use', 'apply'] if stack.item.can(action) %}
-				<div class='option small' data-item-action='{{ action }}'>{{ format('action.' ~ action) }}</div>
-			{% endfor %}
-
-			{% if canMove and character %}
-				{% for slot in 'Slot'|all if slot.fits(stack, character).success %}
-					<div class='option small' data-slot='{{ slot.id }}'>{{ slot.name() }}</div>
+			{% if character.participant.canTakeTurn() %}
+				{% for action in ['use', 'apply'] if stack.item.can(action) %}
+					<div class='option small' data-select-action='inventory/action' data-item-action='{{ action }}'>{{ format('action.' ~ action) }}</div>
 				{% endfor %}
+
+				{% if canMove and character %}
+					{% for slot in 'Slot'|all if slot.fits(stack, character).success %}
+						<div class='option small' data-slot='{{ slot.id }}'>{{ slot.name() }}</div>
+					{% endfor %}
+				{% endif %}
 			{% endif %}
 		
 		</div>
@@ -47,6 +49,10 @@
 					{% endfor %}
 				</table>
 			</div>
+
+			{% if stack.item.description() %}
+				<p class='mt-1 description'>{{ stack.item.description() }}</p>
+			{% endif %}
 
 		</div>
 

@@ -18,8 +18,8 @@
 			return $this->belongsTo(Item::class, 'item_id');
 		}
 		
-		public function name() {
-			return $this->amount.'x '.$this->item->name();
+		public function key() {
+			return new Translation('item.format', [$this->amount, $this->item->name()]);
 		}
 		
 		public function icon() {
@@ -126,7 +126,7 @@
 		protected $table = 'itemtype';
 		protected $with = ['items', 'parents'];
 
-		public function name() {
+		public function key() {
 
 			$name = $this->table.'.';
 			foreach ($this->anchestors() as $anchestor) 
@@ -135,7 +135,7 @@
 
 			$name .= $this->name;
 
-			return format($name);
+			return $name;
 		}
 		
 		public function items() {
@@ -184,12 +184,12 @@
 			return $this->table.'/'.$this->name;
 		}
 		
-		public function name() {
+		public function key() {
 
-			$name = format(implode('.', explode('/', $this->icon())));
-			if($this->color()) return format('item.weapon.format', [$this->type->name(), $this->rarity->name()]);
+			$key = implode('.', explode('/', $this->icon()));
+			if($this->color()) return new Translation('item.weapon.format', [$this->type->name(), $this->rarity->name()]);
 
-			return $name;
+			return $key;
 		}
 		
 		public function type() {

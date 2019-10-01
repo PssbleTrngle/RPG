@@ -20,9 +20,12 @@
 
 }
 
+.slot, .slot > a {
+	cursor: pointer;
+}
+
 .slot {
 	font-size: 10px;
-	cursor: pointer;
 	transition: transform 0.2s linear;	
 }
 
@@ -49,24 +52,22 @@
 	margin-bottom: 10px;
 }
 
-.slot:hover, .slot.active {
+.slot:hover, .slot.selected {
 	transform: scale(1.15, 1.15);
 }
 
-.item-popup {
+.info-popup {
 	display: none;
 }
 
-.item-popup.active {
+.info-popup.active {
 	display: block;
 }
 
-.battle-inventory {
-	width: 200px;
+.description {
+	font-style: italic;
 }
 
-.battle-inventory .slot {
-
-	--size: 50px;
-
+.description::before, .description::after {
+	content: '"';
 }

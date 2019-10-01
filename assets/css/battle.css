@@ -1,6 +1,7 @@
 .battlefield {
 
-	width: 100%;
+	width: calc(100% - 20px);
+	max-width: 900px;
 	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
 	background-color: #0005;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
@@ -11,6 +12,10 @@
 	
 	padding: 10px;
 	
+}
+
+.battle-bar {
+	max-width: 100px;
 }
 
 @keyframes join-battle {
@@ -43,37 +48,30 @@
 
 }
 
-.participant.died {
+.participant.died .participant-icon {
 
 	animation: die 0.8s forwards linear;
+	animation-delay: 1s;
 	overflow: hidden;
 	pointer-events: none; 
 
 }
 
-.participants {
-	color: #000;
-	padding: 40px;
-	width: 100%;
-	height: 200px;
+@keyframes zero-w {
+	to {
+		width: 0;
+		margin-left: 10px;
+	}
 }
 
-.participant > p {
-	text-align: center;	
+.participant.died .bar {
+
+	animation: zero-w 1.5s linear forwards;
+	animation-delay: 0.5s;
+
 }
 
-.participant {
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	width: 200px;
-}
-
-.participant.selected {
-	 filter: drop-shadow(0 0 4px var(--highlight));
-}
-
-.participant.active > .participant-icon .icon {
+.participant.active .participant-icon .icon {
 	 filter: drop-shadow(0 0 4px #FFF);
 }
 
@@ -92,7 +90,7 @@
 	from {
 		top: 25%;
 		left: 0;
-		z-index: 2;
+		z-index: 1;
 	}
 	50% {
 		top: 75%;
@@ -140,4 +138,174 @@
 	opacity: 0.2;
 	background-color: #87ddff;
 	clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
+}
+
+.charging {
+
+	text-align: center;
+	margin-bottom: 10px;
+	padding: 8px 0;
+	background-color: #0002;
+
+}
+
+.charge.done {
+	background-color: var(--highlight-dark);
+}
+
+.charges {
+	margin-top: 10px;
+	height: 20px;
+}
+
+.charges::after, .charges::before, .charge {
+
+	display: inline-block;
+	height: 100%;
+	background-color: #0002;
+
+}
+
+.charges::before, .charges::after {
+
+	content: '';
+	position: relative;
+	width: 30px;
+	background-color: #0006;
+
+}
+
+.charges::after {
+	clip-path: polygon(100% 0%, 100% 100%, 0 100%, 20% 50%, 0 0);
+}
+
+.charges::before {
+	clip-path: polygon(80% 0%, 100% 50%, 80% 100%, 0 100%, 0 0);
+}
+
+.charge {
+
+	width: 40px;
+	clip-path: polygon(85% 0%, 100% 50%, 85% 100%, 0 100%, 15% 50%, 0 0);
+
+}
+
+/*
+.charge:first-child {
+	clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0 100%, 0 0);
+}
+
+.charge:last-child {
+	clip-path: polygon(100% 0%, 100% 100%, 0 100%, 10% 50%, 0 0);
+}
+
+.charge:last-child:first-child {
+	clip-path: none;
+}
+*/
+
+.battle-inventory .slot {
+	--size: 50px;
+}
+
+.option.selected {
+	background-color: var(--highlight);
+	border-color: var(--highlight);
+}
+
+.field {
+	--size: 40px;
+
+	position: absolute;
+
+	width: var(--size);
+	height: calc(var(--size) * 1.15);
+
+	top: 50%;
+	left: 50%;
+
+	display: none;
+	transform: translate(-50%, -50%) scale(1, 1);
+
+	/* animation: field-grow 1.2s linear; */
+	transition: margin 0.3s linear, opacity 0.3s linear;
+
+}
+
+@keyframes field-grow {
+	from {
+		transform: translate(-50%, -50%) scale(0, 0);
+	}
+}
+
+.field .bar {
+
+	width: 80%;
+	left: 10%;
+
+}
+
+.field .participant-icon {
+
+	top: 50%;
+	transform: translate(0, -50%);
+
+}
+
+.field > * {
+	position: absolute;
+	pointer-events: none;
+}
+
+.hex {
+	--h: 10px;
+
+	background-color: var(--bg);
+
+	width: 100%;
+	height: 80%;
+	top: 30%;
+
+	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+	
+}
+
+.hex::after {
+
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+
+	background-color: #0007;
+	
+	clip-path: polygon(50% calc(100% - var(--h)), 100% calc(75% - var(--h)), 100% 75%, 50% 100%, 0% 75%, 0% calc(75% - var(--h)));
+
+}
+
+.field.hover {
+	opacity: 1;
+	margin-top: -10px;
+}
+
+.field:hover:not(.disabled) {
+	cursor: pointer;
+}
+
+.field.disabled {
+	margin-top: 5px;
+	opacity: 0.6;
+}
+
+.field.hover.disabled {
+	opacity: 1;
+	margin-top: -5px;
+}
+
+.battlefield {
+
+	position: relative;
+	height: 600px;
+
 }

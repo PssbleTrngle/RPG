@@ -16,12 +16,12 @@
 		$success = strpos($msg, 'changed') !== false;
 		return ['success' => $success, 'message' => $msg];
 
-	}, 'admin');
+	}, 'editor');
 	
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
-		
-		$log = json_encode(Battle::first());
-		$this->view->render($response, 'admin/validate.twig', ['log' => $log]);
+		global $capsule;
+
+		echo json_encode(Battle::first()->fieldsIn(Skill::areaHexagon()(), 1, 0));
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
@@ -36,19 +36,16 @@
 		$this->view->render($response, 'admin/post.twig', []);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
-	$app->get('/admin/classes', function (Request $request, Response $response, array $args) {		
+	$app->get('/view/classes', function (Request $request, Response $response, array $args) {		
 		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
-	$app->get('/admin/list/{class}', function (Request $request, Response $response, array $args) {
+	$app->get('/test/battle', function (Request $request, Response $response, array $args) {
 
-		$class = $args['class'];
-		$objects = [];
+		$battle = new Battlefield;
 
-		if(is_subclass_of($class, 'BaseModel')) $objects = $class::all();
-
-		return $this->view->render($response, 'admin/list.twig', ['objects' => $objects, 'search' => $class]);
-
+		return $this->view->render($response, 'battle.twig', ['battle' => $battle]);		
+	
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
-
+	
 ?>

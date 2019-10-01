@@ -25,33 +25,7 @@
 		'collation' => 'utf8_unicode_ci',
 		'prefix'    => '',
 	]);
-
-	class DamageEvent {
-
-		public $amount;
-		public $source;
-		public $element;
-
-		public function __construct($amount, $source = null, $element = null) {
-			$this->amount = abs($amount);
-			$this->source = $source;
-			$this->element = $element;
-		}
-
-	}
-
-	interface Target {
-   		
-		public function damage(DamageEvent $event);
-   		
-		public function heal($amount);
-   		
-		public function revive(Participant $by = null);
-   		
-		public function addEffect($effect);
 	
-	}
-
 	class BaseModel extends Model {
 
    		public $timestamps = false;
@@ -105,9 +79,47 @@
 		public function color() {
 			return false;
 		}
+
+		public function key() {
+			if(array_key_exists('name', $this->attributes))
+				return $this->table.'.'.$this->name;
+
+			return null;
+		}
 		
 		public function name() {
-			return format($this->table.'.'.$this->name);
+			
+			$translation = $this->key();
+			if(is_string($translation)) $translation = new Translation($translation);
+
+			if($translation) {
+				if(translationExists($translation->key.'.name'))
+					$translation->key .= '.name';
+				return $translation->format();
+			}
+
+			return $this->id;
+			
+		}
+		
+		public function description() {
+			
+			$translation = $this->key();
+			if(is_string($translation)) $translation = new Translation($translation);
+
+			if($translation) {
+				$translation->key .= '.description';
+				if(translationExists($translation->key))
+					return $translation->format();
+			}
+
+			return false;			
+			
+		}
+
+		function relatesTo($relation) {
+			$from = $this->$relation()->getQuery()->getQuery()->from;
+			return preg_replace('/([cC])lass/', '$1lazz', $from);
 		}
 		
 	}
@@ -122,7 +134,7 @@
 		
 	}
 
-	foreach (glob("database/interfaces/*.php") as $filename)
+	foreach (glob("database/classes/*.php") as $filename)
 	    include_once $filename;
 
 	foreach (glob("database/models/*.php") as $filename)
