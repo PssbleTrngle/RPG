@@ -53,7 +53,7 @@
 				for($x = -$radius; $x <= $radius; $x++)
 					for($y = -$radius; $y <= $radius; $y++)
 						if(abs($x + $y) <= $radius)
-							$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY + $y];
+							$neighboors[] = new Vec2i($centerX + $x, $centerY + $y);
 
 				return collect($neighboors);
 
@@ -69,15 +69,15 @@
 
 				for($x = -$radius; $x <= $radius; $x++) 
 					if($x != $centerX)
-						$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY];
+						$neighboors[] = new Vec2i($centerX + $x, $centerY);
 
 				for($y = -$radius; $y <= $radius; $y++) 
 					if($y != $centerY)
-						$neighboors[] = ['x' => $centerX, 'y' => $centerY + $y];
+						$neighboors[] = new Vec2i($centerX, $centerY + $y);
 
 				for($y = -$radius; $y <= $radius; $y++) 
 					if($y != $centerY)
-						$neighboors[] = ['x' => $centerX - $y, 'y' => $centerY + $y];
+						$neighboors[] = new Vec2i($centerX - $y, $centerY + $y);
 
 				return collect($neighboors);
 
@@ -88,7 +88,7 @@
 		public static function areaSingle() {
 
 			return function(Skill $skill = null) {
-				return [['x' => 0, 'y' => 0]];
+				return [new Vec2i(0, 0)];
 			};
 
 		}
@@ -118,7 +118,7 @@
 
 				$battle->prepareTurn();
 
-				$targets = $battle->fieldsIn($this->area(), $target->x, $target->y)->pluck('participant')->filter();
+				$targets = $battle->fieldsIn($this->area(), $target->pos())->pluck('participant')->filter();
 							
 				if(!$this->affectDead)
 					$targets = $targets->where('health', '>', '0');
@@ -148,7 +148,7 @@
 					$charging = ['skill_id' => $this->id, 'participant_id' => $user->id, 'field_id' => $target->id, 'countdown' => $this->charge];
 					$capsule->table('charging_skills')->insert($charging);
 
-					$battle->addMessage(Translation('started_charging', [$user->name(), $this->name()]));
+					$battle->addMessage(new Translation('started_charging', [$user->name(), $this->name()]));
 					return true;
 
 				}
@@ -193,13 +193,13 @@
 			static::register(['id' => 102, 'name' => 'rumble', 'timeout' => 0, 'cost' => 1, 'range' => 1],
 				['use' => static::spellDamage(5), 'area' => static::areaHexagon()]);
 			
-			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'range' => 2, 'charge' => 3],
+			static::register(['id' => 103, 'name' => 'discharge', 'timeout' => 0, 'cost' => 1, 'range' => 2, 'charge' => 1],
 				['use' => static::spellDamage(12, ['stunned' => 0.1]), 'area' => static::areaSingle()]);
 			
-			static::register(['id' => 120, 'name' => 'blast', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 1],
+			static::register(['id' => 120, 'name' => 'blast', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 2],
 				['use' => static::spellDamage(6, ['burned' => 0.1]), 'area' => static::areaStar(2)]);
 			
-			static::register(['id' => 121, 'name' => 'kamikaze', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 1],
+			static::register(['id' => 121, 'name' => 'kamikaze', 'timeout' => 0, 'cost' => 1, 'range' => 0, 'charge' => 2],
 				['use' => static::spellDamage(12, ['burned' => 0.1]), 'area' => static::areaStar(2)]);
 
 			/* ------------------------  MISC  ------------------------ */

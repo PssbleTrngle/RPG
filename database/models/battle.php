@@ -193,18 +193,18 @@
 			
 		}
 
-		public function createHex($radius, $centerX = 0, $centerY = 0, $side = null) {
+		public function createHex($radius, Vec2i $center, $side = null) {
 
 			for($x = -$radius; $x <= $radius; $x++)
 				for($y = -$radius; $y <= $radius; $y++)
 					if(abs($x + $y) <= $radius) {
 
-						$field = $this->fieldAt($centerX + $x, $centerY + $y) ?? new Field;
+						$field = $this->fieldAt($center->add($x, $y)) ?? new Field;
 
 						if($side && $x == 0 && $y == 0) $field->spawn = $side;
 
-						$field->x = $centerX + $x;
-						$field->y = $centerY + $y;
+						$field->x = $center->x + $x;
+						$field->y = $center->y + $y;
 						$field->battle_id = $this->id;
 						$field->save();
 					
@@ -222,7 +222,7 @@
 
 					$spawn = $spawn->random();
 					$hex = Skill::areaHexagon()();
-					$fields = $this->fieldsIn($hex, $spawn->x, $spawn->y)->where('participant', NULL);
+					$fields = $this->fieldsIn($hex, $spawn->pos())->where('participant', NULL);
 					if(!$fields->isEmpty())
 						return $fields;
 
@@ -249,8 +249,8 @@
 				$battle->save();
 				$battle->refresh();
 
-				$battle->createHex(2, -1, 0, $battle->sides[0]);
-				$battle->createHex(2, 1, 0, $battle->sides[1]);
+				$battle->createHex(2, new Vec2i(-1, 0), $battle->sides[0]);
+				$battle->createHex(2, new Vec2i(+1, 0), $battle->sides[1]);
 
 				$battle->addCharacter($character);
 
@@ -260,26 +260,16 @@
 			return false;
 		}
 
-		public function fieldAt(int $x, int $y) {
-			return $this->fields->where('x', $x)->where('y', $y)->first();
+		public function fieldAt(Vec2i $at) {
+			return $this->fields->where('x', $at->x)->where('y', $at->y)->first();
 		}
 
-		public function fieldsIn($range, int $x, int $y) {
+		public function fieldsIn($range, Vec2i $at) {
 			if(is_array($range)) $range = collect($range);
 
-			$range->each(function($value, $key) use($range, $x, $y) {
-
-				$value['x'] += $x;
-				$value['y'] += $y;
-				$range[$key] = $value;
-
+			$range->each(function($value, $key) use($range, $at) {
+				$range[$key] = $value->add($at->x, $at->y);
 			});
-
-			$fields = [];
-			foreach($range as $pos)
-				$fields[] = $this->fieldAt($pos['x'], $pos['y']);
-
-			return collect($fields)->filter();
 
 			return $this->fields->filter(function($field) use($range) {
 				return $range->contains($field->pos());
@@ -292,7 +282,7 @@
 			$spawns = $this->possibleSpawns($side);
 			if($spawns) $field = $spawns->random();
 
-			if($field && !$field->participant) {
+			if($field && $field->canMoveOn()) {
 				if($character) {
 
 					$character->message = null;
@@ -405,7 +395,11 @@
 		}
 
 		public function pos() {
-			return ['x' => $this->x, 'y' => $this->y];
+			return new Vec2i($this->x, $this->y);
+		}
+
+		public function canMoveOn() {
+			return is_null($this->participant);
 		}
 
 	}

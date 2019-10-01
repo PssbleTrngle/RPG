@@ -154,11 +154,6 @@
 				return false;
 			}
 
-			if($this->health <= 0) {
-				$this->revive();
-				return false;
-			}
-
 			return true;
 
 		}

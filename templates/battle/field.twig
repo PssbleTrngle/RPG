@@ -25,6 +25,14 @@
 						{% endfor %}
 					</div>
 
+					<div>
+						{% for effect in par.effects %}
+							<div class='effect orbit'>
+								{{ effect|icon|raw }}
+							</div>
+						{% endfor %}
+					</div>
+
 				{% endif %}
 			</div>
 
