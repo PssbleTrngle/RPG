@@ -27,7 +27,9 @@
 		}
 		
 		public function skills() {
-			return $this->belongsToMany(Skill::class, 'class_skills', 'class_id', 'skill_id')->withPivot('level');
+			return $this->belongsToMany(Skill::class, 'class_skills', 'class_id', 'skill_id')
+						->withPivot('level')
+		    			->orderBy('level');
 		}
 		
 		public function starting_weapon() {
