@@ -34,7 +34,7 @@
 		{% for skill in character.participant.charging %}
 			<div class='charging'>
 				<p>{{ skill.name() }}</p>
-				<div>
+				<div class='charges'>
 					{% for i in skill.charge..1 %}
 						<div class='charge {% if i > skill.pivot.countdown %}done{% endif %}'></div>
 					{% endfor %}
@@ -46,6 +46,7 @@
 
 			{% if character.participant.canTakeTurn() %}
 				<div class='option' id='attack'>Attack</div>
+				<div class='option' id='move' data-select-action='battle/move'>Move</div>
 				<div class='option' data-action='battle/skip'>Skip</div>
 				<div class='option' data-action='battle/run'>Run</div>
 			{% else %}
@@ -54,7 +55,7 @@
 
 			{% for skill in character.participant.skills %}
 				<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}'
-				data-skill='{{ skill.id }}' data-area='{{ skill.area()|json_encode }}' data-parent='attack' data-range={{ skill.range }}>{{ skill.name() }}</div>
+				data-select-action='battle/skill' data-skill='{{ skill.id }}' data-area='{{ skill.area()|json_encode }}' data-parent='attack' data-range={{ skill.range }}>{{ skill.name() }}</div>
 			{% endfor %}
 		</div>
 

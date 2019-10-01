@@ -10,15 +10,16 @@ $(window).ready(function() {
 
 		element.mouseover(function() {
 
-			let skill = $('.skill.selected').attr('data-skill');
-			let item = $('.slot.selected').attr('id');
-			let area = $('.selected').attr('data-area');
-			let range = $('.selected').attr('data-range');
+			let selected = $('.selected');
+			let skill = selected.attr('data-skill');
+			let item = selected.attr('id');
+			let area = selected.attr('data-area');
+			let range = selected.attr('data-range');
 			
 			if(!range) range = 1;
 			if(area) area = JSON.parse(area);
 
-			if(skill || item) {
+			if(selected && window.battle_action) {
 
 				$('.field').removeClass('hover');
 
@@ -54,15 +55,27 @@ $(window).ready(function() {
 	$('.skill').click(function() {
 
 		window.params = { skill: $(this).attr('data-skill') };
-		window.battle_action = 'battle/skill';
-		let range = $(this).attr('data-range');
 
-		$('.field').removeClass('disabled');
+	});
 
-		$('.field').filter(function() {
-			return !$(this).inRange(charX, charY, range);
-		}).addClass('disabled');
+	onLoad('[data-select-action]', function(element) {
+		element.click(function() {
 
+			$(window).unselect();
+			window.battle_action = element.attr('data-select-action');
+			element.addClass('selected');
+
+			if(element.hasClass('selected')) {
+				let range = element.attr('data-range');
+
+				$('.field').removeClass('disabled');
+
+				$('.field').filter(function() {
+					return !$(this).inRange(charX, charY, range);
+				}).addClass('disabled');
+			}
+
+		});
 	});
 
 	onLoad('.field', function(element) {

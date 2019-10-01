@@ -229,6 +229,41 @@
 		
 	});
 
+	registerAction('/battle/move', function($args, $account) {
+			
+		$character = $account->selected;
+		$field = Field::find($args['target'] ?? null);
+
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
+
+			if($character->participant->canTakeTurn() && $field) {
+
+				if($field && $field->canMoveOn()) {
+					$battle->prepareTurn();
+
+					$character->participant->field->participant_id = null;
+					$character->participant->field->save();
+					$field->participant_id = $character->participant->id;
+					$field->save();
+
+					$battle->refresh();
+					$battle->addMessage(new Translation('moved', [$character->name()]));
+					$battle->next();
+
+					return true;
+
+				}
+
+				return ['success' => false, 'message' => 'Select an empty field'];
+
+			}
+
+		}
+		
+		return false;
+		
+	});
+
 	registerAction('/battle/run', function($args, $account) {
 			
 		$character = $account->selected;
