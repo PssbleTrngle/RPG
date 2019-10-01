@@ -229,15 +229,38 @@
 		
 	});
 
-	registerAction('/battle/run', function($args, $account) {
+	registerAction('/battle/move', function($args, $account) {
 			
 		$character = $account->selected;
 
 		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
-
-			if($character->participant->canTakeTurn()) {
 			
+			$battle->prepareTurn();
+			$battle->addMessage(new Translation('skipped', [$character->name()]));
+			$success = $battle->next();
+			return ['success' => $success];
+
+		}
+		
+		return false;
+		
+	});
+
+	registerAction('/battle/run', function($args, $account) {
+			
+		$character = $account->selected;
+		$x = $args['x'] ?? null;
+		$y = $args['y'] ?? null;
+
+		if($character && ($battle = $character->participant->battle) && ($battle->active_id == $character->id)) {
+
+			if($character->participant->canTakeTurn() && !is_null($x) && !is_null($y)) {
+			
+				$pos = new Vec2i($x, $y);
+
 				$battle->prepareTurn();
+				return false;
+				
 				$message = $battle->run($character);
 				return ['success' => $message !== false, 'message' => $message];
 

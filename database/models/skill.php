@@ -53,7 +53,7 @@
 				for($x = -$radius; $x <= $radius; $x++)
 					for($y = -$radius; $y <= $radius; $y++)
 						if(abs($x + $y) <= $radius)
-							$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY + $y];
+							$neighboors[] = new Vec2i($centerX + $x, $centerY + $y);
 
 				return collect($neighboors);
 
@@ -69,15 +69,15 @@
 
 				for($x = -$radius; $x <= $radius; $x++) 
 					if($x != $centerX)
-						$neighboors[] = ['x' => $centerX + $x, 'y' => $centerY];
+						$neighboors[] = new Vec2i($centerX + $x, $centerY);
 
 				for($y = -$radius; $y <= $radius; $y++) 
 					if($y != $centerY)
-						$neighboors[] = ['x' => $centerX, 'y' => $centerY + $y];
+						$neighboors[] = new Vec2i($centerX, $centerY + $y);
 
 				for($y = -$radius; $y <= $radius; $y++) 
 					if($y != $centerY)
-						$neighboors[] = ['x' => $centerX - $y, 'y' => $centerY + $y];
+						$neighboors[] = new Vec2i($centerX - $y, $centerY + $y);
 
 				return collect($neighboors);
 
@@ -88,7 +88,7 @@
 		public static function areaSingle() {
 
 			return function(Skill $skill = null) {
-				return [['x' => 0, 'y' => 0]];
+				return [new Vec2i(0, 0)];
 			};
 
 		}
@@ -118,7 +118,7 @@
 
 				$battle->prepareTurn();
 
-				$targets = $battle->fieldsIn($this->area(), $target->x, $target->y)->pluck('participant')->filter();
+				$targets = $battle->fieldsIn($this->area(), $target->pos())->pluck('participant')->filter();
 							
 				if(!$this->affectDead)
 					$targets = $targets->where('health', '>', '0');
