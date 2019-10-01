@@ -193,24 +193,49 @@
 			
 		}
 
-		public function createHex($radius, $centerX = 0, $centerY = 0) {
+		public function createHex($radius, $centerX = 0, $centerY = 0, $side = null) {
 
 			for($x = -$radius; $x <= $radius; $x++)
 				for($y = -$radius; $y <= $radius; $y++)
 					if(abs($x + $y) <= $radius) {
 
-						if(!$this->fieldAt($centerX + $x, $centerY + $y)) {
+						$field = $this->fieldAt($centerX + $x, $centerY + $y) ?? new Field;
 
-							$field = new Field;
-							$field->x = $centerX + $x;
-							$field->y = $centerY + $y;
-							$field->battle_id = $this->id;
-							$field->save();
-						
-						}
+						if($side && $x == 0 && $y == 0) $field->spawn = $side;
+
+						$field->x = $centerX + $x;
+						$field->y = $centerY + $y;
+						$field->battle_id = $this->id;
+						$field->save();
+					
 					}
 
 			$this->refresh();
+
+		}
+
+		public function possibleSpawns($side) {
+
+			if($side) {
+				$spawn = $this->fields->where('spawn', $side);
+				if(!$spawn->isEmpty()) {
+
+					$spawn = $spawn->random();
+					$hex = Skill::areaHexagon()();
+					$fields = $this->fieldsIn($hex, $spawn->x, $spawn->y)->where('participant', NULL);
+					if(!$fields->isEmpty())
+						return $fields;
+
+				}
+
+				return null;
+
+			}
+
+			return null;
+			$all = $this->fields->where('participant', NULL);
+			if($all->isEmpty()) return null;
+			return $all;	
 
 		}
 		
@@ -224,8 +249,8 @@
 				$battle->save();
 				$battle->refresh();
 
-				$battle->createHex(2, -2);
-				$battle->createHex(2, 2);
+				$battle->createHex(2, -1, 0, $battle->sides[0]);
+				$battle->createHex(2, 1, 0, $battle->sides[1]);
 
 				$battle->addCharacter($character);
 
@@ -250,37 +275,51 @@
 
 			});
 
-			$xs = $range->pluck('x');			
-			$ys = $range->pluck('y');
+			$fields = [];
+			foreach($range as $pos)
+				$fields[] = $this->fieldAt($pos['x'], $pos['y']);
 
-			return $this->fields->whereIn('x', $xs)->whereIn('y', $ys);
+			return collect($fields)->filter();
+
+			return $this->fields->filter(function($field) use($range) {
+				return $range->contains($field->pos());
+			});
 
 		}
 		
-		public function addCharacter($character) {			
-			if($character) {
+		public function addCharacter($character, $side = 1) {	
 
-				$field = $this->fieldAt(0, 0);
-				if($field) {
+			$spawns = $this->possibleSpawns($side);
+			if($spawns) $field = $spawns->random();
+
+			if($field && !$field->participant) {
+				if($character) {
+
+					$character->message = null;
+					$character->participant->battle_id = $this->id;
+					$character->participant->side = 1;
+					$character->participant->save();
 					$field->participant_id = $character->participant->id;
 					$field->save();
+					
+					$character->save();
 				}
 
-				$character->message = null;
-				$character->participant->battle_id = $this->id;
-				$character->participant->side = 1;
-				$character->participant->save();
-				$character->save();
 			}
 		}
 		
-		public function addNPC($npc) {			
-			$enemy = $npc->createEnemy($this, 2);
+		public function addNPC($npc, $field = null, $side = 2) {
 
-			if($enemy) {
+			if(is_null($field)) {
+				$spawns = $this->possibleSpawns($side);
+				if($spawns) $field = $spawns->random();
+			}
 
-				$field = $this->fieldAt(1, 0);
-				if($field) {
+			if($field && !$field->participant) {
+
+				$enemy = $npc->createEnemy($this, $side);
+
+				if($enemy) {
 					$field->participant_id = $enemy->participant->id;
 					$field->save();
 				}
@@ -352,6 +391,21 @@
 		
 		public function battle() {
 			return $this->belongsTo(Battle::class, 'battle_id');
+		}
+
+		public function validate() {
+
+			if(!$this->battle) {
+				$this->delete();
+				return false;
+			}
+
+			return true;
+
+		}
+
+		public function pos() {
+			return ['x' => $this->x, 'y' => $this->y];
 		}
 
 	}
