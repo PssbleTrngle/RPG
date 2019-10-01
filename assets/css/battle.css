@@ -48,11 +48,26 @@
 
 }
 
-.participant.died {
+.participant.died .participant-icon {
 
 	animation: die 0.8s forwards linear;
+	animation-delay: 1s;
 	overflow: hidden;
 	pointer-events: none; 
+
+}
+
+@keyframes zero-w {
+	to {
+		width: 0;
+		margin-left: 10px;
+	}
+}
+
+.participant.died .bar {
+
+	animation: zero-w 1.5s linear forwards;
+	animation-delay: 0.5s;
 
 }
 
@@ -180,16 +195,16 @@
 	left: 50%;
 
 	display: none;
-	transform: translate(-50%, -50%) scale(0, 0);
+	transform: translate(-50%, -50%) scale(1, 1);
 
-	animation: field-grow 1.2s linear forwards;
+	/* animation: field-grow 1.2s linear; */
 	transition: margin 0.3s linear, opacity 0.3s linear;
 
 }
 
 @keyframes field-grow {
-	to {
-		transform: translate(-50%, -50%) scale(1, 1);
+	from {
+		transform: translate(-50%, -50%) scale(0, 0);
 	}
 }
 
