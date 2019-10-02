@@ -22,6 +22,7 @@
 		}
 		
 		public function icon() {
+			if($this->classes->isEmpty()) return null;
 			return $this->classes->last()->icon();
 		}
 		
@@ -88,7 +89,7 @@
 		public function bagSize() {
 			return option('base_bag_size');
 		}
-		
+
 		public function classes() {
 			return $this->belongsToMany(Clazz::class, 'character_classes', 'character_id', 'class_id');
 		}
@@ -215,7 +216,7 @@
 			global $capsule;
 
 			if($to) {
-				if($this->canEvolveTo->contains('id', $to->id)) {
+				if($this->canEvolveTo()->contains('id', $to->id)) {
 					$capsule->table('character_classes')->insert(['character_id' => $this->id, 'class_id' => $to->id]);
 					return true;
 				}
@@ -285,6 +286,12 @@
 				$this->createPosition();
 				$correct = false;
 			}
+
+			if($this->classes->isEmpty()) {
+				$this->evolve(Clazz::where('id', '<', 10)->get()->random());
+				$correct = false;
+			}
+			
 			if(!$this->participant) {
 				$this->createParticipant();
 				$correct = false;

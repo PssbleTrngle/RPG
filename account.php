@@ -78,20 +78,22 @@
 	});
 
 	$app->post('/signup', function (Request $request, Response $response, array $args) {
+		global $capsule;
 
 		$username = $request->getParams()['username'] ?? null;
 		$password = $request->getParams()['password'] ?? null;
 		
 		if($username && $password) {
 
-			$account = Account::where('username', '=', $username)->first();
-			if($account)
+			$account = Account::where('username', $username)->first();
+			if($account) {
+				#$account->addPermission(Permission::where('name', 'user')->first());
 				return $this->view->render($response, 'login.twig', ['exists' => true]);
+			}
 
 			$account = new Account;
 			$account->username = $username;
 			$account->password_hash = password_hash($password, PASSWORD_DEFAULT);
-			$account->status_id = Status::where('name', 'user')->first()->id;
 			
 			$account->save();
 			$account->refresh();

@@ -47,8 +47,8 @@
 
 	registerAction('/character/create', function($args, $account) {
 
-		$clazz = $args['class'];
-		$name = $args['name'];
+		$clazz = $args['class'] ?? null;
+		$name = $args['name'] ?? null;
 
 		if($account->characters->isEmpty() || $account->hasPermission('create_chars')) {
 		
@@ -60,20 +60,19 @@
 				$clazz = Clazz::find($clazz);
 				if(!$clazz && !$clazz->evolvesFrom->first())
 					return ['success' => false, 'message' => 'Not a starter class'];
-
+				
 				$character = new Character;
 				$character->name = $name;
 				$character->race_id = 1;
-				$character->health = 1000;
 				$character->account_id = $account->id;
-
-				$character->createPosition();
-				$character->createParticipant();
 
 				$character->save();
 				$character->refresh();
 
-				$character->evolve($clazz->id);
+				$character->createPosition();
+				$character->createParticipant();
+
+				$character->evolve($clazz);
 				return ['redirect' => '/profile'];
 
 			}

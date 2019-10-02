@@ -63,7 +63,7 @@
 		public function addPermission($permission) {
 			global $capsule;
 
-			if($this->permissions->contains('id', $permission->id)) {
+			if(!$this->permissions->contains('id', $permission->id)) {
 				$capsule->table('account_permissions')->insert(['account_id' => $this->id, 'permission_id' => $permission->id]);
 				return true;
 			}
