@@ -111,8 +111,8 @@
 			return $this->character ?? $this->enemy;
 		}
 		
-		public function key() {
-			return $this->parent()->key();
+		public function name() {
+			return $this->parent()->name();
 		}
 		
 		public function icon() {
