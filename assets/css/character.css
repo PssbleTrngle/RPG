@@ -1,7 +1,7 @@
 .character-panel {
 
 	display: inline-block;
-	width: calc(33% - 60px);
+	max-width: 160px;
 	
 	cursor: pointer;
 	border: 3px var(--highlight-dark) solid;
@@ -16,8 +16,12 @@
 	
 }
 
-.character-panel.create {
+.character-panel.evolve {
+	max-width: 25%;
+}
 
+.character-row.count-2 {
+	padding-left: 25%;
 }
 
 .character-panel:hover {
@@ -35,16 +39,6 @@
 	transition: transform 0.1s linear;
 }
 
-.character-row.small .character-panel .icon {
-	height: 100px;
-	width: 100px;
-}
-
-.character-row.big .character-panel .icon {
-	height: 200px;
-	width: 200px;
-}
-
 .character-panel .icon:hover {
 	transform: scale(1.1, 1.1);
 }
@@ -52,7 +46,7 @@
 .character-panel.selected {
 
 	background-color: var(--highlight);
-	box-shadow: 0 0 15px 0 var(--highlight);
+	border-color: var(--highlight);
 	
 }
 
@@ -152,10 +146,11 @@
 .journey > * {
 	text-align: center;
 	position: relative;
+	transition: color 0.1s linear;
 }
 
 .journey > p:not(:last-child) {
-	--distance: 15px;
+	--distance: 12px;
 	--arrow-length: 12px;
 	margin-bottom: calc(var(--arrow-length) * 2 + var(--distance) * 2);
 }
@@ -167,7 +162,8 @@
 	left: calc(50% - var(--arrow-length) / 2);
 	width: var(--arrow-length);
 	height: var(--arrow-length);
-	background-color: #0002;
+	background-color: #0003;
+	transition: background-color 0.1s linear;
 }
 
 .journey > p:not(:last-child)::before {
@@ -181,4 +177,23 @@
 	border-left: var(--arrow-length) solid transparent;
 	border-right: var(--arrow-length) solid transparent;
 	border-top: var(--arrow-length) solid #0002;
+	transition: border-color 0.1s linear;
+}
+
+.journey > p:hover {
+	color: var(--highlight);
+}
+
+.journey > p:hover::after {
+	background-color: var(--highlight);
+}
+
+.journey > p:hover::before {
+	border-top-color: var(--highlight);
+}
+
+.evolve-description {
+	padding: 5px 0;
+	height: 50px;
+	max-width: 500px;
 }

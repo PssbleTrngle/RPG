@@ -10,6 +10,9 @@
 	background-color: #0002;
 	
 	box-shadow: 0 0 20px 0 rgba(0,0,0,0.5) inset;
+
+	margin: 0 auto;
+	max-width: 600px;
 	
 }
 
@@ -136,6 +139,8 @@
 	--width: 15px;
 
 	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
+	-webkit-clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
+	
 	padding: 7px 0;
 	color: #FFF;
 	background-color: var(--alternate-bg);

@@ -31,7 +31,6 @@
 			$participant = new Participant;
 
 			$participant->health = $this->maxHealth;
-			$participant->battle_id = $battle->id;
 			$participant->side = $side;
 
 			$participant->save();

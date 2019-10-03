@@ -133,7 +133,7 @@
 						$success = $success || $message;
 					}
 
-					$battle->participants->fresh();
+					$battle->fields->fresh();
 
 					if($success) {
 						$this->timeout($user);
@@ -172,10 +172,10 @@
 
 			/* ------------------------  HEALING  ------------------------ */
 			
-			static::register(['id' => 51, 'name' => "heal", 'timeout' => 0, 'cost' => 2, 'range' => 2],
+			static::register(['id' => 51, 'name' => 'heal', 'timeout' => 0, 'cost' => 2, 'range' => 2],
 				['use' => static::simpleHeal(15), 'area' => static::areaSingle()]);
 			
-			static::register(['id' => 52, 'name' => "cleansing_rain", 'timeout' => 0, 'cost' => 2, 'range' => 1],
+			static::register(['id' => 52, 'name' => 'cleansing_rain', 'timeout' => 0, 'cost' => 2, 'range' => 1],
 				['use' => static::simpleHeal(8), 'area' => static::areaHexagon()]);
 
 			static::register(['id' => 53, 'name' => "revive", 'timeout' => 0, 'cost' => 5, 'range' => 1, 'affectDead' => true],

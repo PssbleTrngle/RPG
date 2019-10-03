@@ -35,7 +35,7 @@
 		
 		public function takeTurn() {
 
-			$battle = $this->participant->battle;
+			$battle = $this->battle;
 			
 			if($battle) {
 				
@@ -83,7 +83,7 @@
 
 		public function validate() {
 
-			if(!$this->participant || !$this->participant->battle) {
+			if(!$this->participant || !$this->battle) {
 				$this->delete();
 				return false;
 			}

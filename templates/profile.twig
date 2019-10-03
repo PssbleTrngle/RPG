@@ -8,7 +8,7 @@
 	
 	<h1 class='banner w-66 mb-4'>{{ format('message.welcome', account.username) }}</h1>
 
-	<div class='row'>
+	<div class='row collapse'>
 		<div class='character-row w-66'>
 			{% for character in account.characters %}
 				
@@ -33,7 +33,7 @@
 
 		</div>
 		
-		<div class='row bottom'>
+		<div class='row top'>
 			<div class='pl-4'>
 				<div class='row'>
 					{% if account.selected.exists %}
@@ -68,7 +68,7 @@
 								
 				{% endif %}
 			</div>
-			<div class='pl-2'>
+			<div class='pl-2 middle'>
 				{% if account.selected.exists %}
 					<div class='journey'>
 						<h2>Your Journey</h2>

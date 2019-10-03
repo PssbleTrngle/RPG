@@ -3,7 +3,7 @@
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position', 'messages', 'fields'];
+		protected $with = ['active', 'position', 'messages', 'fields'];
 		public $sides = [1, 2];
 
 		public function addMessage($message) {
@@ -33,8 +33,8 @@
 			return $this->belongsTo(Position::class, 'position_id');
 		}
 		
-		public function participants() {
-			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
+		public function getParticipantsAttribute() {
+			return $this->fields->pluck('participant')->filter()->values();
 		}
 
 		public function onSide($side, $living = false) {
@@ -51,26 +51,11 @@
 				$capsule::table('participant_skills')
 					->where('participant_id', $participant->id)
 					->update(['nextUse' => 0]);
-				
-				$capsule::table('charging_skills')
-					->where('participant_id', $participant->id)
-					->delete();
 
-				if($participant->character) {
-
-					$participant->battle_id = null;
-					$participant->save();
-
-				} else {
+				if(!$participant->character)
 					$participant->delete();
-				}
+
 			}
-
-			foreach ($this->messages as $message)
-				$message->delete();
-
-			foreach ($this->fields as $field)
-				$field->delete();
 			
 			parent::delete();
 			
@@ -102,8 +87,8 @@
 				$character->message = 'ran';
 				$character->save();
 
-				$character->participant->battle_id = null;
-				$character->participant->save();
+				$character->participant->field->participant_id = null;
+				$character->participant->field->save();
 
 				$this->refresh();
 
@@ -286,7 +271,6 @@
 				if($character) {
 
 					$character->message = null;
-					$character->participant->battle_id = $this->id;
 					$character->participant->side = 1;
 					$character->participant->save();
 					$field->participant_id = $character->participant->id;
@@ -336,7 +320,7 @@
 			foreach($this->sides as $side) {
 
 				$living = $this->onSide($side)->filter(function($p, $k) {
-					return $p->validate() && $p->health() > 0;
+					return $p->validate() && $p->health > 0;
 				});
 
 				if($living->isEmpty())

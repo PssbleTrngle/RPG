@@ -21,6 +21,30 @@ a {
 	display: table-cell;
 }
 
+.row.collapse {
+	width: 100%;
+}
+
+@media only screen and (orientation: portrait) {
+	.row.collapse > * {
+		display: block;
+		width: 100%;
+	}
+
+	.row.collapse > *:not(:last-child) {
+		margin-bottom: 50px;
+	}
+
+	.decollapse {
+		border-collapse: separate;
+		border-spacing: 20px;
+	}
+
+	.decollapse > * {
+		display: table-cell;
+	}
+}
+
 .center { text-align: center; margin: auto; }
 .right { text-align: right; }
 .left { text-align: left; }
@@ -221,15 +245,20 @@ img.icon {
 }
 
 .bg {
+
 	margin-top: -20px;
 	z-index: -1;
 	position: fixed;
 	height: calc(100vh + 20px);
 	width: 100vw;
-	box-shadow: 0 -30vh 30vh #000A inset;
+
+	box-shadow: 0 -70vh 70vh #000A inset;
 	background-image: url('/assets/img/bg.png');
 	background-repeat: repeat;
 	background-size: calc(1462px * var(--factor)) calc(1520px * var(--factor));
+
+	filter: brightness(1);
+
 }
 
 .container {
@@ -272,6 +301,7 @@ input {
 	padding: 10px;
 	border: none;
 	outline: none;
+	-webkit-appearance: none;
 }
 
 input[type=text], input[type=password] {

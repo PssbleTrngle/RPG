@@ -6,13 +6,13 @@
 
 {% block content %}
 	
-	{% if character.participant.battle.exists %}
+	{% if character.battle %}
 
-		{% include 'home/battle.twig' with {'battle': character.participant.battle, 'character': character} %}
+		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
 	
 	{% else %}
 	
-	<div class='row w-100'>
+	<div class='row collapse'>
 		<div class='top w-66'>
 
 			{% if character.message %}
@@ -31,7 +31,7 @@
 		</div>
 		<div class='top right'>
 
-			<div class='ml-2'>
+			<div class='ml-2 decollapse'>
 				{% include 'home/character.twig' with {'character': character} %}
 				{% include 'home/inventory.twig' with {'character': character} %}
 			</div>
@@ -41,23 +41,4 @@
 
 	{% endif %}
 
-{% endblock %}
-
-{% block script %}
-<script>
-
-$(window).ready(function() {
-	
-	$('.evolve').each(function() {
-		let panel = $(this);
-
-		panel.click(function() {
-			window.params.to = panel.attr('data-class');
-			sendAction('character/evolve');
-		});
-	});
-	
-});
-
-</script>
 {% endblock %}

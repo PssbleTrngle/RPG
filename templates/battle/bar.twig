@@ -42,40 +42,44 @@
 			</div>
 		{% endfor %}
 
-		<div class='options w-100'>
+		<div class='decollapse'>
+			<div class='options w-100'>
 
-			{% if character.participant.canTakeTurn() %}
-				<div class='option' id='attack'>Attack</div>
-				<div class='option' id='move' data-select-action='battle/move'>Move</div>
-				<div class='option' data-action='battle/skip'>Skip</div>
-				<div class='option' data-action='battle/run'>Run</div>
-			{% else %}
-				<div class='option' data-action='battle/skip'>Skip</div>
-			{% endif %}
+				{% if character.participant.canTakeTurn() %}
+					<div class='option' id='attack'>Attack</div>
+					<div class='option' id='move' data-select-action='battle/move'>Move</div>
+					<div class='option' data-action='battle/skip'>Skip</div>
+					<div class='option' data-action='battle/run'>Run</div>
+				{% else %}
+					<div class='option' data-action='battle/skip'>Skip</div>
+				{% endif %}
 
-			{% for skill in character.participant.skills %}
-				<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}'
-				data-select-action='battle/skill' data-skill='{{ skill.id }}' data-area='{{ skill.area()|json_encode }}' data-parent='attack' data-range={{ skill.range }}>{{ skill.name() }}</div>
-			{% endfor %}
+				{% for skill in character.participant.skills %}
+					<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}'
+					data-select-action='battle/skill' data-skill='{{ skill.id }}' data-area='{{ skill.area()|json_encode }}' data-parent='attack' data-range={{ skill.range }}>{{ skill.name() }}</div>
+				{% endfor %}
+			</div>
+
+			{% import 'home/inventory.twig' as inventory %}
+
+			<div class='inventory battle-inventory mx-a mt-3'>
+				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+
+					{{ inventory.slot(stack) }}
+
+				{% endfor %}
+			</div>
+
+			<div>
+				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+					{{ inventory.popup(stack, character, false) }}
+				{% endfor %}
+
+				{% for skill in character.participant.skills %}
+					{{ self.popup(skill) }}
+				{% endfor %}
+			</div>
 		</div>
-
-		{% import 'home/inventory.twig' as inventory %}
-
-		<div class='inventory battle-inventory mx-a mt-3'>
-			{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
-
-				{{ inventory.slot(stack) }}
-
-			{% endfor %}
-		</div>
-
-		{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
-			{{ inventory.popup(stack, character, false) }}
-		{% endfor %}
-
-		{% for skill in character.participant.skills %}
-			{{ self.popup(skill) }}
-		{% endfor %}
 	
 	{% else %}
 	

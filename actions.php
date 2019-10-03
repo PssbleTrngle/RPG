@@ -96,7 +96,7 @@
 
 	registerAction('/character/evolve', function($args, $account) {
 		
-		$to = $args['to'] ?? null;
+		$to = Clazz::find($args['class'] ?? null);
 		
 		if($to) {
 			$character = $account->selected;

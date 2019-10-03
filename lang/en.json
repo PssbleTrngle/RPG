@@ -59,15 +59,15 @@
 		},
 		"druid": {
 			"name": "Druid",
-			"description": ""
+			"description": "Connected to the nature around him, he has learned to use it to his favor, giving life as well as taking it back"
 		},
 		"mage": {
 			"name": "Mage",
-			"description": ""
+			"description": "Expert in all things arcane and old, this magician has gathered immense knowledge of the mystic force within"
 		},
 		"alchemist": {
 			"name": "Alchemist",
-			"description": ""
+			"description": "The alchemist has understood that all matter and energy can be converted into each other, with a cost he is willing to pay"
 		},
 		"rogue": {
 			"name": "Rogue",

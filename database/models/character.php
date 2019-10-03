@@ -137,7 +137,7 @@
 		}
 
 		public function canTravel() {
-			return !$this->participant->battle && !$this->position->dungeon;
+			return !$this->battle && !$this->position->dungeon;
 		}
 		
 		public function travel($location) {
@@ -188,7 +188,7 @@
 		
 		public function leave() {
 			
-			if($this && $this->position->dungeon && !$this->participant->battle) {
+			if($this && $this->position->dungeon && !$this->battle) {
 			
 				$this->position->dungeon_id = null;
 				$this->position->floor = null;

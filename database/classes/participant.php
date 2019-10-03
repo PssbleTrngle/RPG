@@ -24,6 +24,10 @@
 			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
+		public function getBattleAttribute() {
+			return $this->participant->battle;
+		}
+
 	}
 
 ?>
