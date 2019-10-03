@@ -33,7 +33,7 @@
 			return $this->belongsTo(Position::class, 'position_id');
 		}
 		
-		public function getParticipants() {
+		public function getParticipantsAttribute() {
 			return $this->fields->pluck('participant')->filter();
 		}
 
@@ -51,21 +51,11 @@
 				$capsule::table('participant_skills')
 					->where('participant_id', $participant->id)
 					->update(['nextUse' => 0]);
-				
-				$capsule::table('charging_skills')
-					->where('participant_id', $participant->id)
-					->delete();
 
 				if(!$participant->character)
 					$participant->delete();
 
 			}
-
-			foreach ($this->messages as $message)
-				$message->delete();
-
-			foreach ($this->fields as $field)
-				$field->delete();
 			
 			parent::delete();
 			

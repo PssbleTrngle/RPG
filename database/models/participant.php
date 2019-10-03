@@ -4,20 +4,6 @@
 
 		protected $table = 'participant';
 		protected $with = ['character', 'enemy', 'effects', 'skills', 'charging', 'field'];
-
-		public function delete() {
-			global $capsule;
-
-			if($this->enemy)
-				$this->enemy->delete();
-
-			$capsule->table('participant_effects')->where('participant_id', $this->id)->delete();
-			$capsule->table('participant_skills')->where('participant_id', $this->id)->delete();
-			$capsule->table('charging_skills')->where('participant_id', $this->id)->delete();
-
-			parent::delete();
-
-		}
 		
 		public function field() {
 			return $this->hasOne(Field::class, 'participant_id')->without('battle', 'participant');
@@ -34,7 +20,7 @@
     			->withPivot('nextUse');
 		}
 
-		public function getBattle() {
+		public function getBattleAttribute() {
 			if($this->field)
 				return $this->field->battle;
 

@@ -6,7 +6,7 @@
 
 {% block content %}
 	
-	{% if character.battle.exists %}
+	{% if character.battle %}
 
 		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
 	

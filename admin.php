@@ -21,7 +21,7 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		echo json_encode(getAccount()->selected->participant->battle);
+		echo json_encode(Character::where('name', 'Kurt')->first()->battle);
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	
