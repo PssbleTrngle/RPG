@@ -3,7 +3,7 @@
 	class Battle extends BaseModel {
    		
 		protected $table = 'battle';
-		protected $with = ['participants', 'active', 'position', 'messages', 'fields'];
+		protected $with = ['active', 'position', 'messages', 'fields'];
 		public $sides = [1, 2];
 
 		public function addMessage($message) {
@@ -33,8 +33,8 @@
 			return $this->belongsTo(Position::class, 'position_id');
 		}
 		
-		public function participants() {
-			return $this->hasMany(Participant::class, 'battle_id')->without(['battle']);
+		public function getParticipants() {
+			return $this->fields->pluck('participant')->filter();
 		}
 
 		public function onSide($side, $living = false) {
@@ -56,14 +56,9 @@
 					->where('participant_id', $participant->id)
 					->delete();
 
-				if($participant->character) {
-
-					$participant->battle_id = null;
-					$participant->save();
-
-				} else {
+				if(!$participant->character)
 					$participant->delete();
-				}
+
 			}
 
 			foreach ($this->messages as $message)
@@ -102,8 +97,8 @@
 				$character->message = 'ran';
 				$character->save();
 
-				$character->participant->battle_id = null;
-				$character->participant->save();
+				$character->participant->field->participant_id = null;
+				$character->participant->field->save();
 
 				$this->refresh();
 
@@ -286,7 +281,6 @@
 				if($character) {
 
 					$character->message = null;
-					$character->participant->battle_id = $this->id;
 					$character->participant->side = 1;
 					$character->participant->save();
 					$field->participant_id = $character->participant->id;

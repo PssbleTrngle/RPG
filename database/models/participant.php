@@ -3,7 +3,7 @@
 	class Participant extends BaseModel implements Target {
 
 		protected $table = 'participant';
-		protected $with = ['battle', 'character', 'enemy', 'effects', 'skills', 'charging', 'field'];
+		protected $with = ['character', 'enemy', 'effects', 'skills', 'charging', 'field'];
 
 		public function delete() {
 			global $capsule;
@@ -34,8 +34,11 @@
     			->withPivot('nextUse');
 		}
 
-		public function battle() {
-			return $this->belongsTo(Battle::class, 'battle_id');
+		public function getBattle() {
+			if($this->field)
+				return $this->field->battle;
+
+			return null;
 		}
 		
 		public function character() {
