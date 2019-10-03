@@ -42,22 +42,3 @@
 	{% endif %}
 
 {% endblock %}
-
-{% block script %}
-<script>
-
-$(window).ready(function() {
-	
-	$('.evolve').each(function() {
-		let panel = $(this);
-
-		panel.click(function() {
-			window.params.to = panel.attr('data-class');
-			sendAction('character/evolve');
-		});
-	});
-	
-});
-
-</script>
-{% endblock %}

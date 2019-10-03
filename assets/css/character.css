@@ -1,7 +1,7 @@
 .character-panel {
 
 	display: inline-block;
-	width: calc(33% - 60px);
+	max-width: 160px;
 	
 	cursor: pointer;
 	border: 3px var(--highlight-dark) solid;
@@ -16,8 +16,12 @@
 	
 }
 
-.character-panel.create {
+.character-panel.evolve {
+	max-width: 25%;
+}
 
+.character-row.count-2 {
+	padding-left: 25%;
 }
 
 .character-panel:hover {
@@ -33,16 +37,6 @@
 
 .character-panel .icon {
 	transition: transform 0.1s linear;
-}
-
-.character-row.small .character-panel .icon {
-	height: 100px;
-	width: 100px;
-}
-
-.character-row.big .character-panel .icon {
-	height: 200px;
-	width: 200px;
 }
 
 .character-panel .icon:hover {
@@ -181,4 +175,10 @@
 	border-left: var(--arrow-length) solid transparent;
 	border-right: var(--arrow-length) solid transparent;
 	border-top: var(--arrow-length) solid #0002;
+}
+
+.evolve-description {
+	padding: 5px 0;
+	height: 50px;
+	max-width: 500px;
 }
