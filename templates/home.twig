@@ -12,7 +12,7 @@
 	
 	{% else %}
 	
-	<div class='row w-100'>
+	<div class='row collapse'>
 		<div class='top w-66'>
 
 			{% if character.message %}
@@ -31,7 +31,7 @@
 		</div>
 		<div class='top right'>
 
-			<div class='ml-2'>
+			<div class='ml-2 decollapse'>
 				{% include 'home/character.twig' with {'character': character} %}
 				{% include 'home/inventory.twig' with {'character': character} %}
 			</div>

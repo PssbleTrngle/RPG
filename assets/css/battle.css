@@ -1,7 +1,11 @@
 .battlefield {
 
+	position: relative;
+	height: calc(100vh - 100px);
+	max-height: 600px;
 	width: calc(100% - 20px);
 	max-width: 900px;
+
 	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4) inset;
 	background-color: #0005;
 	/* background-image: url('https://cdnb.artstation.com/p/assets/images/images/010/919/215/large/vyacheslav-ryzhkov-20180520204748-1.jpg?1526937354'); */
@@ -301,11 +305,4 @@
 .field.hover.disabled {
 	opacity: 1;
 	margin-top: -5px;
-}
-
-.battlefield {
-
-	position: relative;
-	height: 600px;
-
 }

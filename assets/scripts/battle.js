@@ -3,6 +3,46 @@ $(window).ready(function() {
 	let charX = parseInt($('#x').val());
 	let charY = parseInt($('#y').val());
 
+	let redraw = function(field) {
+
+		console.log('Redraw');
+
+		field.find('.field').each(function() {
+			let element = $(this);
+
+			let battlefield = element.parent();
+			let fieldsize = battlefield.size();
+
+			let totalW = battlefield.innerWidth();
+			let totalH = battlefield.innerHeight();
+			let sizeW = totalW / (fieldsize.x * 2 + 1) * 0.8;
+			let sizeH = totalH / (fieldsize.y * 2 + 1) * 0.8;
+			let size = Math.min(sizeW, sizeH);
+
+			let y = parseInt(element.attr('data-y'));
+			let x = parseInt(element.attr('data-x')) + 0.5 * y;
+			let marg = size * 0.1;
+
+			element.css({
+				top: totalH / 2 + (size + marg) * y + 'px',
+				left: totalW / 2 + (size + marg * 2) * x + 'px', '--size':
+				size + 'px',
+				display: 'block'
+			});
+
+		});
+
+	};
+
+	onLoad('.battlefield', function(element) {
+
+		redraw(element);
+		$(window).resize(function() {
+			redraw(element);
+		});
+
+	});
+
 	onLoad('.participant', function(element) {
 
 		let x = parseInt(element.attr('data-x'));
@@ -79,26 +119,6 @@ $(window).ready(function() {
 	});
 
 	onLoad('.field', function(element) {
-
-		let battlefield = element.parent();
-		let fieldsize = battlefield.size();
-
-		let totalW = battlefield.innerWidth();
-		let totalH = battlefield.innerHeight();
-		let sizeW = totalW / (fieldsize.x * 2 + 1) * 0.8;
-		let sizeH = totalH / (fieldsize.y * 2 + 1) * 0.8;
-		let size = Math.min(sizeW, sizeH);
-
-		let y = parseInt(element.attr('data-y'));
-		let x = parseInt(element.attr('data-x')) + 0.5 * y;
-		let marg = size * 0.1;
-
-		element.css({
-			top: totalH / 2 + (size + marg) * y + 'px',
-			left: totalW / 2 + (size + marg * 2) * x + 'px', '--size':
-			size + 'px',
-			display: 'block'
-		});
 
 		element.mouseout(function() {
 
