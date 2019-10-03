@@ -21,7 +21,7 @@
 	$app->get('/admin/test', function (Request $request, Response $response, array $args) {
 		global $capsule;
 
-		echo json_encode(Character::where('name', 'Kurt')->first()->battle);
+		echo json_encode(Translation::all());
 		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 	

@@ -34,7 +34,7 @@
 		}
 		
 		public function getParticipantsAttribute() {
-			return $this->fields->pluck('participant')->filter();
+			return $this->fields->pluck('participant')->filter()->values();
 		}
 
 		public function onSide($side, $living = false) {

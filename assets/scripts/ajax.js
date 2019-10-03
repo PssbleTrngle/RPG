@@ -67,7 +67,11 @@ function sendAction(action, func, source) {
 
 		if(source) source.addClass('error disabled');
 		$('.feedback').text('An error occured');
+
 		$('.admin-feedback').html(result.responseText);
+		$('.admin-feedback').each(function() {
+			$(this).html($(this).find('.container').html());
+		});
 
 	}).always(function(result) {		
 		$('.loading').removeClass('loading');
