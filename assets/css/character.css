@@ -46,7 +46,7 @@
 .character-panel.selected {
 
 	background-color: var(--highlight);
-	box-shadow: 0 0 15px 0 var(--highlight);
+	border-color: var(--highlight);
 	
 }
 
@@ -146,10 +146,11 @@
 .journey > * {
 	text-align: center;
 	position: relative;
+	transition: color 0.1s linear;
 }
 
 .journey > p:not(:last-child) {
-	--distance: 15px;
+	--distance: 12px;
 	--arrow-length: 12px;
 	margin-bottom: calc(var(--arrow-length) * 2 + var(--distance) * 2);
 }
@@ -161,7 +162,8 @@
 	left: calc(50% - var(--arrow-length) / 2);
 	width: var(--arrow-length);
 	height: var(--arrow-length);
-	background-color: #0002;
+	background-color: #0003;
+	transition: background-color 0.1s linear;
 }
 
 .journey > p:not(:last-child)::before {
@@ -175,6 +177,19 @@
 	border-left: var(--arrow-length) solid transparent;
 	border-right: var(--arrow-length) solid transparent;
 	border-top: var(--arrow-length) solid #0002;
+	transition: border-color 0.1s linear;
+}
+
+.journey > p:hover {
+	color: var(--highlight);
+}
+
+.journey > p:hover::after {
+	background-color: var(--highlight);
+}
+
+.journey > p:hover::before {
+	border-top-color: var(--highlight);
 }
 
 .evolve-description {

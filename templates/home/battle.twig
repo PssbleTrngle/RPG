@@ -32,7 +32,7 @@
 			id='{{ par.id }}'>
 
 		<p>{{par.name() }}</p>
-		<div class='bar health' data-amount='{{ par.health() / par.maxHealth() }}'></div>
+		<div class='bar health' data-amount='{{ par.health / par.maxHealth() }}'></div>
 
 		<div class='participant-icon {% for effect in par.effects %}{{ effect.name }} {% endfor %}'>{{ par|icon|raw }}</div>
 

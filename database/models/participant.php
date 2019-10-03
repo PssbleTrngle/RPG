@@ -108,7 +108,7 @@
 			return $this->parent()->icon();
 		}
 
-		public function health() {
+		public function getHealthAttribute() {
 			$this->health = max(0, min($this->health, $this->maxHealth()));
 			$this->save();
 			return $this->health;
