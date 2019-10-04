@@ -395,7 +395,21 @@ input.grow {
 	padding-top: 12px;
 	padding-bottom: 7px;
 
-	clip-path: polygon(0 0, 100% 0, calc(100% - var(--inset)) 50%, 100% 100%, 0 100%, var(--inset) 50%);
+	-webkit-clip-path: polygon(
+		100% 0,
+		calc(100% - var(--inset)) 40%,
+		100% 80%,
+		calc(100% - var(--length)) 80%,
+		calc(100% - var(--length)) 100%,
+		calc(var(--length)) 100%,
+		calc(var(--length)) 80%,
+		0 80%,
+		var(--inset) 40%,
+		0% 0%,
+		calc(var(--length) + var(--depth) * 2) 0%,
+		calc(var(--length) + var(--depth) * 2) 10%,
+		calc(100% - var(--length) - var(--depth) * 2) 10%,
+		calc(100% - var(--length) - var(--depth) * 2) 0);
 
 	clip-path: polygon(
 		100% 0,
@@ -442,6 +456,22 @@ input.grow {
 	top: 0;
 	left: 0;
 	background-color: var(--alternate-bg);
+
+	-webkit-clip-path: polygon(
+		100% 0,
+		calc(100% - var(--inset)) 40%,
+		100% 80%,
+		calc(100% - var(--depth) - var(--length)) 80%,
+		calc(100% - var(--length)) 100%,
+		calc(var(--length)) 100%,
+		calc(var(--depth) +var(--length)) 80%,
+		0 80%,
+		var(--inset) 40%,
+		0% 0%,
+		calc(var(--length) + var(--depth) * 2) 0%,
+		calc(var(--length) + var(--depth) * 2) 10%,
+		calc(100% - var(--length) - var(--depth) * 2) 10%,
+		calc(100% - var(--length) - var(--depth) * 2) 0);
 
 	clip-path: polygon(
 		100% 0,

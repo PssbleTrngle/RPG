@@ -2,10 +2,8 @@ $(window).ready(function() {
 
 	let charX = parseInt($('#x').val());
 	let charY = parseInt($('#y').val());
-
-	let redraw = function(field) {
-
-		console.log('Redraw');
+	
+	onReload('.battlefield', function(field) {
 
 		field.find('.field').each(function() {
 			let element = $(this);
@@ -30,15 +28,6 @@ $(window).ready(function() {
 				display: 'block'
 			});
 
-		});
-
-	};
-
-	onLoad('.battlefield', function(element) {
-
-		redraw(element);
-		$(window).resize(function() {
-			redraw(element);
 		});
 
 	});

@@ -1,3 +1,3 @@
 $(window).ready(function() {
-	$(this).reload();
+	$('.container').reload();
 });

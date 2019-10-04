@@ -6,17 +6,6 @@ $(window).ready(function() {
 	
 	onLoad('.map', function(map) {
 
-		map.find('.map-back').click(function() {
-
-			$(this).removeClass('shown');
-			map[0].selected_area = null;
-			map.reload();
-
-		});
-
-		if(map[0].selected_area)
-			map.find('.map-back').addClass('shown');
-
 		for(loc of map.find('.location')) {
 
 			let element = $(loc);
@@ -33,6 +22,29 @@ $(window).ready(function() {
 				element.sendAction('/character/enter/' + element.attr('id'));
 			else
 				element.sendAction('/character/travel/' + element.attr('id'));
+
+		}
+
+		
+	});
+	
+	onReload('.map', function(map) {
+
+		map.find('.map-back').click(function() {
+
+			$(this).removeClass('shown');
+			map[0].selected_area = null;
+			map.reload();
+
+		});
+
+		if(map[0].selected_area)
+			map.find('.map-back').addClass('shown');
+
+		for(loc of map.find('.location')) {
+
+			let element = $(loc);
+			let isArea = element.hasClass('area');
 
 			let showAreas = isArea && !map[0].selected_area;
 			let showLocation = !isArea && element.attr('data-area') == map[0].selected_area;

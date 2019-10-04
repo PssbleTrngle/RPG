@@ -1,32 +1,45 @@
-var FUNCTIONS = [];
+var FUNCTIONS_LOAD = [];
+var FUNCTIONS_RELOAD = [];
 
 function onLoad(query, func) {
 
-	if(!FUNCTIONS[query]) FUNCTIONS[query] = [];
-	FUNCTIONS[query].push(func);
+	if(!FUNCTIONS_LOAD[query]) FUNCTIONS_LOAD[query] = [];
+	FUNCTIONS_LOAD[query].push(func);
 
 }
 
-/*
-$.fn.click = function(func) {
-	
-	if(func) for(e of $(this)) if(!e.hasClickEvent) {
-		e.hasClickEvent = true;
-		e.onclick = func;
-	}
+function onReload(query, func) {
 
-};
-*/
+	if(!FUNCTIONS_RELOAD[query]) FUNCTIONS_RELOAD[query] = [];
+	FUNCTIONS_RELOAD[query].push(func);
+
+	if(!FUNCTIONS_LOAD[query]) FUNCTIONS_LOAD[query] = [];
+	FUNCTIONS_LOAD[query].push(func);
+
+}
+
+$(window).resize(function() {
+	$('.container').reload();
+})
 
 $.fn.reload = function() {
 	
 	for(e of $(this))
 		for(child of e.children) $(child).reload();
 
-	for(query in FUNCTIONS) {
-		for(e of $(this).filter(query))
-			for(func of FUNCTIONS[query])
-				func($(e));
+	for(query in FUNCTIONS_LOAD) {
+		for(e of $(this).filter(query)) {
+
+			if(!e.loaded)
+				for(func of FUNCTIONS_LOAD[query])
+					func($(e));
+
+			if(FUNCTIONS_RELOAD[query])
+				for(func of FUNCTIONS_RELOAD[query])
+					func($(e));
+
+			e.loaded = true;
+		}
 	}
 
 };
