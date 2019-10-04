@@ -143,9 +143,11 @@
 	$app->get('/icon/{icon:[a-zA-Z/]*}', function(Request $request, Response $response, array $args) {
 
 		$icon = $args['icon'] ?? null;
-		$srcOnly = !($request->getParams()['div'] ?? false);
 
-		return createIcon($icon, null, $srcOnly);
+		$icon = createIcon($icon, null, true);
+	    $response->write(file_get_contents($icon));
+
+	    return $response->withHeader('Content-Type', 'image/png');
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 

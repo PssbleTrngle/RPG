@@ -52,10 +52,10 @@
 
         $html = "<div title='$title' class='icon-container'>";
 		
-		$img = '/assets/img/'.$img;
-		if($srcOnly) return 'https://'.$_SERVER['HTTP_HOST'].$img;
+		$img = 'assets/img/'.$img;
+		if($srcOnly) return $img;
 
-        $icon = "<img class='icon' src='$img'></img>";
+        $icon = "<img class='icon' src='/$img'></img>";
         $html .= $icon;
 
 		if($color) {
