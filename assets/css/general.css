@@ -5,6 +5,10 @@
 	color: #000;
 }
 
+*:focus {
+	outline: none;
+}
+
 a {
 	margin: 0;
 	cursor: pointer;
@@ -205,6 +209,9 @@ img.icon {
 .pb-5, .py-5, .p-5 { padding-bottom: calc(var(--marg) * 5); }
 .pr-5, .px-5, .p-5 { padding-right: 	calc(var(--marg) * 5); }
 .pl-5, .px-5, .p-5 { padding-left: 	calc(var(--marg) * 5); }
+
+.rel { position: relative; }
+.abs { position: absolute; }
 
 .w-0 { width: 0 }
 .w-25 { width: 25% }
@@ -557,4 +564,45 @@ input.grow {
 .diagram td {
 	width: 50% !important;
 	height: 400px !important;
+}
+
+.speech {
+
+	--arrow: 16px;
+	--color: var(--alternate-bg);
+
+	text-align: center;
+	position: relative;
+
+	background-color: var(--color);
+	color: var(--highlight);
+	padding: 10px;
+
+	border-radius: 15px;
+
+}
+
+.speech::after {
+
+	content: '';
+	position: absolute;
+	left: calc(100% - var(--arrow) * 2 - 85px);
+	top: 100%;
+
+	border-bottom: calc(var(--arrow) * 0.7) transparent solid;
+	border-left: calc(var(--arrow)) transparent solid;
+
+	border-top: calc(var(--arrow) * 0.7) var(--color) solid;
+	border-right: calc(var(--arrow)) var(--color) solid;
+
+}
+
+.speech.right::after {
+
+	border-bottom: calc(var(--arrow) * 0.7) transparent solid;
+	border-right: calc(var(--arrow)) transparent solid;
+
+	border-top: calc(var(--arrow) * 0.7) var(--color) solid;
+	border-left: calc(var(--arrow)) var(--color) solid;
+
 }

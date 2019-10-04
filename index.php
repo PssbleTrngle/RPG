@@ -139,6 +139,16 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
+	/* Can be used by other websites to request icons */
+	$app->get('/icon/{icon:[a-zA-Z/]*}', function(Request $request, Response $response, array $args) {
+
+		$icon = $args['icon'] ?? null;
+		$srcOnly = !($request->getParams()['div'] ?? false);
+
+		return createIcon($icon, null, $srcOnly);
+		
+	})->add(new NeedsAuthentication($container['view'], 'user'));
+
 	/* A functioning, but no yet used map screen */
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
@@ -163,7 +173,7 @@
 
 		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
 	
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+	})->add(new NeedsAuthentication($container['view'], 'create_chars'));
 
 	/*
 		Used by 'actions.php' to register to user input actions.

@@ -56,6 +56,12 @@
 				return false;
 			}
 
+			else if(!$this->selected && !$this->characters->isEmpty()) {
+				$this->selected_id = $this->characters->first()->id;
+				$this->save();
+				return false;
+			}
+
 			return true;
 
 		}

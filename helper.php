@@ -24,7 +24,7 @@
 	    return $returnValue;
 	}
 
-	function createIcon($path = null, $color = null) {
+	function createIcon($path = null, $color = null, $srcOnly = false) {
 		
 		if($path) {
 			$path = strtolower(str_replace(' ', '_', $path));
@@ -53,6 +53,7 @@
         $html = "<div title='$title' class='icon-container'>";
 		
 		$img = '/assets/img/'.$img;
+		if($srcOnly) return $_SERVER['HTTP_HOST'].$img;
 
         $icon = "<img class='icon' src='$img'></img>";
         $html .= $icon;
