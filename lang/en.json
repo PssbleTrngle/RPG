@@ -19,6 +19,7 @@
 			"skipped": "§h$1 skipped",
 			"scared": "§h$1 was to scared to attack",
 			"called_help": "§h$1 called for help",
+			"moved": "§h$1 Moved",
 			"blocked": {
 				"asleep": "§1$1 had a wonderful sleep"
 			}

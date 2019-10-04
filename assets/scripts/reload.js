@@ -23,12 +23,9 @@ $(window).resize(function() {
 })
 
 $.fn.reload = function() {
-	
-	for(e of $(this))
-		for(child of e.children) $(child).reload();
 
 	for(query in FUNCTIONS_LOAD) {
-		for(e of $(this).filter(query)) {
+		for(let e of $(this).filter(query)) {
 
 			if(!e.loaded)
 				for(func of FUNCTIONS_LOAD[query])
@@ -38,8 +35,13 @@ $.fn.reload = function() {
 				for(func of FUNCTIONS_RELOAD[query])
 					func($(e));
 
-			e.loaded = true;
 		}
 	}
+
+	for(e of $(this))
+		for(child of e.children) $(child).reload();
+
+	for(let e of $(this))
+		e.loaded = true;
 
 };

@@ -39,12 +39,14 @@ $(window).ready(function() {
 		
 		let options = element.closest('.options');
 		let parent = element.attr('data-parent');
+
 		if(parent) parent = $('.option#' + parent);
+
 			
 		if(parent && parent[0] && options[0]) {
 		
 			parent.click(function() {
-				
+
 				options.find('.option').css({'display': 'none'});
 				options.find('.option[data-parent=' + parent.attr('id') + ']').css({'display': 'block'});
 				options.find('.option.back').css({'display': 'block'});
