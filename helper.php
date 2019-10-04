@@ -53,7 +53,7 @@
         $html = "<div title='$title' class='icon-container'>";
 		
 		$img = '/assets/img/'.$img;
-		if($srcOnly) return $_SERVER['HTTP_HOST'].$img;
+		if($srcOnly) return 'https://'.$_SERVER['HTTP_HOST'].$img;
 
         $icon = "<img class='icon' src='$img'></img>";
         $html .= $icon;
