@@ -141,6 +141,10 @@ img.icon {
 	position: relative;
 }
 
+.optional img.icon[src*='missing'] {
+	display: none;
+}
+
 .colored {
     position: absolute;
     top: 0;

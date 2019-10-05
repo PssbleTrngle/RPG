@@ -13,4 +13,7 @@
 	/* If defined everybody will use this account instead of logging in */
 	$static_account = 7;
 
+	/* prefer svg over png icons */
+	$prefer_svg = false;
+
 ?>

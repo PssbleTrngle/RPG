@@ -25,6 +25,7 @@
 	}
 
 	function createIcon($path = null, $color = null, $srcOnly = false) {
+		global $prefer_svg;
 		
 		if($path) {
 			$path = strtolower(str_replace(' ', '_', $path));
@@ -39,9 +40,13 @@
 				
 				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
 				
+			} else {
+
+				if(file_exists("assets/img/$path.png")) $img = $path.'.png';
+				if(file_exists("assets/img/$path.svg") && ($prefer_svg || !$img)) $img = $path.'.svg';
+
 			}
-			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
-			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
+
 		}
 
 		$title = '';
