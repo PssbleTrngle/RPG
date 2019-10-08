@@ -75,21 +75,21 @@
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
 	    */
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null) {
-			return createIcon($path, $color);
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null, $srcOnly = false) {
+			return createIcon($path, $color, $srcOnly);
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object) {
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object, $srcOnly = false) {
 
 	    	if(method_exists($object, 'icon')) {
 	    		if(method_exists($object, 'color')) {
 	    			$color = $object->color();
-	    			if($color) return createIcon($object->icon(), $color);
+	    			if($color) return createIcon($object->icon(), $color, $srcOnly);
 	    		} 
-	    		return createIcon($object->icon());
+	    		return createIcon($object->icon(), null, $srcOnly);
 	    	}
 			
-			return createIcon();
+			return createIcon(null, null, $srcOnly);
 
 	    }));
 

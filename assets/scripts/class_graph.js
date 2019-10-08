@@ -48,8 +48,7 @@ $(window).ready(function() {
     		node.colorCode = blend_colors(node.colorCode, '#FFFFFF', 0.15);
 
     	node.color = {background: node.colorCode, border: node.colorCode};
-    	if(node.level < max-1) node.shape = 'box';
-    	if(node.id < 10) node.shape = 'circle';
+    	node.shape = node.image ? 'image' : 'box';
 	
     }
 
@@ -109,6 +108,7 @@ $(window).ready(function() {
 				dragNodes: true
 			},
 			nodes: {
+				brokenImage: '/assets/img/missing.png',
 				font: {
 					color: '#000',
 					size: 20

@@ -36,8 +36,11 @@
 		$this->view->render($response, 'admin/post.twig', []);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
-	$app->get('/view/classes', function (Request $request, Response $response, array $args) {		
-		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all()]);		
+	$app->get('/view/classes', function (Request $request, Response $response, array $args) {
+
+		$icons = $request->getParams()['icons'] === true ?? true;
+
+		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all(), 'icons' => $icons]);		
 	})->add(new NeedsAuthentication($container['view'], 'tester'));
 
 	$app->get('/test/battle', function (Request $request, Response $response, array $args) {
