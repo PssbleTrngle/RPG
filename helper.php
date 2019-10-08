@@ -43,7 +43,7 @@
 			} else {
 
 				if(file_exists("assets/img/$path.png")) $img = $path.'.png';
-				if(file_exists("assets/img/$path.svg") && ($prefer_svg || !$img)) $img = $path.'.svg';
+				if(file_exists("assets/img/$path.svg") && ($prefer_svg || !isset($img))) $img = $path.'.svg';
 
 			}
 

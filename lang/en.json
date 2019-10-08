@@ -45,15 +45,15 @@
 		},
 		"traveller": {
 			"name": "Traveller",
-			"description": ""
+			"description": "Striding though the lands far and wide, this visitor has seen much and has learned to adapt to the most absurd enviroments"
 		},
 		"wild": {
 			"name": "Wild",
-			"description": ""
+			"description": "Living with his tribe in a rural enviroment, his values are more primal"
 		},
 		"fighter": {
 			"name": "Fighter",
-			"description": ""
+			"description": "Training to achieve balance though strength, he seeks for honor in physical combat"
 		},
 		"psychic": {
 			"name": "Psychic",
@@ -73,15 +73,15 @@
 		},
 		"rogue": {
 			"name": "Rogue",
-			"description": ""
+			"description": "Merged with the shadows around him, this sneaky devil is wanted far and wide, be it to catch him or to hire him for all things silent"
 		},
 		"barde": {
 			"name": "Barde",
-			"description": ""
+			"description": "Music is his medium of storytelling and his weapon of choice. Maybe the notes hold greater truth to the universe than heared at first"
 		},
 		"merchant": {
 			"name": "Merchant",
-			"description": ""
+			"description": "He gathered many things in his repertoire. None of his enemies see coming what these mystic artifacts do, but neither does he"
 		},
 		"ranger": {
 			"name": "Ranger",
