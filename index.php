@@ -149,7 +149,7 @@
 
 	    return $response->withHeader('Content-Type', 'image/png');
 		
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+	});
 
 	/* A functioning, but no yet used map screen */
 	$app->get('/map', function (Request $request, Response $response, array $args) {
