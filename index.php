@@ -144,10 +144,19 @@
 
 		$icon = $args['icon'] ?? null;
 
-		$icon = createIcon($icon, null, true);
-	    $response->write(file_get_contents($icon));
+		$url = createIcon($icon, null, true);
+		$icon = file_get_contents($url);
 
-	    return $response->withHeader('Content-Type', 'image/png');
+		if(pathinfo($url, PATHINFO_EXTENSION) == 'svg') {
+			$response->write($icon);
+		}
+
+		else {
+			$response->write($icon);
+			$response = $response->withHeader('Content-Type', 'image/'.pathinfo($url, PATHINFO_EXTENSION));
+		}
+
+	    return $response;
 		
 	});
 
