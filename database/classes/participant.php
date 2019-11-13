@@ -21,7 +21,7 @@
 		}
 
 		public function participant() {
-			return $this->belongsTo(Participant::class, 'participant_id')->without(['character', 'enemy']);
+			return $this->belongsTo(Participant::class, 'participant_id');
 		}
 
 		public function getBattleAttribute() {
