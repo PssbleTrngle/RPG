@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Isometric v2.5.4 (isometricapp.com) -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Isometric" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="512px" height="512px">
-<path class="top" fill="rgb(80.0%,80.0%,80.0%)" d=" M256.000 5.191 216.615 27.930 256.000 50.669 295.385 27.930 Z"/>
-<path class="left" fill="rgb(10.0%,10.0%,10.0%)" d=" M216.615 27.930 216.615 482.704 256.000 505.443 256.000 50.669 Z"/>
-<path class="right" fill="rgb(50.0%,50.0%,50.0%)" d=" M256.000 50.669 256.000 505.443 295.385 482.704 295.385 27.930 Z"/>
-</svg>
