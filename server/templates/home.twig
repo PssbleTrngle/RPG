@@ -1,0 +1,44 @@
+{% extends 'base.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% set character = account().selected %}
+
+{% block content %}
+	
+	{% if character.battle %}
+
+		{% include 'home/battle.twig' with {'battle': character.battle, 'character': character} %}
+	
+	{% else %}
+	
+	<div class='row collapse'>
+		<div class='top w-66'>
+
+			{% if character.message %}
+				<h1 class='mb-1 banner'>{{ format('message.' ~ character.message) }}</h1>
+			{% endif %}
+
+			{% include 'home/evolve.twig' with {'character': character} %}
+
+			{% set pos = character.position %}
+			{% if pos.dungeon.exists %}
+				{% include 'home/dungeon.twig' with {'position': pos} %}
+			{% else %}
+				{% include 'home/map.twig' with {'position': pos} %}
+			{% endif %}
+
+		</div>
+		<div class='top right'>
+
+			<div class='ml-2 decollapse'>
+				{% include 'home/character.twig' with {'character': character} %}
+				{% include 'home/inventory.twig' with {'character': character} %}
+			</div>
+
+		</div>
+	</div>
+
+	{% endif %}
+
+{% endblock %}

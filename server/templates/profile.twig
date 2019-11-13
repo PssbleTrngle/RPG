@@ -1,0 +1,118 @@
+{% extends 'base.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% set account = account() %}
+
+{% block content %}
+	
+	<h1 class='banner highlight w-66 mb-4'>{{ format('message.welcome', account.username) }}</h1>
+
+	<div class='row collapse'>
+		{% if not account.characters.isEmpty() %}
+			<div class='character-row'>
+				{% for character in account.characters %}
+					
+					<div class='character-panel {% if character.isSelected() %}selected{% endif %}' data-action='character/select/{{ character.id }}'>
+						<h4>{{ character.name() }}</h4>
+						<small>
+							<p>{{ character.description()}}</p>
+							<p>Level {{ character.level() }}</p>
+							<p>{{ character.birth|age }}</p>
+						</small>
+						{{ character|icon|raw }}
+					</div>
+
+				{% endfor %}
+
+			</div>
+		{% else %}
+			<div class='w-33 pl-2'>
+				<table>
+					<tr>
+						<td colspan='2'><h2 class='speech'>{{ format('message.new_account') }}</h2></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class='greeter'>{{ icon('class/death')|raw }}</td>
+					</tr>
+				</table>
+			</div>
+		{% endif %}
+		
+		<div class='row top profile-right'>
+			<div class='pl-4'>
+
+				<div class='row'>
+					{% if account.selected.exists %}
+						<a href='/'><div class='profile-btn fade big-btn'>{{ account.selected.position|icon|raw }}</div></a>
+					{% else %}
+						<a href='/profile/create'><div class='profile-btn big-btn fade'>{{ icon('icon/create')|raw }}</div></a>
+					{% endif %}
+					<div class='top'>
+						<div class='profile-btn fade' data-window='options-window'>{{ icon('icon/options')|raw }}</div>
+						<div class='profile-btn fade' data-window='lang-window'>{{ icon('icon/lang')|raw }}</div>
+					</div>
+					<div class='top'>
+						{% if account.hasPermission('create_chars') and not account.character.isEmpty() %}
+							<a href='/profile/create'><div class='profile-btn fade'>{{ icon('icon/create')|raw }}</div></a>
+						{% endif %}
+					</div>
+				</div>
+
+				{% if account.selected.exists %}
+					{% set stats = account.selected.stats() %}
+					
+					<div class='bar health' data-amount='{{ account.selected.participant.health / account.selected.maxHealth() }}'></div>
+					<div class='mt-1'></div>
+					<div class='bar xp' data-amount='{{ account.selected.xp / account.selected.requiredXp() }}'></div>
+					
+					<table class='stats mt-2 w-100'>
+						{% for stat in stats.keys %}
+							<tr>
+								<td class='stat'>{{ format('stat.' ~ stat) }}:</td>
+								<td class='stat highlight'>{{ attribute(stats, stat) }}</td>
+							</tr>
+						{% endfor %}
+					</table>
+
+					<div class='mt-2'>
+						{% for skill in account.selected.skills %}
+							<p>{{ skill.name() }}</p>
+						{% endfor %}
+					</div>
+
+				{% endif %}
+
+			</div>
+			<div class='pl-2 middle'>
+				{% if account.selected.exists %}
+					<div class='journey'>
+						<h2>Your Journey</h2>
+						<p>{{ format('journey.start') }}</p>
+						{% for class in account.selected.classes %}
+							<p>{{ class.name() }}</p>
+						{% endfor %}
+						<p>{{ format('journey.end') }}</p>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class='window' id='lang-window'>
+		<div class='row'>
+			{% for index, lang in langs() %}
+
+				{% if index > 0 and index % 8 == 0 %}</div><div class='row'>{% endif %}
+				<div class='lang' data-action='language/{{ lang }}'>{{ lang|lower }}</div>
+
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class='window' id='options-window'>
+		<h1>Options</h1>
+	</div>
+
+{% endblock %}

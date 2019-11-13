@@ -1,0 +1,45 @@
+{% macro participant(participant) %}
+	<div class='participant'>
+		<div class='bar health' data-amount='{{ participant.health / participant.maxHealth() }}'></div>
+		<div class='participant-icon'>
+			{{ participant|icon|raw }}
+		</div>
+
+		<div>{% for effect in participant.effects %}
+				<div class='effect orbit'>
+					{{ effect|icon|raw }}
+				</div>
+		{% endfor %}</div>
+	</div>
+{% endmacro %}
+
+<div class='w-75'>
+	<div class='battlefield'>
+
+		{% for field in battle.fields %}
+
+			<div data-x='{{ field.x }}' data-y='{{ field.y }}' class='field 
+				{% if field.participant.character.exists and battle.active.id == field.participant.character.id %}active{% endif %}
+				{% if field.participant.died %}died{% endif %}'
+				id='{{ field.id }}'>
+
+				<div class='hex'></div>
+
+				{% import _self as self %}
+
+				{% if field.participant.exists %}
+					{{ self.participant(field.participant) }}
+				{% endif %}
+			</div>
+
+		{% endfor %}
+
+	</div>
+		
+	<div class='mt-2'>
+		{% for key in battle.messages.take(5) %}
+		<p>{{ key.format()|raw }}</p>	
+		{% endfor %}
+	</div>
+
+</div>

@@ -1,0 +1,46 @@
+{% macro nav(to, icon) %}
+	<a href='/{{ to|lower }}'><div class="navbar-link {% if to|lower in uri() %}active{% endif %}"><i class="fas fa-{{ icon }}"></i></div></a>
+{% endmacro %}
+
+{% import _self as base %}
+
+<html>
+	<head>
+		<title>RPG - {% block title %}{% endblock %}</title>
+		<link rel="icon" type="image/png" href="/assets/img/icon.png">
+		
+		<link href='/assets/vis/vis.min.css' rel='stylesheet' />	
+		
+		{% for file in styles() %}
+			<link href='/{{ file }}' rel='stylesheet' />
+		{% endfor %}
+
+		<link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+		<script src='/assets/vis/vis.min.js'></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+		
+		{% for file in scripts() %}
+			<script src='/{{ file }}'></script>
+		{% endfor %}
+		
+	</head>
+	<body>
+
+		<div class='box'>
+			<div class='bg'></div>
+			<div class='container'>
+					{% block content %}{% endblock %}
+			</div>
+		</div>
+
+		<div class='window-open'></div>
+
+	</body>
+	<footer>
+		{% block script %}{% endblock %}
+	</footer>
+</html>

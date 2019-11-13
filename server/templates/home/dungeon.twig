@@ -1,0 +1,41 @@
+<div class='row mt-3 bottom'>
+	
+	<div class='dungeon-box'>
+		<h2 class='dungeon-top center' >{{ position.dungeon.name() }}</h2>
+		
+		<div class='floors'>
+
+			{% set last = position.floor %}
+			{% if position.foundStairs %}
+				{% set last = last + 1 %}
+			{% endif %}
+
+			{% for floor in range(1, position.dungeon.floors) %}
+
+				{% if floor <= last %}
+
+					{% set boss = floor == position.dungeon.floors %}
+
+					<div class='floor {% if floor == position.floor %}current{% endif %} {% if boss %}last{% endif %}'>
+						<p class='center'>{% if boss %}<i class="fas fa-skull"></i>{% else %}{{ floor|roman }}{% endif %}</p>
+					</div>
+				{% endif %}
+
+			{% endfor %}
+
+			{% if last < position.dungeon.floors %}
+				<div class='floor below'></div>
+			{% endif %}
+
+		</div>
+	</div>
+
+	<div class='middle'>
+		<div class='options ml-2'>
+			<div class='option' data-action='dungeon/leave'>Exit</div>
+			<div class='option' data-action='dungeon/search'>Search</div>
+			{% if position.foundStairs %}<div class='option' data-action='dungeon/down'>Down</div>{% endif %}
+		</div>	
+	</div>			
+
+</div>

@@ -1,0 +1,19 @@
+{% extends 'base.twig' %}
+
+{% block title %}505 - Internal Server Error{% endblock %}
+
+{% block content %}
+
+	<h1>Internal Server Error</h1>
+	<p>Some gremlin seems to have sabotaged us</p>
+	
+	{% if account().hasPermission('tester') %}
+	<br><br>
+	<small>
+		{% for line in error|split('\n') %}
+			<p>{{ line }}</p>
+		{% endfor %}
+	</small>
+	{% endif %}
+
+{% endblock %}

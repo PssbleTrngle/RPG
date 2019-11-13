@@ -1,0 +1,89 @@
+{% macro popup(skill) %}
+
+	<div class='info-popup center mt-2' data-source='.skill[data-skill={{ skill.id }}]'>
+
+		<div class='darken pb-2 pt-1 mt-1'>
+
+			<h3>{{ skill.name() }}</h3>
+
+			{% if skill.usage.nextUse > 0 %}
+				<p>Use again in {{ skill.usage.nextUse }}</p>
+			{% endif %}
+
+			{% if skill.charge > 0 %}
+				<p>Needs {{ skill.charge }} rounds to charge</p>
+			{% endif %}
+
+			<p>Range: {{ skill.range }}</p>
+
+			{% if skill.description() %}
+				<p class='mt-1 description'>{{ skill.description() }}</p>
+			{% endif %}
+
+		</div>
+
+	</div>
+
+{% endmacro %}
+
+{% import _self as self %}
+
+<div class='top px-1 battle-bar'>
+	{% if battle.active.id == character.id %}
+
+		{% for skill in character.participant.charging %}
+			<div class='charging'>
+				<p>{{ skill.name() }}</p>
+				<div class='charges'>
+					{% for i in skill.charge..1 %}
+						<div class='charge {% if i > skill.pivot.countdown %}done{% endif %}'></div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
+
+		<div class='decollapse'>
+			<div class='options w-100'>
+
+				{% if character.participant.canTakeTurn() %}
+					<div class='option' id='attack'>Attack</div>
+					<div class='option' id='move' data-select-action='battle/move'>Move</div>
+					<div class='option' data-action='battle/skip'>Skip</div>
+					<div class='option' data-action='battle/run'>Run</div>
+				{% else %}
+					<div class='option' data-action='battle/skip'>Skip</div>
+				{% endif %}
+
+				{% for skill in character.participant.skills %}
+					<div class='skill option {% if skill.usage.nextUse %}disabled{% endif %}'
+					data-select-action='battle/skill' data-skill='{{ skill.id }}' data-area='{{ skill.area()|json_encode }}' data-parent='attack' data-range={{ skill.range }}>{{ skill.name() }}</div>
+				{% endfor %}
+			</div>
+
+			{% import 'home/inventory.twig' as inventory %}
+
+			<div class='inventory battle-inventory mx-a mt-3'>
+				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+
+					{{ inventory.slot(stack) }}
+
+				{% endfor %}
+			</div>
+
+			<div>
+				{% for stack in character.itemIn('inventory') if stack.item.can('use') %}
+					{{ inventory.popup(stack, character, false) }}
+				{% endfor %}
+
+				{% for skill in character.participant.skills %}
+					{{ self.popup(skill) }}
+				{% endfor %}
+			</div>
+		</div>
+	
+	{% else %}
+	
+		{{ battle.active.name() }}' turn
+
+	{% endif %}
+</div>
