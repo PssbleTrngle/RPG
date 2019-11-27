@@ -57,8 +57,15 @@ class Icon extends React.Component<{src: string},{}> {
 	render() {
 		const { src } = this.props;
 
+		let icon: any;
+		try {
+			icon = require(`./img/${src}`);
+		} catch(e) {
+			icon = require('./img/missing.png');
+		}
+
 		return (
-			null
+			<img className='icon' src={icon} />
 		)
 	}
 }
@@ -73,7 +80,7 @@ class Buttons extends React.Component<{account: Account},{}> {
 		return (
 			<div className='row'>
 				{ selected ?
-					<a href='/'><div className='profile-btn fade big-btn'><Icon src={selected.position} /></div></a>
+					<a href='/'><div className='profile-btn fade big-btn'><Icon src={selected.position.icon} /></div></a>
 				:
 					<a href='/profile/create'><div className='profile-btn big-btn fade'><Icon src={'icon/create'} /></div></a>
 				}
@@ -97,15 +104,15 @@ class SelectedInfo extends React.Component<{selected: Character},{}> {
 
 		return (
 			<>
-			<div className='bar health' data-amount={selected.participant.health / selected.participant.maxHealth}></div>
+			<div className='bar health' data-amount={selected.health / selected.maxHealth}></div>
 			<div className='mt-1'></div>
 			<div className='bar xp' data-amount={selected.xp / selected.requiredXp}></div>
 			
 			<table className='stats mt-2 w-100'>
-				{Object.keys(selected.participant.stats).map( stat =>
+				{Object.keys(selected.stats).map( stat =>
 					<tr>
 						<td className='stat'>{ format('stat.' + stat)}:</td>
-						<td className='stat highlight'>{selected.participant.stats[stat]}</td>
+						<td className='stat highlight'>{selected.stats[stat]}</td>
 					</tr>
 				)}
 			</table>
@@ -149,36 +156,38 @@ class Profile extends React.Component<{account: Account},{}> {
 		return (
 			<>
 			<h1 className='banner highlight w-66 mb-4'>{ format('message.welcome', account.username)}</h1>
+			<div id='profile'>
 
-			<div className='row collapse'>
-				<CharacterRow characters={characters} selected={selected} />
-				<Greeter icon={'death'} message={format('message.new_account')} />
-				
-				<div className='col'>
-					<div className='row top'>
-						<div className='pl-4'>
+				<div className='row collapse'>
+					<CharacterRow characters={characters} selected={selected} />
+					<Greeter icon={'death'} message={format('message.new_account')} />
+					
+					<div className='col'>
+						<div className='row top'>
+							<div className='pl-4'>
 
-							<Buttons account={account} />
-							{selected && <SelectedInfo selected={selected} />}
+								<Buttons account={account} />
+								{selected && <SelectedInfo selected={selected} />}
 
+							</div>
+							<div className='pl-2 middle'>
+								{selected && <Journey character={selected} />}
+							</div>
 						</div>
-						<div className='pl-2 middle'>
-							{selected && <Journey character={selected} />}
-						</div>
+					</div>
+
+				</div>
+				<div className='window' id='lang-window'>
+					<div className='row'>
+						{['en', 'de', 'cyber'].map((lang, i) =>
+							<div className='lang' data-action='language/{{ lang }}'>{lang.toLowerCase()}</div>
+						)}
 					</div>
 				</div>
 
-			</div>
-			<div className='window' id='lang-window'>
-				<div className='row'>
-					{['en', 'de', 'cyber'].map((lang, i) =>
-						<div className='lang' data-action='language/{{ lang }}'>{lang.toLowerCase()}</div>
-				 	)}
+				<div className='window' id='options-window'>
+					<h1>Options</h1>
 				</div>
-			</div>
-
-			<div className='window' id='options-window'>
-				<h1>Options</h1>
 			</div>
 			</>
 		);
