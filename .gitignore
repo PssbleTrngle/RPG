@@ -6,3 +6,5 @@ phpmyadmin/
 config.php
 
 *.hxl
+
+*.code-workspace
