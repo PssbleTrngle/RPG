@@ -1,17 +1,24 @@
 package rpg
 
-class Area {
+import grails.rest.Resource
 
-    String id, icon
+@Resource(uri = '/area', readOnly = true)
+class Area implements Translated {
+
+    String id
     int level
     int mapX, mapY
 
-    static belongsTo = Area
+    static belongsTo = [ parent: Area ]
     static hasMany = [ children: Area, dungeons: Dungeon ]
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
-        icon blank: false, nullable: false
+        id bindable: true, generator: 'assigned'
         level unsigned: true
+        parent nullable: true
+    }
+
+    static mapping = {
+        children sort: 'id'
     }
 }

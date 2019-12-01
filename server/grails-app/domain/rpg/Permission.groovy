@@ -5,6 +5,6 @@ class Permission {
     String id
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
+        id bindable: true, generator: 'assigned'
     }
 }

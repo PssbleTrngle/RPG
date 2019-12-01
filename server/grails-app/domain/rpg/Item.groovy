@@ -1,13 +1,17 @@
 package rpg
 
-class Item {
+import grails.rest.Resource
+
+@Resource(uri = '/item', readOnly = true)
+class Item implements Translated {
 
     String id
-    boolean stackable = true
 
     static belongsTo = [type: ItemType, rarity: Rarity, stats: Stats ]
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
+        id bindable: true, generator: 'assigned'
+        stats nullable: true
+        rarity nullable: true
     }
 }

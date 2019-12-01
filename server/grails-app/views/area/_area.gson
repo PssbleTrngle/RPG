@@ -1,0 +1,13 @@
+import rpg.Area
+inherits template: '/translated', model: [model: area]
+
+model {
+	Area area
+}
+
+json {
+    if(!area.getChildren().isEmpty())
+        areas g.render(template: 'area', collection: area.getChildren())
+    x area.getMapX()
+    y area.getMapY()
+}

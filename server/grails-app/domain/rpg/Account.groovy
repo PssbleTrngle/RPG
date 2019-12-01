@@ -12,5 +12,10 @@ class Account {
     static constraints = {
         name blank: false, unique: true, nullable: false
         passwordHash blank: false, nullable: false
+        selected nullable: true
+    }
+
+    static mapping = {
+        characters sort: 'dateCreated'
     }
 }

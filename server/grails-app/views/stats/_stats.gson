@@ -1,0 +1,14 @@
+import rpg.Character
+import rpg.Stats
+
+model {
+	Stats stats
+}
+
+json {
+    wisdom stats.getWisdom()
+    strength stats.getStrength()
+    agility stats.getAgility()
+    luck stats.getLuck()
+    resistance stats.getResistance()
+}

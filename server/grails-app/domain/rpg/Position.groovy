@@ -8,5 +8,7 @@ class Position {
     static belongsTo = [ area: Area, dungeon: Dungeon ]
 
     static constraints = {
+        area nullable: true /* TODO remove */
+        dungeon nullable: true
     }
 }

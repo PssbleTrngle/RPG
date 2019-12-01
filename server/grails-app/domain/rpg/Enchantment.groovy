@@ -1,10 +1,13 @@
 package rpg
 
-class Enchantment {
+import grails.rest.Resource
+
+@Resource(uri = '/enchantment', readOnly = true)
+class Enchantment implements Translated {
 
     String id
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
+        id bindable: true, generator: 'assigned'
     }
 }

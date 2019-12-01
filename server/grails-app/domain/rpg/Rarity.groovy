@@ -1,10 +1,14 @@
 package rpg
 
-class Rarity {
+import grails.rest.Resource
+
+@Resource(uri = '/rarity', readOnly = true)
+class Rarity implements Translated {
 
     String id, color
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
+        id bindable: true, generator: 'assigned'
+        color nullable: true
     }
 }

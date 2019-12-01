@@ -1,8 +1,10 @@
 package rpg
 
-class Participant {
+abstract class Participant {
 
     int health, side
     boolean died = false, joined = true
+
+    abstract int maxHealth();
 
 }

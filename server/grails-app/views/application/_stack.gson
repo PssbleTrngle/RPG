@@ -1,0 +1,12 @@
+import rpg.Stack
+
+model {
+    Stack stack
+}
+
+json {
+    id stack.getId()
+    item g.render(stack.getItem())
+    amount stack.getAmount()
+    slot g.render(stack.getSlot())
+}

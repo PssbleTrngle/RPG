@@ -1,0 +1,27 @@
+import rpg.Character
+import rpg.Clazz
+
+model {
+    Character character
+}
+
+json {
+    id character.getId()
+    name character.getName()
+
+    health character.getHealth()
+    maxHealth character.maxHealth()
+    xp character.getXp()
+    level character.getLevel()
+    requiredXp 10
+
+    stats g.render(character.getStats())
+    skills new String[0]
+
+    classes g.render(template: '/clazz/clazz', collection: character.getClazzes())
+    position g.render(character.getPosition())
+
+    evolutions g.render(template: '/clazz/clazz', collection: Clazz.list().subList(0, 3))
+
+    inventory g.render(template: 'stack', collection: character.getInventory())
+}

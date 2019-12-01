@@ -1,6 +1,9 @@
 package rpg
 
-class Dungeon {
+import grails.rest.Resource
+
+@Resource(uri = '/dungeon', readOnly = true)
+class Dungeon implements Translated {
 
     String id, icon
     int level, floors
@@ -9,7 +12,7 @@ class Dungeon {
     static belongsTo = [ area: Area ]
 
     static constraints = {
-        id blank: false, nullable: false, unique: true
+        id bindable: true, generator: 'assigned'
         level unsigned: true
         floors unsigned: true
     }

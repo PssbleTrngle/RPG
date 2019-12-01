@@ -1,0 +1,9 @@
+import rpg.Position
+
+model {
+	Position position
+}
+
+json {
+    area g.render(position.getArea())
+}

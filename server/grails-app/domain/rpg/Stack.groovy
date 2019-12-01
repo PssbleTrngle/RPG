@@ -9,7 +9,7 @@ class Stack {
     static constraints = {
         amount unsigned: true
         enchantment nullable: true
-        slot nullable: true
+        slot nullable: false
         item nullable: false
     }
 }

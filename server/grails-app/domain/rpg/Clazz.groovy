@@ -1,12 +1,16 @@
 package rpg
 
-class Clazz {
+import grails.rest.Resource
+
+@Resource(uri = '/class', readOnly = true)
+class Clazz implements Translated {
 
     String id
 
     static belongsTo = [ stats: Stats, starter_weapon: ItemType ]
 
     static constraints = {
-        id nullable: false, blank: false, unique: true
+        id bindable: true, generator: 'assigned'
+        starter_weapon nullable: true
     }
 }

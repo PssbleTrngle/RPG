@@ -1,0 +1,10 @@
+import rpg.Item
+import rpg.Slot
+
+inherits template: '/translated', model: [model: slot]
+
+model {
+    Slot slot
+}
+
+json {}
