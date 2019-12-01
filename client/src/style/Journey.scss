@@ -1,0 +1,49 @@
+.journey {
+
+    text-align: center;
+	position: relative;
+    transition: color 0.1s linear;
+
+    @mixin arrow($color) {
+        position: relative;
+        $distance: 16px;
+        $arrow: 12px;
+        margin-bottom: $arrow * 2 + $distance;
+
+        &::after, &::before {
+            @include pseudo;
+            transition: background-color 0.1s linear, border 0.1s linear;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &::before {
+            background-color: $color;
+            top: calc(100% + #{$distance});
+            width: $arrow;
+            height: $arrow;
+        }
+
+        &::after {
+            top: calc(100% + #{$distance} + #{$arrow});
+            width: 0;
+            height: 0;
+        
+            border-left: $arrow solid transparent;
+            border-right: $arrow solid transparent;
+            border-top: $arrow solid $color;
+
+        }
+    }
+    
+    p:not(:last-child) {
+        @include arrow(#0003);
+
+        &:hover {
+            @include arrow(#0001);
+            color: $highlight;
+        }
+
+    }
+
+}

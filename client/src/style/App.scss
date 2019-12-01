@@ -16,16 +16,6 @@ $highlight-dark: #e2a126;
 $highlight: #f2b748;
 $highlight-light: #f2c56f;
 
-@import "./old/battle";
-@import "./old/character";
-@import "./old/editor";
-@import "./old/inventory";
-@import "./old/lang";
-@import "./old/map";
-@import "./old/options";
-
-@import "./Profile";
-
 * {
   transition: background-color 0.1s linear, opacity 0.1s linear;
   font-family: 'Roboto Slab', serif;
@@ -87,6 +77,7 @@ img.icon {
 }
 
 .bg {
+  $factor: 0.5;
 
   top: 0;
   left: 0;
@@ -97,9 +88,9 @@ img.icon {
   width: 100vw;
 
   box-shadow: 0 -70vh 70vh #000A inset;
-  background-image: url('/assets/img/bg.png');
+  background-image: url('../img/bg.png');
   background-repeat: repeat;
-  background-size: calc(1462px * $factor) calc(1520px * $factor);
+  background-size: 1462px * $factor 1520px * $factor;
 
   filter: brightness(1);
 
@@ -114,9 +105,33 @@ img.icon {
   padding: 15px;
   width: calc(100% - 20px * 2);
   max-width: 1200px;
+  min-height: 400px;
   margin: 0 auto;
   background-color: $bg;
   box-shadow: 0 3px 8px #000D;
   display: table;
   
 }
+
+@mixin pseudo {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.center { text-align: center }
+
+@import "./Home";
+@import "./Profile";
+@import "./Participant";
+@import "./Popup";
+@import "./Journey";
+@import "./Buttons";
+@import "./Banner";
+@import "./Map";
+@import "./Battle";
+@import "./View";
+@import "./Inventory";

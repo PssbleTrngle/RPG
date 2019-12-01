@@ -1,0 +1,79 @@
+@mixin banner($color, $drop, $text, $length, $depth) {
+    $inset: 10px;
+
+    margin: 10px auto;
+    width: 66.6%;
+
+	position: relative;
+
+	text-align: center;
+	background-color: $drop;
+	color: $text;
+	padding-top: 12px;
+	padding-bottom: 7px;
+
+	clip-path: polygon(
+		100% 0,
+		calc(100% - #{$inset}) 40%,
+		100% 80%,
+		calc(100% - #{$length}) 80%,
+		calc(100% - #{$length}) 100%,
+		calc(#{$length}) 100%,
+		calc(#{$length}) 80%,
+		0 80%,
+		$inset 40%,
+		0% 0%,
+		$length + $depth * 2 0%,
+		$length + $depth * 2 10%,
+		calc(100% - #{$length - $depth} * 2) 10%,
+        calc(100% - #{$length - $depth} * 2) 0
+    );
+        
+    &::after, & {
+	    transition: clip-path 0.2s linear;
+    }
+
+    &::after {
+        @include pseudo;
+        background-color: $color;
+        z-index: -1;
+
+        clip-path: polygon(
+            100% 0,
+            calc(100% - #{$inset}) 40%,
+            100% 80%,
+            calc(100% - #{$depth + $length}) 80%,
+            calc(100% - #{$length}) 100%,
+            $length 100%,
+            $depth + $length 80%,
+            0 80%,
+            $inset 40%,
+            0% 0%,
+            $length + $depth * 2 0%,
+            $length + $depth * 2 10%,
+            calc(100% - #{$length - $depth} * 2) 10%,
+            calc(100% - #{$length - $depth} * 2) 0
+        );
+    }
+}
+
+@mixin bannerHoverable($color, $drop, $text) {
+
+	$length: 70px;
+    $depth: 20px;
+
+    @include banner($color, $drop, $text, 70px, 20px);
+
+    &:hover {
+        @include banner($color, $drop, $text, 65px, 15px);
+    }
+
+}
+
+.banner {
+    @include bannerHoverable($alternate-bg, $alternate-bg-darker, $highlight);
+
+    &.highlight {
+        @include bannerHoverable($highlight-dark, $highlight-darker, $alternate-bg-darker)
+    }
+}

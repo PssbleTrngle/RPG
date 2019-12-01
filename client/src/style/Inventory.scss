@@ -1,0 +1,17 @@
+.bag {
+
+    display: flex;
+	flex-direction: row;
+    flex-wrap: wrap;
+
+    $per-row: 6;
+    $size: 400px;
+
+    max-width: $size;
+
+    .stack {
+        margin: 5px ($size / $per-row) * 0.1;
+        max-width: ($size / $per-row) * 0.8;
+    }
+
+}

@@ -1,0 +1,23 @@
+.view-list {
+
+    display: flex;
+    flex-direction: row;
+
+    div {
+        max-width: 100px;
+        margin: 10px;
+
+        p {
+            text-align: center;;
+        }
+    
+    }
+
+}
+
+.search {
+    width: calc(100% - 40px);
+    padding: 5px 20px;
+    margin: 5px 0;
+    font-size: 1rem;
+}

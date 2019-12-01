@@ -3,6 +3,17 @@
     display: grid;
     grid-template:
         "chars buttons buttons"
-        "chars info journey";
+		"chars info journey"
+		/ 4fr 1fr 1fr;
+		
+	column-gap: 15px;
 
+}
+
+@media only screen and (max-width: 800px) {
+	#profile {
+		grid-template:
+	        "buttons buttons info journey"
+	        "greeter chars chars chars";
+	}
 }

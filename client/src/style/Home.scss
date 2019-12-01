@@ -1,0 +1,26 @@
+#home {
+
+    display: grid;
+    grid-template:
+        "evolve skills"
+        "evolve buttons"
+        "evolve ."
+        "position inventory"
+		/ 2fr 1fr;
+
+    .evolve {
+        text-align: center;
+    }
+
+}
+
+@media only screen and (max-width: 800px) {
+	#home {
+		grid-template:
+            "evolve"
+            "buttons"
+            "position"
+            "skills"
+            "inventory"
+	}
+}

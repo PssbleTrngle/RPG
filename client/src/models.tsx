@@ -1,44 +1,87 @@
 export type time = string;
 
-interface Translated {
-	id: string;
+export type ID = string | number;
+
+export interface ITranslated {
+	id: ID;
 	name: string;
 }
 
-export interface Stats {
+export interface Point {
+	x: number;
+	y: number;
+}
+
+export interface IStats {
 	[key: string]: number;
 }
 
-export interface Position {
+export interface IArea extends ITranslated {
+	areas?: IArea[];
+	x: number;
+	y: number;
+}
+
+export interface ISkill extends ITranslated {
+	aoe?: Point[]
+}
+
+export interface IField {
+	id: ID;
+	x: number;
+	y: number;
+}
+
+export interface IPosition {
 	icon: string;
+	area: IArea;
 };
 
-export interface Skill extends Translated {
+export interface IClass extends ITranslated {
 };
 
-export interface Class extends Translated {
-};
-
-export interface Participant {
-	id: number;
+export interface IParticipant {
+	id: ID;
 	name: string;
 	health: number;
 	maxHealth: number;
-	stats: Stats;
-	skills: Skill[];
+	stats: IStats;
+	skills: ISkill[];
 }
 
-export interface Character extends Participant {
+export interface ICharacter extends IParticipant {
 	birth: time;
-	position: Position;
+	position: IPosition;
 	xp: number;
 	requiredXp: number;
-	classes: Class[];
+	level: number;
+	classes: IClass[];
+	evolutions: IClass[];
+	inventory: IStack[];
 }
 
 export interface Account {
-	id: number;
+	id: ID;
 	username: string;
-	selected?: Character;
-	characters: Character[];
+	selected?: ICharacter;
+	characters: ICharacter[];
 };
+
+export interface ISlot extends ITranslated {
+}
+
+export interface IItemType extends ITranslated {
+	ancestors?: IItemType[];
+	icon: boolean;
+}
+
+export interface IItem extends ITranslated {
+	type: IItemType;
+}
+
+export interface IStack {
+	id: ID;
+	item: IItem;
+	amount: number;
+	slot: ISlot;
+}
