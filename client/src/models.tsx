@@ -68,6 +68,7 @@ export interface Account {
 };
 
 export interface ISlot extends ITranslated {
+	size: number;
 }
 
 export interface IItemType extends ITranslated {

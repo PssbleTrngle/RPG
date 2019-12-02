@@ -32,7 +32,7 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends React.Component<
 			});
 	
 		load();
-		if(interval) window.setInterval(load, 1000);
+		if(interval) window.setInterval(load, 1000 * 6);
 	
 	}
 

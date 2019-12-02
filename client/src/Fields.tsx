@@ -2,6 +2,7 @@ import React from 'react';
 import { IField, ISkill, Point, IArea, ID } from './models'
 import { Icon } from './Grid';
 import { LoadingComponent } from "./Connection";
+import { Collapseable, Page } from './Page';
 
 type FieldProps<T extends IField> = {
     onClick?: (f: T) => any,
@@ -172,7 +173,7 @@ class BattleField extends React.Component<{fields: IField[], aoe?: Point[]},{hov
 
 }
 
-export class WorldMap extends LoadingComponent<IArea[], {},{message?: string, selected?: ID}> {
+export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: string, selected?: ID}> {
 
     model() { return 'area' }
     initialState() { return {} }
@@ -213,22 +214,25 @@ export class WorldMap extends LoadingComponent<IArea[], {},{message?: string, se
 
     render() {
         const { message, selected } = this.state;
+        const { page } = this.props;
         const selectedAreas = this.selectedAreas();
 
-        return (<div className='map'>
-            {selected ?
-                <button onClick={() => this.select()} className='back'>Back</button>
-                : null}
-            {message ?
-                <p>{message}</p>
-                : null}
-            {selectedAreas && <Fields
-                fields={selectedAreas}
-                onClick={a => this.select(a)}
-                onHover={a => this.hover(a)}
-                render={a => <Icon src={`position/area/${a.id}`} />}
-            />}
-        </div>);
+        return (
+            <Collapseable page={page} id='map'>
+                {selected ?
+                    <button onClick={() => this.select()} className='back'>Back</button>
+                    : null}
+                {message ?
+                    <p>{message}</p>
+                    : null}
+                {selectedAreas && <Fields
+                    fields={selectedAreas}
+                    onClick={a => this.select(a)}
+                    onHover={a => this.hover(a)}
+                    render={a => <Icon src={`position/area/${a.id}`} />}
+                />}
+            </Collapseable>
+        );
     }
 
 }

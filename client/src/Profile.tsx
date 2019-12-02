@@ -3,6 +3,7 @@ import { Account, ICharacter } from './models';
 import { Link } from "react-router-dom";
 import format from './localization';
 import { Cell, Buttons, Icon } from './Grid';
+import { Page } from "./Page";
 
 const action = (url: string) => {
 
@@ -127,10 +128,10 @@ class Journey extends React.Component<{character: ICharacter},{}> {
 
 }
 
-class Profile extends React.Component<{account: Account},{}> {
+class Profile extends Page {
 	
 	render() {
-		const { account } = this.props;
+		const account = this.props;
 		const { selected, characters } = account;
 
 		return (

@@ -31,4 +31,14 @@
     left: 5px;
   }
 
+  .back {
+    padding: 5px;
+    border: 1px $highlight-dark solid;
+
+    &:hover {
+      background-color: $highlight;
+      border-color: $highlight;
+    }
+  }
+
 }

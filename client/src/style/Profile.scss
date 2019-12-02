@@ -8,12 +8,14 @@
 		
 	column-gap: 15px;
 
-}
-
-@media only screen and (max-width: 800px) {
-	#profile {
+	@media only screen and (max-width: 800px) {
 		grid-template:
-	        "buttons buttons info journey"
-	        "greeter chars chars chars";
+			"buttons buttons"
+			"info journey"
+			"greeter greeter"
+			"chars chars";
+			
+		row-gap: 10px;
 	}
+
 }

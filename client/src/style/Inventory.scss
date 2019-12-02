@@ -1,8 +1,18 @@
+.inventory {
+    display: grid;
+    grid-template: 
+        "loot loot loot loot"
+        "left_hand-icon left_hand right_hand right_hand-icon"
+        "bag bag bag bag"
+        / 1fr 1fr 1fr 1fr;
+}
+
 .bag {
 
     display: flex;
 	flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
 
     $per-row: 6;
     $size: 400px;
@@ -10,8 +20,19 @@
     max-width: $size;
 
     .stack {
-        margin: 5px ($size / $per-row) * 0.1;
-        max-width: ($size / $per-row) * 0.8;
+        $stackSize: ($size / $per-row);
+        margin: 5px $stackSize * 0.1;
+        max-width: $stackSize * 0.8;
+
+        &:not(.info) {
+            @include hoverScale;
+        }
+
+        &.info {
+            @include hexagon;
+            background-color: #0002;
+            padding: $stackSize * 0.4 $stackSize * 0.1;
+        }
     }
 
 }

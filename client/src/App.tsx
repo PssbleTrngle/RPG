@@ -6,7 +6,6 @@ import Profile from './Profile';
 import Home from './Home';
 
 import './style/App.scss';
-import { unwatchFile } from 'fs';
 import { List, View } from './View';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
@@ -72,7 +71,7 @@ class App extends React.Component<{},{account?: Account}> {
 
 					<Switch>
 						<Route path='/profile'>
-							<Profile account={account} />
+							<Profile {...account} />
 						</Route>
 						<Route path='/view/:model/:id?' render={p => {
 							const {id, model} = p.match.params;
@@ -83,7 +82,7 @@ class App extends React.Component<{},{account?: Account}> {
 							return null;
 						}} />
 						<Route path='/'>
-							<Home account={account} />
+							<Home {...account} />
 						</Route>
 					</Switch>
 

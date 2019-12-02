@@ -1,10 +1,11 @@
 import React from 'react';
-import { Account, ICharacter, IClass, IArea } from './models';
+import { Account, ICharacter, IClass, IArea, ISkill } from './models';
 import { Link } from "react-router-dom";
 import format from './localization';
 import { Cell, Buttons, Icon } from './Grid';
 import { WorldMap } from './Fields';
 import { Inventory } from './Inventory';
+import { Page, Collapseable, ToggleButton } from "./Page";
 
 const action = (url: string) => {
 
@@ -33,11 +34,37 @@ class Evolve extends React.Component<{classes: IClass[]},{}> {
 
 }
 
-class Home extends React.Component<{account: Account},{}> {
+interface SkillProps {
+    skill: ISkill;
+}
+class Skills extends React.Component<{page: Page, skills: SkillProps[]},{}> {
+
+    render() {
+        const { skills, page } = this.props;;
+
+        return (
+            <Collapseable hidden={true} id='skills' {...{ page }}>
+                {skills.map(s => {
+                    return <p key={s.skill.id}>{s.skill.name}</p>
+                })}
+            </Collapseable>
+        )
+    }
+
+}
+
+class Home extends Page {
 	
 	render() {
-		const { account } = this.props;
+		const account = this.props;
         const { selected, characters } = account;
+
+        const skills = [
+            {skill: {id: 'test_1', name: 'Test 1'}},
+            {skill: {id: 'test_2', name: 'Test 2'}},
+            {skill: {id: 'test_3', name: 'Test 3'}},
+            {skill: {id: 'test_4', name: 'Test 4'}},
+        ]
         
         if(!selected) return null;
 
@@ -47,19 +74,21 @@ class Home extends React.Component<{account: Account},{}> {
                     <Evolve classes={selected.evolutions} />
                 }
                 <Cell area='position'>
-                    <WorldMap />
+                    <WorldMap page={this} />
                 </Cell>
                 <Cell area='inventory'>
-                    <Inventory {...selected.inventory} />
+                    <Inventory page={this} stacks={selected.inventory} />
                 </Cell>
                 <Cell area='skills'>
+                    <Skills page={this} skills={skills} />
                 </Cell>
 
                 <Buttons>
                     <Link to='/profile'><Icon src={`class/${selected.classes[selected.classes.length-1].id}`} /></Link>
 
-                    <Icon src={'icon/skills'} />
-                    <Icon src={'icon/chest'} />
+                    <ToggleButton id='skills' page={this} />
+                    <ToggleButton id='inventory' src='chest' page={this} />
+                    <ToggleButton id='map' page={this} mobileOnly={true} />
 
                 </Buttons>
 			</div>
