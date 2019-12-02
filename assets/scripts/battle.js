@@ -2,10 +2,8 @@ $(window).ready(function() {
 
 	let charX = parseInt($('#x').val());
 	let charY = parseInt($('#y').val());
-
-	let redraw = function(field) {
-
-		console.log('Redraw');
+	
+	onReload('.battlefield', function(field) {
 
 		field.find('.field').each(function() {
 			let element = $(this);
@@ -27,23 +25,15 @@ $(window).ready(function() {
 				top: totalH / 2 + (size + marg) * y + 'px',
 				left: totalW / 2 + (size + marg * 2) * x + 'px', '--size':
 				size + 'px',
-				display: 'block'
+				display: 'block',
+				'z-index': (20 + y)
 			});
 
 		});
 
-	};
-
-	onLoad('.battlefield', function(element) {
-
-		redraw(element);
-		$(window).resize(function() {
-			redraw(element);
-		});
-
 	});
 
-	onLoad('.participant', function(element) {
+	onLoad('.field', function(element) {
 
 		let x = parseInt(element.attr('data-x'));
 		let y = parseInt(element.attr('data-y'));
@@ -76,6 +66,12 @@ $(window).ready(function() {
 				}
 
 			}
+
+		});
+
+		element.mouseout(function() {
+
+			$('.field').removeClass('hover');
 
 		});
 
@@ -116,16 +112,6 @@ $(window).ready(function() {
 			}
 
 		});
-	});
-
-	onLoad('.field', function(element) {
-
-		element.mouseout(function() {
-
-			$('.field').removeClass('hover');
-
-		});
-
 	});
 	
 });

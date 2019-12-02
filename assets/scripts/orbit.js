@@ -1,5 +1,5 @@
 /*
-	TODO
+	Not needed solved by CSS
 */
 
 let MAX_EFFECTS = 3;

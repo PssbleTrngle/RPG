@@ -39,12 +39,14 @@ $(window).ready(function() {
 		
 		let options = element.closest('.options');
 		let parent = element.attr('data-parent');
+
 		if(parent) parent = $('.option#' + parent);
+
 			
 		if(parent && parent[0] && options[0]) {
 		
 			parent.click(function() {
-				
+
 				options.find('.option').css({'display': 'none'});
 				options.find('.option[data-parent=' + parent.attr('id') + ']').css({'display': 'block'});
 				options.find('.option.back').css({'display': 'block'});
@@ -76,13 +78,6 @@ $(window).ready(function() {
 	});
 
 	onLoad('[data-popup]', function(popup) {
-		window.setTimeout(function() {
-
-			popup.attr('data-max', popup.maxHeight());
-			if(popup.innerHeight())
-				popup.css({ height: popup.attr('data-max') });
-
-		}, 500);
 		
 		let identifier = popup.attr('data-popup');
 		let btn = $(identifier);
@@ -107,6 +102,16 @@ $(window).ready(function() {
 			window.setTimeout(function() { popup.removeClass('moving'); }, 1000);
 
 		});	
+	});
+
+	onReload('[data-popup]', function(popup) {
+		window.setTimeout(function() {
+
+			popup.attr('data-max', popup.maxHeight());
+			if(popup.innerHeight())
+				popup.css({ height: popup.attr('data-max') });
+
+		}, 500);
 	});
 	
 });

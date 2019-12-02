@@ -24,7 +24,7 @@
 
     window.classes = {
 		{% for class in classes %}
-       		{{ class.id }}: {label: '{{ class.name() }}', from: 
+       		{{ class.id }}: {label: '{{ class.name() }}', {% if icons %}image: '/{{ class|icon(true) }}', {% endif %}from: 
        		[{% for from in class.evolvesFrom %}
        			{{ from.id }},
        		{% endfor %}]},

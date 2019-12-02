@@ -72,6 +72,10 @@
 	text-align: center;
 }
 
+.profile-right {
+	width: 460px;
+}
+
 .profile-icon {
 	
 	cursor: pointer;
@@ -93,9 +97,9 @@
 	
 }
 
-.dungeon-btn {
-	width: 100px;
-	height: 100px;
+.big-btn {
+	width: 120px;
+	height: 120px;
 }
 
 .learnable-skills {
@@ -196,4 +200,10 @@
 	padding: 5px 0;
 	height: 50px;
 	max-width: 500px;
+}
+
+.greeter {
+
+	width: 150px;
+
 }

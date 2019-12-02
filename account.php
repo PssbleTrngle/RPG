@@ -12,21 +12,29 @@
 
 	function getAccount() {
 		global $ACCOUNT;
+		global $static_account;
 
 		if(!is_null($ACCOUNT)) return $ACCOUNT;
+
+	    if($static_account) {
+	    	$account = Account::find($static_account);
+	    	if($account) return $account;
+	    }
 
 	    if (isset($_SESSION['account'])) {
 
 	    	$account = Account::where('id', $_SESSION['account'])->first();
+
 			if($account->selected) {
 				Stack::tidy($account->selected);
-				$account->selected->validate();	
+				$account->validate();	
 			}
 
 			$ACCOUNT = $account;
 			return $ACCOUNT;
 
 	    }
+
 	    return null;
 	}
 

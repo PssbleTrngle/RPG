@@ -109,7 +109,6 @@
 
 .participant-icon {
 	position: relative;
-	z-index: 1;
 }
 
 .orbit {
@@ -141,6 +140,8 @@
 	width: 100%;
 	opacity: 0.2;
 	background-color: #87ddff;
+
+	-webkit-clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
 	clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
 }
 
@@ -180,33 +181,22 @@
 }
 
 .charges::after {
+	-webkit-clip-path: polygon(100% 0%, 100% 100%, 0 100%, 20% 50%, 0 0);
 	clip-path: polygon(100% 0%, 100% 100%, 0 100%, 20% 50%, 0 0);
 }
 
 .charges::before {
+	-webkit-clip-path: polygon(80% 0%, 100% 50%, 80% 100%, 0 100%, 0 0);
 	clip-path: polygon(80% 0%, 100% 50%, 80% 100%, 0 100%, 0 0);
 }
 
 .charge {
 
 	width: 40px;
+	-webkit-clip-path: polygon(85% 0%, 100% 50%, 85% 100%, 0 100%, 15% 50%, 0 0);
 	clip-path: polygon(85% 0%, 100% 50%, 85% 100%, 0 100%, 15% 50%, 0 0);
 
 }
-
-/*
-.charge:first-child {
-	clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0 100%, 0 0);
-}
-
-.charge:last-child {
-	clip-path: polygon(100% 0%, 100% 100%, 0 100%, 10% 50%, 0 0);
-}
-
-.charge:last-child:first-child {
-	clip-path: none;
-}
-*/
 
 .battle-inventory .slot {
 	--size: 50px;
@@ -256,7 +246,7 @@
 
 }
 
-.field > * {
+.participant > * {
 	position: absolute;
 	pointer-events: none;
 }
@@ -266,10 +256,12 @@
 
 	background-color: var(--bg);
 
+	position: absolute;
 	width: 100%;
 	height: 80%;
 	top: 30%;
 
+	-webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 	
 }
@@ -280,10 +272,11 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	z-index: 1;
+	z-index: 0;
 
 	background-color: #0007;
 	
+	-webkit-clip-path: polygon(50% calc(100% - var(--h)), 100% calc(75% - var(--h)), 100% 75%, 50% 100%, 0% 75%, 0% calc(75% - var(--h)));
 	clip-path: polygon(50% calc(100% - var(--h)), 100% calc(75% - var(--h)), 100% 75%, 50% 100%, 0% 75%, 0% calc(75% - var(--h)));
 
 }

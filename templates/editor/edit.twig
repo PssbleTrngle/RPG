@@ -80,7 +80,7 @@
 			<h2>{{ object.name() }}</h2>
 			<small class='description'>{{ object.description() }}</small>
 
-			<div class='edit-icon'>{{ object|icon|raw }}</div>
+			<div class='edit-icon optional'>{{ object|icon|raw }}</div>
 
 			<div class='row mb-2 mt-4 relations'>
 				{% for attribute, value in object.attributes %}

@@ -75,21 +75,21 @@
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
 	    */
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null) {
-			return createIcon($path, $color);
+	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null, $srcOnly = false) {
+			return createIcon($path, $color, $srcOnly);
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object) {
+	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object, $srcOnly = false) {
 
 	    	if(method_exists($object, 'icon')) {
 	    		if(method_exists($object, 'color')) {
 	    			$color = $object->color();
-	    			if($color) return createIcon($object->icon(), $color);
+	    			if($color) return createIcon($object->icon(), $color, $srcOnly);
 	    		} 
-	    		return createIcon($object->icon());
+	    		return createIcon($object->icon(), null, $srcOnly);
 	    	}
 			
-			return createIcon();
+			return createIcon(null, null, $srcOnly);
 
 	    }));
 
@@ -139,6 +139,27 @@
 		
 	})->add(new NeedsAuthentication($container['view'], 'user'));
 
+	/* Can be used by other websites to request icons */
+	$app->get('/icon/{icon:[a-zA-Z/]*}', function(Request $request, Response $response, array $args) {
+
+		$icon = $args['icon'] ?? null;
+
+		$url = createIcon($icon, null, true);
+		$icon = file_get_contents($url);
+
+		if(pathinfo($url, PATHINFO_EXTENSION) == 'svg') {
+			$response->write($icon);
+		}
+
+		else {
+			$response->write($icon);
+			$response = $response->withHeader('Content-Type', 'image/'.pathinfo($url, PATHINFO_EXTENSION));
+		}
+
+	    return $response;
+		
+	});
+
 	/* A functioning, but no yet used map screen */
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
@@ -163,7 +184,7 @@
 
 		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
 	
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+	})->add(new NeedsAuthentication($container['view'], 'create_chars'));
 
 	/*
 		Used by 'actions.php' to register to user input actions.

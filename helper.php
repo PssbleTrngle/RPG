@@ -24,7 +24,8 @@
 	    return $returnValue;
 	}
 
-	function createIcon($path = null, $color = null) {
+	function createIcon($path = null, $color = null, $srcOnly = false) {
+		global $prefer_svg;
 		
 		if($path) {
 			$path = strtolower(str_replace(' ', '_', $path));
@@ -39,9 +40,13 @@
 				
 				if(!empty($all)) $img = $dir.'/'.$all[array_rand($all)];
 				
+			} else {
+
+				if(file_exists("assets/img/$path.png")) $img = $path.'.png';
+				if(file_exists("assets/img/$path.svg") && ($prefer_svg || !isset($img))) $img = $path.'.svg';
+
 			}
-			else if(file_exists("assets/img/$path.svg")) $img = $path.'.svg';
-			else if(file_exists("assets/img/$path.png")) $img = $path.'.png';
+
 		}
 
 		$title = '';
@@ -52,9 +57,10 @@
 
         $html = "<div title='$title' class='icon-container'>";
 		
-		$img = '/assets/img/'.$img;
+		$img = 'assets/img/'.$img;
+		if($srcOnly) return $img;
 
-        $icon = "<img class='icon' src='$img'></img>";
+        $icon = "<img class='icon' src='/$img'></img>";
         $html .= $icon;
 
 		if($color) {

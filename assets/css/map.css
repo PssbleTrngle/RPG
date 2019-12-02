@@ -72,6 +72,7 @@
 	top: 0;
 
 	/* border-radius: 100%; */
+	-webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 	background-color: var(--highlight);
 
@@ -138,8 +139,8 @@
 	--left: 15%;
 	--width: 15px;
 
-	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
 	-webkit-clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
+	clip-path: polygon(calc(var(--left) + var(--width)) 0%, calc(100% - var(--right) - var(--width)) 0%, calc(100% - var(--right)) var(--top), 100% var(--top), 100% 100%, 0 100%, 0 var(--top), var(--left) var(--top));
 	
 	padding: 7px 0;
 	color: #FFF;
