@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Isometric v2.5.4 (isometricapp.com) -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Isometric" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="512px" height="512px">
-<path class="right" fill="rgb(43.8%,43.8%,43.8%)" d=" M258.444 413.812 258.444 503.918 297.462 481.392 297.462 391.285 Z"/>
-<path class="top" fill="rgb(80.0%,80.0%,80.0%)" d=" M180.410 53.385 258.444 98.439 336.479 53.385 258.444 8.332 Z"/>
-<path class="right" fill="rgb(50.0%,50.0%,50.0%)" d=" M258.444 98.439 258.444 413.812 336.479 368.759 336.479 53.385 Z"/>
-<path class="left" fill="rgb(10.0%,10.0%,10.0%)" d=" M180.410 53.385 180.410 368.759 219.427 391.285 219.427 481.392 258.444 503.918 258.444 98.439 Z"/>
-</svg>
