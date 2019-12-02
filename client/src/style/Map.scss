@@ -1,0 +1,34 @@
+@keyframes zoom {
+  from {
+    transform: translate(0,0);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.map {
+
+  position: relative;
+  height: 300px;
+  background-color: #0003;
+  border: 3px $highlight-dark solid;
+
+  .field {
+    animation: zoom 0.2s linear; 
+  }
+
+  p {
+    text-align: center;
+    width: 100%;
+  }
+
+  .back, p {
+    z-index: 200;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+
+}

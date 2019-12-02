@@ -1,0 +1,75 @@
+.inventory {
+	--size: 65px;
+	text-align: center;
+}
+
+.slot, .slot-icon, .slot-text {
+	vertical-align: top;
+	display: inline-block;
+	margin: 0 5px;
+	width: var(--size);	
+	text-align: center;
+}
+
+.slot-text {
+	
+	font-size: 15px;
+	padding: calc(var(--size) / 2 - 5px) 0;
+	background-color: #0001;
+	
+	-webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+	clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+
+}
+
+.slot, .slot > a {
+	cursor: pointer;
+}
+
+.slot {
+	font-size: 10px;
+	transition: transform 0.2s linear;	
+}
+
+.slot-icon > div {
+	width: 80%;
+	margin: 10%;
+}
+
+.inventory.loot > .slot {
+
+	/* background-color: var(--highlight); */
+	filter: drop-shadow(0 0 4px var(--highlight)) drop-shadow(0 0 4px var(--highlight)) drop-shadow(0 0 4px var(--highlight));
+	
+}
+
+.slot > div {
+	margin-top: 10%;
+	margin-left: 10%;
+	width: 80%;
+	margin-bottom: 8px;
+}
+
+.slot > p:last-child {
+	margin-bottom: 10px;
+}
+
+.slot:hover, .slot.selected {
+	transform: scale(1.15, 1.15);
+}
+
+.info-popup {
+	display: none;
+}
+
+.info-popup.active {
+	display: block;
+}
+
+.description {
+	font-style: italic;
+}
+
+.description::before, .description::after {
+	content: '"';
+}

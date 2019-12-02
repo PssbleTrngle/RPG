@@ -196,6 +196,8 @@
 	include_once 'editor.php';
 	include_once 'account.php';
 
+	include_once 'api.php';
+
 	$container['notFoundHandler'] = function ($container) {
 	    return function (Request $request, Response $response) use ($container) {
 	        return $container->view->render($response->withStatus(404), 'handlers/404.twig');

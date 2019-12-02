@@ -1,0 +1,21 @@
+.buttons {
+    display: grid;
+    grid-template:
+        "big small small"
+        "big small small"
+        / 2fr 1fr 1fr;
+
+    grid-auto-flow: column;
+
+    padding: 5px;
+
+    *:first-child {
+        grid-area: big;
+    }
+
+    @media only screen and (max-width: 800px) {
+        grid-template: 
+            "big small small small small";
+    }
+
+}
