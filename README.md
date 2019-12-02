@@ -1,5 +1,4 @@
-<span style='line-height: 0; font-size: 80px; margin-right: 30px;' >RPG</span>
-<a href='http://rpg.somethingcatchy.net/'><img src=https://rpg.somethingcatchy.net/assets/img/icon.svg height='80px' /></a>
+# <span style='line-height: 0; font-size: 80px; margin-right: 30px;' >RPG</span><a href='http://rpg.somethingcatchy.net/'><img src=https://rpg.somethingcatchy.net/assets/img/icon.svg height='80px' /></a>
 ### Random Players Grinding
 
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/users)
