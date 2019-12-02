@@ -23,5 +23,5 @@ json {
 
     evolutions g.render(template: '/clazz/clazz', collection: Clazz.list().subList(0, 3))
 
-    inventory g.render(template: 'stack', collection: character.getInventory())
+    inventory g.render(template: 'stack', collection: character.getInventory().sort({ it.getId() }))
 }

@@ -7,4 +7,6 @@ model {
     Slot slot
 }
 
-json {}
+json {
+    size slot.getSpace()
+}

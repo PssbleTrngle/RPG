@@ -28,8 +28,6 @@ class Character extends Participant {
         race nullable: true /* TODO remove */
     }
 
-    static mapping = {
-        sort: 'dateCreated'
-    }
+    static mapping = {}
 
 }

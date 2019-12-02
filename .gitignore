@@ -5,7 +5,5 @@ phpmyadmin/
 */config.php
 config.php
 
-*.hxl
-
 .idea/
 *.code-workspace
