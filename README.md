@@ -1,5 +1,7 @@
-<a href='http://rpg.somethingcatchy.net/'>![](http://rpg.somethingcatchy.net/assets/img/icon_github.png)</a>
-# RPG
+<span style='line-height: 0; font-size: 80px; margin-right: 30px;' >RPG</span>
+<a href='http://rpg.somethingcatchy.net/'><img src=https://rpg.somethingcatchy.net/assets/img/icon.svg height='80px' /></a>
+### Random Players Grinding
+
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/users)
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/characters)
 
@@ -16,6 +18,7 @@
 1. Clone
 2. Import rpg.sql
 3. Run `composer install`
+4. Enjoy
 
 ---
 
