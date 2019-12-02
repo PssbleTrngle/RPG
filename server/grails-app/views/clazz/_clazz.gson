@@ -1,0 +1,10 @@
+import rpg.Clazz
+import rpg.Position
+inherits template: '/translated', model: [model: clazz]
+
+model {
+	Clazz clazz
+}
+
+json {
+}

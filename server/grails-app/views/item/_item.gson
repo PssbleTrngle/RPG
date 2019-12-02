@@ -1,0 +1,13 @@
+import rpg.Item
+inherits template: '/translated', model: [model: item]
+
+model {
+    Item item
+}
+
+json {
+    type g.render(item.getType())
+    stackable item.getType().isStackable()
+    if(item.getRarity()) rarity g.render(item.getRarity())
+    if(item.getStats()) stats g.render(item.getStats())
+}

@@ -1,0 +1,15 @@
+import rpg.Account
+import rpg.ItemType
+
+model {
+	Account account
+}
+
+json {
+    if (account) {
+        id account.getId()
+        name account.getName()
+        if (account.getSelected()) selected g.render(template: 'char', model: [character: account.getSelected()])
+        characters g.render(template: 'char', var: 'character', collection: account.getCharacters())
+    }
+}

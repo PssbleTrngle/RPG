@@ -1,0 +1,12 @@
+import rpg.Translated
+
+model {
+    Translated model
+}
+
+json {
+    if (model instanceof Translated) {
+        id model.getId()
+        name model.getId().capitalize().replaceAll(/[-_](.)/, { _, String letter -> ' ' + letter.toUpperCase() })
+    }
+}

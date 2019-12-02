@@ -1,0 +1,12 @@
+import rpg.Area
+import rpg.ItemType
+inherits template: '/translated', model: [model: itemType]
+
+model {
+    ItemType itemType
+}
+
+json {
+    if(itemType.getParent()) ancestors g.render(template: 'itemtype', var: 'itemType', collection: itemType.ancestors())
+    icon itemType.isHasIcon()
+}
