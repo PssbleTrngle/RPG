@@ -3,6 +3,7 @@
 
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/users)
 ![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/characters)
+![](https://img.shields.io/github/issues/PssbleTrngle/RPG)
 
 ---
 
