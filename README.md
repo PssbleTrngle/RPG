@@ -27,8 +27,6 @@ As a variety of features are not implemented yet,
 playing the actual game is still confusing, because there
 are no guiding elements.
 
----
-
 #### What you are able to do:
  - Click on your character to view your profile page and switch characters
  - Evolve your character into a higher class if the level is high enough
