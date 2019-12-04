@@ -1,22 +1,21 @@
 import React from 'react';
 import { Account, ICharacter, IClass, IArea, ISkill } from './models';
 import { Link } from "react-router-dom";
-import Translator from './localization';
 import { Cell, Buttons, Icon } from './Grid';
 import { WorldMap } from './Fields';
 import { Inventory } from './Inventory';
 import { Page, Collapseable, ToggleButton } from "./Page";
-const { format } = Translator;
+import { Component } from './App';
 
-class Evolve extends React.Component<{classes: IClass[]},{}> {
+class Evolve extends Component<{classes: IClass[]},{}> {
 
-    render() {
+    template() {
         const { classes } = this.props;
         return (
             <Cell className='evolve' area='evolve'>
 
-                <p>{ format('message.evolve_1') }</p>
-                <h3>{ format('message.evolve_2') }</h3>
+                <p>{ this.format('message.evolve_1') }</p>
+                <h3>{ this.format('message.evolve_2') }</h3>
 
                 <div className='character-row'>
                     {classes.map(clazz =>
@@ -34,9 +33,9 @@ class Evolve extends React.Component<{classes: IClass[]},{}> {
 interface SkillProps {
     skill: ISkill;
 }
-class Skills extends React.Component<{page: Page, skills: SkillProps[]},{}> {
+class Skills extends Component<{page: Page, skills: SkillProps[]},{}> {
 
-    render() {
+    template() {
         const { skills, page } = this.props;;
 
         return (
@@ -52,7 +51,7 @@ class Skills extends React.Component<{page: Page, skills: SkillProps[]},{}> {
 
 class Home extends Page {
 	
-	render() {
+	template() {
 		const { account } = this.props;
         const { selected, characters } = account;
 

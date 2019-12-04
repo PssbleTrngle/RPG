@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export class Cell extends React.Component<{area?: any, className?: string},{}> {
+export class Cell extends Component<{area?: any, className?: string},{}> {
 
-	render() {
+	template() {
 		const { area, children, className } = this.props;
 
 		return (
@@ -11,9 +11,9 @@ export class Cell extends React.Component<{area?: any, className?: string},{}> {
 	}
 }
 
-export class Buttons extends React.Component<{},{}> {
+export class Buttons extends Component<{},{}> {
 
-	render() {
+	template() {
         const { children } = this.props;
 
 		return (
@@ -25,9 +25,9 @@ export class Buttons extends React.Component<{},{}> {
 
 }
 
-export class Icon extends React.Component<{src: string, reverse?: boolean, className?: string},{}> {
+export class Icon extends Component<{src: string, reverse?: boolean, className?: string},{}> {
 
-	render() {
+	template() {
 		const { src, reverse, className } = this.props;
 
 		let icon: any;

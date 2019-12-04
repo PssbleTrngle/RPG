@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import { BrowserRouter as Router, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
-import { Account, Point, ICharacter } from './models';
+import { Account, Point, ICharacter, ID } from './models';
 
 import Profile from './Profile';
 import Home from './Home';
@@ -9,13 +9,8 @@ import './style/App.scss';
 import { List, View } from './View';
 import Translator from './localization';
 import { LoadingComponent } from './Connection';
-import { Page } from './Page';
 import { Battle } from './Fields';
-
-export interface IApp {
-	page: Page,
-	action: (action: string, params?: {[key: string]: string}) => void,
-}
+import { format } from 'path';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
 
@@ -35,7 +30,7 @@ class BG extends React.Component<{},{current: Point, initial: Point}> {
 		});
 	}
 
-	render() {
+	template() {
 		const { current, initial } = this.state;
 		const x = current.x - initial.x;
 		const y = current.y - initial.y;
@@ -49,7 +44,7 @@ class BG extends React.Component<{},{current: Point, initial: Point}> {
 
 }
 
-class App extends LoadingComponent<Account, {},{lang?: string}> {
+class App extends LoadingComponent<Account, {},{lang?: string}> implements AppProps {
 
 	initialState() { return {} };
 	model() {return ''; }
@@ -83,6 +78,8 @@ class App extends LoadingComponent<Account, {},{lang?: string}> {
 		}
 	}
 
+	format = Translator.format;
+
 	apiView(params: any) {
 		const {id, model} = params;
 		if(model) {
@@ -92,7 +89,7 @@ class App extends LoadingComponent<Account, {},{lang?: string}> {
 		return null;
 	}
 
-	render() {
+	template() {
 		const { result: account } = this.state;
 		const battle = account && account.selected && account.selected.battle;
 		const inBattle = (c?: ICharacter) => c && c.battle;
@@ -127,6 +124,52 @@ class App extends LoadingComponent<Account, {},{lang?: string}> {
 
 			</Router>
 		);
+	}
+
+}
+
+type params = {[key: string]: string};
+export interface AppProps {
+	action: (url: string, params?: params) => void,
+	format: (key: string | {id: ID}, ...params: string[]) => string,
+}
+
+export abstract class Component<P,S, SS = {}> extends React.Component<{app?: AppProps} & P,S, SS> implements AppProps {
+
+	action(url: string, params?: params) {
+		const { app } = this.props;
+		if(app) app.action(url, params);
+	}
+	
+	format(key: string | {id: ID}, ...params: string[]): string {
+		const { app } = this.props;
+		if(app) return app.format(key, ...params);
+		return 'NO APP';
+	}
+
+	abstract template(): ReactNode;
+
+	private assignProps(node: any) {
+		const { app } = this.props;
+
+		if(!app) return 'NO APP';
+
+		if(typeof node === 'object') {
+			const { type, props } = node;
+
+			return <node.type {...props} {...{ app }}>
+				{React.Children.map(props.children, child => this.assignProps(child) )}
+			</node.type>
+		}
+
+		return node;
+	}
+
+	render() {
+		const rendered = this.template();
+		const { children, app } = this.props;
+
+		return this.assignProps(rendered);
 	}
 
 }

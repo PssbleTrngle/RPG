@@ -2,19 +2,14 @@ import React from 'react';
 import AnimateHeight from 'react-animate-height';
 import { Account } from './models';
 import { Icon } from './Grid';
-import App, { IApp } from './App';
+import App, { Component, AppProps } from './App';
 
 type collapseable = string;
-export abstract class Page extends React.Component<{account: Account, app: App}, {collapsed: Set<collapseable>}> {
+export abstract class Page extends Component<{account: Account, app: AppProps}, {collapsed: Set<collapseable>}> {
 
     constructor(props: any) {
         super(props);
         this.state = {collapsed: new Set<collapseable>()};
-    }
-
-    app(): IApp {
-        const { app } = this.props;
-        return {action: app.action, page: this};
     }
 
     toggle(id: collapseable) {
@@ -34,9 +29,9 @@ export abstract class Page extends React.Component<{account: Account, app: App},
 
 }
 
-export class Collapseable extends React.Component<{hidden?: boolean, id: string, className?: string, page?: Page},{}> {
+export class Collapseable extends Component<{hidden?: boolean, id: string, className?: string, page?: Page},{}> {
 
-    render() {
+    template() {
         const { page, id, children, className, hidden } = this.props;
         const toggled = page && page.collapsed(id) !== (hidden || false);
 
@@ -52,9 +47,9 @@ export class Collapseable extends React.Component<{hidden?: boolean, id: string,
 
 }
 
-export class ToggleButton extends React.Component<{page:Page, id: string, src?: string, mobileOnly?: boolean},{}> {
+export class ToggleButton extends Component<{page:Page, id: string, src?: string, mobileOnly?: boolean},{}> {
 
-    render() {
+    template() {
         const { id, mobileOnly, src, page } = this.props;
 
         return (

@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { any } from 'prop-types';
 import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
-import App from './App';
+import App, { Component } from './App';
 
-export abstract class LoadingComponent<T, PROPS, STATE> extends React.Component<PROPS,{result?: T} & STATE> {
+export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,{result?: T} & STATE> {
 
 	abstract model(): string;
 	id(): string | undefined {

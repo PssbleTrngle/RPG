@@ -1,17 +1,14 @@
 import React from 'react';
 import { Account, ICharacter } from './models';
 import { Link } from "react-router-dom";
-import Translator from './localization';
 import { Cell, Buttons, Icon } from './Grid';
 import { Page } from './Page';
-import { IApp } from './App';
+import { Component } from './App';
 
-const { format } = Translator;
+class CharacterRow extends Component<{characters: ICharacter[], selected?: ICharacter},{}> {
 
-class CharacterRow extends React.Component<{characters: ICharacter[], selected?: ICharacter} & IApp,{}> {
-
-	render() {
-		const { characters, selected, action } = this.props;
+	template() {
+		const { characters, selected } = this.props;
 
 		return (
 			<div className='character-row'>
@@ -21,7 +18,7 @@ class CharacterRow extends React.Component<{characters: ICharacter[], selected?:
 						<div 
 							key={character.id}
 							className={`character-panel ${selected && selected.id === character.id && 'selected'}`}
-							onClick={() => action(`character/select/${character.id}`)}>
+							onClick={() => this.action(`character/select/${character.id}`)}>
 							<h4>{ character.name }</h4>
 							<small>
 								<p>{ last.name }</p>
@@ -38,9 +35,9 @@ class CharacterRow extends React.Component<{characters: ICharacter[], selected?:
 
 }
 
-class Greeter extends React.Component<{icon: string, message: string},{}> {
+class Greeter extends Component<{icon: string, message: string},{}> {
 
-	render() {
+	template() {
 		const { icon, message } = this.props;
 
 		return (
@@ -62,9 +59,9 @@ class Greeter extends React.Component<{icon: string, message: string},{}> {
 
 }
 
-class Bar extends React.Component<{amount: number, type?: string},{}> {
+class Bar extends Component<{amount: number, type?: string},{}> {
 
-	render() {
+	template() {
 		const { type, amount } = this.props;
 
 		const width = 100 * amount + '%';
@@ -77,9 +74,9 @@ class Bar extends React.Component<{amount: number, type?: string},{}> {
 	}
 }
 
-class SelectedInfo extends React.Component<{selected: ICharacter},{}> {
+class SelectedInfo extends Component<{selected: ICharacter},{}> {
 
-	render() {
+	template() {
 		const { selected } = this.props;
 
 		return (
@@ -108,19 +105,19 @@ class SelectedInfo extends React.Component<{selected: ICharacter},{}> {
 
 }
 
-class Journey extends React.Component<{character: ICharacter},{}> {
+class Journey extends Component<{character: ICharacter},{}> {
 
-	render() {
+	template() {
 		const { character } = this.props;
 
 		return (
 			<div className='journey'>
 				<h2>Your Journey</h2>
-				<p>{ format('journey.start')}</p>
+				<p>{ this.format('journey.start')}</p>
 				{character.classes.map(clazz => 
 					<p key={clazz.id}>{clazz.name}</p>
 				)}
-				<p>{ format('journey.end')}</p>
+				<p>{ this.format('journey.end')}</p>
 			</div>
 		)
 	}
@@ -129,18 +126,18 @@ class Journey extends React.Component<{character: ICharacter},{}> {
 
 class Profile extends Page {
 	
-	render() {
+	template() {
 		const { account } = this.props;
 		const { selected, characters } = account;
 
 		return (
 			<>
-			<h1 className='banner highlight'>{ format('message.welcome', account.username)}</h1>
+			<h1 className='banner highlight'>{ this.format('message.welcome', account.username)}</h1>
 			<div id='profile'>
 
 				<Cell area='chars'>
-					<CharacterRow {...this.app()} {...{ selected, characters }} />
-					{characters.length === 0 && <Greeter icon={'class/death'} message={format('message.new_account')} />}
+					<CharacterRow {...{ selected, characters }} />
+					{characters.length === 0 && <Greeter icon={'class/death'} message={this.format('message.new_account')} />}
 				</Cell>
 
 				<Buttons>
@@ -169,7 +166,7 @@ class Profile extends Page {
 							<div
 								key={lang}
 								className='lang'
-								onClick={() => this.app().action(`language/${lang}`)}>
+								onClick={() => this.action(`language/${lang}`)}>
 								{lang.toLowerCase()}
 							</div>
 						)}
@@ -186,9 +183,9 @@ class Profile extends Page {
 
 }
 
-export class Popup extends React.Component<{},{}> {
+export class Popup extends Component<{},{}> {
 
-	render() {
+	template() {
 		const { children } = this.props;
 
 		return (

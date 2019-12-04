@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { IField, ISkill, Point, IArea, ID, ICharacter, IBattle } from './models'
 import { Icon } from './Grid';
 import { LoadingComponent } from "./Connection";
@@ -10,9 +10,9 @@ type FieldProps<T extends IField> = {
     onHover?: (f?: T) => any,
     className?: (f: T) => any,
 }
-class Field<T extends IField> extends React.Component<FieldProps<T> & { field: T, size: number }, {}> {
+class Field<T extends IField> extends Component<FieldProps<T> & { field: T, size: number }, {}> {
 
-    render() {
+    template() {
         const { field, size, onClick, render, onHover, className } = this.props;
         const { x, y } = field;
         const left = (x + y / 2) * 110;
@@ -38,7 +38,7 @@ class Field<T extends IField> extends React.Component<FieldProps<T> & { field: T
 
 }
 
-export class Fields<T extends IField> extends React.Component<{fields: T[]} & FieldProps<T>,{width: number, height: number}> {
+export class Fields<T extends IField> extends Component<{fields: T[]} & FieldProps<T>,{width: number, height: number}> {
 
     element: HTMLElement | null = null;
 
@@ -60,7 +60,7 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
         }
     }
 
-    render() {
+    template() {
         const { fields, onClick, render, onHover, className } = this.props;
         const { height, width } = this.state;
 
@@ -83,9 +83,9 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
     }
 }
 
-class BattleWrapper extends React.Component<{character: ICharacter},{skill?: ISkill}> {
+class BattleWrapper extends Component<{character: ICharacter},{skill?: ISkill}> {
 
-    render() {
+    template() {
         const { character } = this.props;
         const { battle } = character;
         if(!battle) return null;
@@ -111,7 +111,7 @@ class BattleWrapper extends React.Component<{character: ICharacter},{skill?: ISk
 
 export class Battle extends Page {
 
-    render() {
+    template() {
         const { account } = this.props;
         const { selected } = account;
         if(!selected) return null;
@@ -122,9 +122,9 @@ export class Battle extends Page {
 
 }
 
-class Sidebar extends React.Component<{skills: ISkill[], select: ((skill: ISkill) => any)}> {
+class Sidebar extends Component<{skills: ISkill[], select: ((skill: ISkill) => any)}> {
 
-    render() {
+    template() {
         const { skills, select } = this.props;
 
         return (
@@ -141,7 +141,7 @@ class Sidebar extends React.Component<{skills: ISkill[], select: ((skill: ISkill
 
 }
 
-class BattleField extends React.Component<{fields: IField[], aoe?: Point[]},{hover?: Point}> {
+class BattleField extends Component<{fields: IField[], aoe?: Point[]},{hover?: Point}> {
 
     constructor(props: any) {
         super(props);
@@ -167,7 +167,7 @@ class BattleField extends React.Component<{fields: IField[], aoe?: Point[]},{hov
         return false;
     }
 
-    render() {
+    template() {
         let { fields, aoe } = this.props;
         const { hover } = this.state;
 
@@ -222,7 +222,7 @@ export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: 
         return areas.filter(a => a.areas);
     }
 
-    render() {
+    template() {
         const { message, selected } = this.state;
         const { page } = this.props;
         const selectedAreas = this.selectedAreas();

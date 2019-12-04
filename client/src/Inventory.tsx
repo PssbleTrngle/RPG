@@ -4,15 +4,15 @@ import { Icon, Cell } from './Grid';
 import { LoadingComponent } from './Connection';
 import { JSXElement } from '@babel/types';
 import { Collapseable, Page } from './Page';
-import { IApp } from './App';
+import { IApp, Component } from './App';
 
 enum StackState {
     LOCKED = 'locked',
     EMPTY = 'empty',
 }
-export class InfoStack extends React.Component<{state: StackState},{}> {
+export class InfoStack extends Component<{state: StackState},{}> {
 
-    render() {
+    template() {
         const {state } = this.props;
         return (
             <div className={`stack info ${state}`}>
@@ -23,9 +23,9 @@ export class InfoStack extends React.Component<{state: StackState},{}> {
 
 }
 
-export class Stack extends React.Component<IStack,{}> {
+export class Stack extends Component<IStack,{}> {
 
-    render() {
+    template() {
         const { item, amount } = this.props;
         const { type } = item
         const { ancestors } = type;
@@ -44,9 +44,9 @@ export class Stack extends React.Component<IStack,{}> {
 
 }
 
-export class Bag extends React.Component<{stacks: IStack[], slot?: ISlot},{}> {
+export class Bag extends Component<{stacks: IStack[], slot?: ISlot},{}> {
 
-    render() {
+    template() {
         const { stacks, slot } = this.props;
         const singleton = slot && slot.size === 1;
         const empty = stacks.length === 0;
@@ -94,7 +94,7 @@ export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[], app:
         return <Bag key={slot.id} {...{stacks, slot}} />
     }
 
-    render() {
+    template() {
         const { result: slots } = this.state;
         const { app } = this.props;
 

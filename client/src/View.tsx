@@ -3,13 +3,14 @@ import { LoadingComponent } from "./Connection";
 import { ITranslated } from './models';
 import { Icon } from './Grid';
 import { Link } from 'react-router-dom';
+import { Component } from './App';
 
 type SeachProps<T> = {
     change?: (result: string) => any,
     filter: (t: T, search: string) => boolean,
     parent: React.Component<any,{filtered?: T[], result?: T[]}>
 };
-export class Searchbar<T> extends React.Component<SeachProps<T>,{value?: string}> {
+export class Searchbar<T> extends Component<SeachProps<T>,{value?: string}> {
 
     element: HTMLElement | null = null;
 
@@ -45,7 +46,7 @@ export class Searchbar<T> extends React.Component<SeachProps<T>,{value?: string}
         this.setState({ value })
     }
 
-    render() {
+    template() {
         const { value } = this.state;
 
         return <input
@@ -66,7 +67,7 @@ export class List<T extends ITranslated> extends LoadingComponent<T[], {model: s
     model() { return this.props.model }
     initialState() { return {} }
 
-    render() {
+    template() {
         const { model } = this.props;
         const { result, filtered } = this.state;
         const models = filtered || result;
@@ -97,7 +98,7 @@ export class View<T extends ITranslated> extends LoadingComponent<T, {model: str
     model() { return this.props.model }
     initialState() { return {} }
 
-    render() {
+    template() {
         const { model } = this.props;
         const { result } = this.state;
 
