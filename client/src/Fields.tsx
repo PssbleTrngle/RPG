@@ -1,5 +1,5 @@
 import React from 'react';
-import { IField, ISkill, Point, IArea, ID } from './models'
+import { IField, ISkill, Point, IArea, ID, ICharacter, IBattle } from './models'
 import { Icon } from './Grid';
 import { LoadingComponent } from "./Connection";
 import { Collapseable, Page } from './Page';
@@ -83,15 +83,14 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
     }
 }
 
-class Battle extends React.Component<{fields: IField[]},{skill?: ISkill}> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = {};
-    }
+class BattleWrapper extends React.Component<{character: ICharacter},{skill?: ISkill}> {
 
     render() {
-        const { fields } = this.props;
+        const { character } = this.props;
+        const { battle } = character;
+        if(!battle) return null;
+
+        const { fields} = battle;
         const { skill } = this.state;
 
         const skills: ISkill[] = [
@@ -102,12 +101,23 @@ class Battle extends React.Component<{fields: IField[]},{skill?: ISkill}> {
 
         const aoe = skill ? skill.aoe : undefined;
 
-        const props = { fields, aoe };
-
         return (<div id='battle'>
-            <BattleField {...props} />
+            <BattleField {...{ fields, aoe }} />
             <Sidebar select={skill => this.setState({ skill })} skills={skills} />
         </div>);
+    }
+
+}
+
+export class Battle extends Page {
+
+    render() {
+        const { account } = this.props;
+        const { selected } = account;
+        if(!selected) return null;
+        
+        return <BattleWrapper character={selected} />
+
     }
 
 }
@@ -202,14 +212,14 @@ export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: 
     }
 
     selectedAreas() {
-        const { result, selected } = this.state;
-        if(!result) return [];
+        const { result: areas, selected } = this.state;
+        if(!areas) return [];
 
         if(selected) {
-            const area = this.find(result, selected);
+            const area = this.find(areas, selected);
             if(area) return area.areas || [];
         }
-        return result.filter(a => a.areas);
+        return areas.filter(a => a.areas);
     }
 
     render() {

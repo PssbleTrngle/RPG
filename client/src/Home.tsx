@@ -1,15 +1,12 @@
 import React from 'react';
 import { Account, ICharacter, IClass, IArea, ISkill } from './models';
 import { Link } from "react-router-dom";
-import format from './localization';
+import Translator from './localization';
 import { Cell, Buttons, Icon } from './Grid';
 import { WorldMap } from './Fields';
 import { Inventory } from './Inventory';
 import { Page, Collapseable, ToggleButton } from "./Page";
-
-const action = (url: string) => {
-
-};
+const { format } = Translator;
 
 class Evolve extends React.Component<{classes: IClass[]},{}> {
 
@@ -56,7 +53,7 @@ class Skills extends React.Component<{page: Page, skills: SkillProps[]},{}> {
 class Home extends Page {
 	
 	render() {
-		const account = this.props;
+		const { account } = this.props;
         const { selected, characters } = account;
 
         const skills = [
@@ -77,7 +74,7 @@ class Home extends Page {
                     <WorldMap page={this} />
                 </Cell>
                 <Cell area='inventory'>
-                    <Inventory page={this} stacks={selected.inventory} />
+                    <Inventory app={this.app()} stacks={selected.inventory} />
                 </Cell>
                 <Cell area='skills'>
                     <Skills page={this} skills={skills} />

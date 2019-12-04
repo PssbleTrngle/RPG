@@ -2,13 +2,19 @@ import React from 'react';
 import AnimateHeight from 'react-animate-height';
 import { Account } from './models';
 import { Icon } from './Grid';
+import App, { IApp } from './App';
 
 type collapseable = string;
-export abstract class Page extends React.Component<Account, {collapsed: Set<collapseable>}> {
+export abstract class Page extends React.Component<{account: Account, app: App}, {collapsed: Set<collapseable>}> {
 
     constructor(props: any) {
         super(props);
         this.state = {collapsed: new Set<collapseable>()};
+    }
+
+    app(): IApp {
+        const { app } = this.props;
+        return {action: app.action, page: this};
     }
 
     toggle(id: collapseable) {

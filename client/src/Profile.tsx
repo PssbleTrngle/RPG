@@ -1,18 +1,17 @@
 import React from 'react';
 import { Account, ICharacter } from './models';
 import { Link } from "react-router-dom";
-import format from './localization';
+import Translator from './localization';
 import { Cell, Buttons, Icon } from './Grid';
-import { Page } from "./Page";
+import { Page } from './Page';
+import { IApp } from './App';
 
-const action = (url: string) => {
+const { format } = Translator;
 
-};
-
-class CharacterRow extends React.Component<{characters: ICharacter[], selected?: ICharacter},{}> {
+class CharacterRow extends React.Component<{characters: ICharacter[], selected?: ICharacter} & IApp,{}> {
 
 	render() {
-		const { characters, selected } = this.props;
+		const { characters, selected, action } = this.props;
 
 		return (
 			<div className='character-row'>
@@ -131,7 +130,7 @@ class Journey extends React.Component<{character: ICharacter},{}> {
 class Profile extends Page {
 	
 	render() {
-		const account = this.props;
+		const { account } = this.props;
 		const { selected, characters } = account;
 
 		return (
@@ -140,7 +139,7 @@ class Profile extends Page {
 			<div id='profile'>
 
 				<Cell area='chars'>
-					<CharacterRow characters={characters} selected={selected} />
+					<CharacterRow {...this.app()} {...{ selected, characters }} />
 					{characters.length === 0 && <Greeter icon={'class/death'} message={format('message.new_account')} />}
 				</Cell>
 
@@ -167,7 +166,12 @@ class Profile extends Page {
 				<Popup>
 					<div className='row'>
 						{['en', 'de', 'cyber'].map(lang =>
-							<div key={lang} className='lang' data-action='language/{{ lang }}'>{lang.toLowerCase()}</div>
+							<div
+								key={lang}
+								className='lang'
+								onClick={() => this.app().action(`language/${lang}`)}>
+								{lang.toLowerCase()}
+							</div>
 						)}
 					</div>
 				</Popup>

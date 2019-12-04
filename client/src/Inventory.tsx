@@ -4,6 +4,7 @@ import { Icon, Cell } from './Grid';
 import { LoadingComponent } from './Connection';
 import { JSXElement } from '@babel/types';
 import { Collapseable, Page } from './Page';
+import { IApp } from './App';
 
 enum StackState {
     LOCKED = 'locked',
@@ -69,13 +70,13 @@ export class Bag extends React.Component<{stacks: IStack[], slot?: ISlot},{}> {
 
 }
 
-export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[], page?: Page},{}> {
+export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[], app: IApp},{}> {
 
     initialState() { return {} };
     model() { return 'slot' }
 
     bagForName(id: ID) {
-        const slots = this.state.result;
+        const { result: slots } = this.state;
 
         if(slots) {
             const slot = slots.find(s => s.id === id);
@@ -94,13 +95,13 @@ export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[], page
     }
 
     render() {
-        const slots = this.state.result;
-        const { page } = this.props;
+        const { result: slots } = this.state;
+        const { app } = this.props;
 
         if(!slots) return null;
 
         return (
-            <Collapseable id='inventory' {...{ page }}>
+            <Collapseable id='inventory' {...app}>
                 {this.bagForName('loot')}
 
                 {['right', 'left'].map((hand, i) =>

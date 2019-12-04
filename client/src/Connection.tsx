@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { any } from 'prop-types';
+import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
+import App from './App';
 
 export abstract class LoadingComponent<T, PROPS, STATE> extends React.Component<PROPS,{result?: T} & STATE> {
 
@@ -11,19 +14,19 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends React.Component<
 		return true;
 	}
 
-    constructor(props: any) {
+  constructor(props: any) {
 		super(props);
 		this.state = {...{result: undefined}, ...this.initialState()};
-    }
+  }
 
-    componentDidMount() {
+  componentDidMount() {
 		this.load(this.model(), this.id(), this.interval());
-    }
+  }
 
 	load(model = '', id = '', interval = true, retry = true) {
 
 		const uri = `/${model}/${id || ''}`;
-		const load = () => fetch(uri)
+		const load = async () => fetch(uri)
 			.then(r => r.json())
 			.then(result => this.setState({ result }))
 			.catch(e => {
@@ -31,9 +34,9 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends React.Component<
 				if(retry && !interval) window.setTimeout(load, 1000)
 			});
 	
-		load();
-		if(interval) window.setInterval(load, 1000 * 6);
-	
+		load().then(() => {
+			if(interval) window.setInterval(load, 1000 * 6);
+		});
 	}
 
 }

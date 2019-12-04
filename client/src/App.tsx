@@ -1,12 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
-import { Account, Point } from './models';
+import { Account, Point, ICharacter } from './models';
 
 import Profile from './Profile';
 import Home from './Home';
 
 import './style/App.scss';
 import { List, View } from './View';
+import Translator from './localization';
+import { LoadingComponent } from './Connection';
+import { Page } from './Page';
+import { Battle } from './Fields';
+
+export interface IApp {
+	page: Page,
+	action: (action: string, params?: {[key: string]: string}) => void,
+}
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
 
@@ -40,27 +49,53 @@ class BG extends React.Component<{},{current: Point, initial: Point}> {
 
 }
 
-class App extends React.Component<{},{account?: Account}> {
+class App extends LoadingComponent<Account, {},{lang?: string}> {
 
-	constructor(props: any) {
-		super(props);
-		this.state = {};
-	}
-
-	update() {
-		fetch('http://localhost:8080')
-			.then(r => r.json())
-			.then(account => this.setState({ account }))
-			.catch(e => this.setState({ account: undefined }))
-	}
+	initialState() { return {} };
+	model() {return ''; }
 
 	componentDidMount() {
-		this.update();
-		window.setInterval(() => this.update(), 1000)
+		super.componentDidMount();
+		this.setLang('en');
+	}
+
+	async setLang(lang: string) {
+		await Translator.load(lang);
+		this.setState({ lang });
+	}
+
+	async action(action: string, params: {[key: string]: string} = {}) {
+		try {
+			const response = await fetch(action, {
+				method: 'POST',
+				headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(params)}
+			);
+	
+			const json = await response.json();
+			return json.success;
+	
+		} catch(_) {
+			return false;
+		}
+	}
+
+	apiView(params: any) {
+		const {id, model} = params;
+		if(model) {
+			if(id) return <View {...{model, id}} />
+			return <List {...{model}} />;
+		}						
+		return null;
 	}
 
 	render() {
-		const { account } = this.state;
+		const { result: account } = this.state;
+		const battle = account && account.selected && account.selected.battle;
+		const inBattle = (c?: ICharacter) => c && c.battle;
 
 		return (
 			<Router>
@@ -70,19 +105,18 @@ class App extends React.Component<{},{account?: Account}> {
 					{account ?
 
 					<Switch>
+						<Route path='/view/:model/:id?' render={p => this.apiView(p.match.params)} />
+
 						<Route path='/profile'>
-							<Profile {...account} />
+							<Profile app={this} {...{ account }} />
 						</Route>
-						<Route path='/view/:model/:id?' render={p => {
-							const {id, model} = p.match.params;
-							if(model) {
-								if(id) return <View {...{model, id}} />
-								return <List {...{model}} />;
-							}							
-							return null;
-						}} />
+
 						<Route path='/'>
-							<Home {...account} />
+						{inBattle(account.selected) ?
+							<Battle app={this} {...{ account }} />
+						:
+							<Home app={this} {...{ account }} />
+						}
 						</Route>
 					</Switch>
 
