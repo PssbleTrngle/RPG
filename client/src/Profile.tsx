@@ -1,9 +1,10 @@
 import React from 'react';
-import { Account, ICharacter } from './models';
+import { ICharacter } from './models';
 import { Link } from "react-router-dom";
 import { Cell, Buttons, Icon } from './Grid';
 import { Page } from './Page';
-import { Component } from './App';
+import { Component } from "./Component";
+import { Popup } from './Popup';
 
 class CharacterRow extends Component<{characters: ICharacter[], selected?: ICharacter},{}> {
 
@@ -18,10 +19,10 @@ class CharacterRow extends Component<{characters: ICharacter[], selected?: IChar
 						<div 
 							key={character.id}
 							className={`character-panel ${selected && selected.id === character.id && 'selected'}`}
-							onClick={() => this.action(`character/select/${character.id}`)}>
+							onClick={() => this.action('account/select', { character: character.id })}>
 							<h4>{ character.name }</h4>
 							<small>
-								<p>{ last.name }</p>
+								<p>{ this.format(`class.${last.id}.name`) }</p>
 								<p>Level { character.level }</p>
 								<p>{ character.birth }</p>
 							</small>
@@ -88,17 +89,11 @@ class SelectedInfo extends Component<{selected: ICharacter},{}> {
 			<table className='stats mt-2 w-100'><tbody>
 				{Object.keys(selected.stats).map(stat =>
 					<tr key={stat}>
-						<td className='stat'>{stat}:</td>
+						<td className='stat'>{this.format(`stat.${stat}`)}:</td>
 						<td className='stat highlight'>{selected.stats[stat]}</td>
 					</tr>
 				)}
 			</tbody></table>
-
-			<div className='mt-2'>
-				{selected.skills.map(skill => 
-					<p>{ skill.name }</p>
-				)}
-			</div>
 			</>
 		)
 	}
@@ -115,7 +110,7 @@ class Journey extends Component<{character: ICharacter},{}> {
 				<h2>Your Journey</h2>
 				<p>{ this.format('journey.start')}</p>
 				{character.classes.map(clazz => 
-					<p key={clazz.id}>{clazz.name}</p>
+					<p key={clazz.id}>{this.format(`class.${clazz.id}.name`)}</p>
 				)}
 				<p>{ this.format('journey.end')}</p>
 			</div>
@@ -146,8 +141,8 @@ class Profile extends Page {
 					:
 						<Link to='create'><Icon src={'icon/create'} /></Link>
 					}
-					<Icon src={'icon/options'} />
-					<Icon src={'icon/lang'} />
+					<button onClick={() => this.open('lang')}><Icon src={'icon/lang'} /></button>
+					<button onClick={() => this.open('options')}><Icon src={'icon/options'} /></button>
 					
 					<Link to='/profile/create'><Icon src={'icon/create'} /></Link>
 				</Buttons>
@@ -160,38 +155,25 @@ class Profile extends Page {
 					{selected && <Journey character={selected} />}
 				</Cell>
 
-				<Popup>
-					<div className='row'>
-						{['en', 'de', 'cyber'].map(lang =>
-							<div
-								key={lang}
-								className='lang'
-								onClick={() => this.action(`language/${lang}`)}>
-								{lang.toLowerCase()}
-							</div>
-						)}
-					</div>
+				<Popup id='lang'>
+					{['en', 'de', 'cyber'].map(lang =>
+						<div
+							key={lang}
+							className={`lang ${this.getLang() === lang ? 'active' : ''}`}
+							onClick={() => {
+								this.setLang(lang);
+								this.open()
+							}}>
+							{lang.toLowerCase()}
+						</div>
+					)}
 				</Popup>
 
-				<Popup>
+				<Popup id='options'>
 					<h1>Options</h1>
 				</Popup>
 			</div>
 			</>
-		);
-	}
-
-}
-
-export class Popup extends Component<{},{}> {
-
-	template() {
-		const { children } = this.props;
-
-		return (
-			<div className='popup'>
-				{children}
-			</div>
 		);
 	}
 

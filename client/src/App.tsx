@@ -1,16 +1,16 @@
-import React, { ReactNode, ReactElement } from 'react';
-import { BrowserRouter as Router, Switch, Route, useRouteMatch, useParams } from "react-router-dom";
-import { Account, Point, ICharacter, ID } from './models';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Account, Point, ICharacter } from './models';
+import { SERVER_URL } from './config'
 
 import Profile from './Profile';
 import Home from './Home';
 
 import './style/App.scss';
 import { List, View } from './View';
-import Translator from './localization';
 import { LoadingComponent } from './Connection';
 import { Battle } from './Fields';
-import { format } from 'path';
+import { PopupOpen } from './Popup';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
 
@@ -30,7 +30,7 @@ class BG extends React.Component<{},{current: Point, initial: Point}> {
 		});
 	}
 
-	template() {
+	render() {
 		const { current, initial } = this.state;
 		const x = current.x - initial.x;
 		const y = current.y - initial.y;
@@ -43,25 +43,48 @@ class BG extends React.Component<{},{current: Point, initial: Point}> {
 	}
 
 }
+	
+const fallback = require('./lang/en.json');
 
-class App extends LoadingComponent<Account, {},{lang?: string}> implements AppProps {
+type Lang = {[key: string]: string | Lang};
 
-	initialState() { return {} };
+class App extends LoadingComponent<Account, {},{lang: Lang, popup?: string}> implements AppProps {
+
+	initialState() { return { lang: fallback } };
 	model() {return ''; }
 
 	componentDidMount() {
 		super.componentDidMount();
-		this.setLang('en');
+		this.setLang(this.getLang());
 	}
 
-	async setLang(lang: string) {
-		await Translator.load(lang);
-		this.setState({ lang });
+	private async loadLang(lang: string): Promise<Lang | false> {
+		
+		try {
+			const json = require(`./lang/${lang}.json`);
+			return json;
+		} catch(_) {
+			return false;
+		}
+
+	}
+
+	async setLang(key: string): Promise<boolean> {
+		const lang = await this.loadLang(key);
+		if(lang) {
+			localStorage.setItem('lang', key);
+			this.setState({ lang });
+		}
+		return !!lang;
+	}
+
+	getLang(): string {
+		return localStorage.getItem('lang') || 'en';
 	}
 
 	async action(action: string, params: {[key: string]: string} = {}) {
 		try {
-			const response = await fetch(action, {
+			const response = await fetch(SERVER_URL + action, {
 				method: 'POST',
 				headers: {
 						'Accept': 'application/json',
@@ -78,8 +101,6 @@ class App extends LoadingComponent<Account, {},{lang?: string}> implements AppPr
 		}
 	}
 
-	format = Translator.format;
-
 	apiView(params: any) {
 		const {id, model} = params;
 		if(model) {
@@ -91,13 +112,14 @@ class App extends LoadingComponent<Account, {},{lang?: string}> implements AppPr
 
 	template() {
 		const { result: account } = this.state;
-		const battle = account && account.selected && account.selected.battle;
 		const inBattle = (c?: ICharacter) => c && c.battle;
 
 		return (
 			<Router>
 
 				<BG />
+				<PopupOpen blocking={!!this.state.popup} /> 
+
 				<div className='container'>
 					{account ?
 
@@ -105,14 +127,14 @@ class App extends LoadingComponent<Account, {},{lang?: string}> implements AppPr
 						<Route path='/view/:model/:id?' render={p => this.apiView(p.match.params)} />
 
 						<Route path='/profile'>
-							<Profile app={this} {...{ account }} />
+							<Profile {...{ account }} />
 						</Route>
 
 						<Route path='/'>
 						{inBattle(account.selected) ?
-							<Battle app={this} {...{ account }} />
+							<Battle {...{ account }} />
 						:
-							<Home app={this} {...{ account }} />
+							<Home {...{ account }} />
 						}
 						</Route>
 					</Switch>
@@ -126,52 +148,49 @@ class App extends LoadingComponent<Account, {},{lang?: string}> implements AppPr
 		);
 	}
 
-}
-
-type params = {[key: string]: string};
-export interface AppProps {
-	action: (url: string, params?: params) => void,
-	format: (key: string | {id: ID}, ...params: string[]) => string,
-}
-
-export abstract class Component<P,S, SS = {}> extends React.Component<{app?: AppProps} & P,S, SS> implements AppProps {
-
-	action(url: string, params?: params) {
-		const { app } = this.props;
-		if(app) app.action(url, params);
-	}
+	find(key: string, object?: Lang): string | undefined {
+		if(!object) return this.find('', {});
 	
-	format(key: string | {id: ID}, ...params: string[]): string {
-		const { app } = this.props;
-		if(app) return app.format(key, ...params);
-		return 'NO APP';
-	}
-
-	abstract template(): ReactNode;
-
-	private assignProps(node: any) {
-		const { app } = this.props;
-
-		if(!app) return 'NO APP';
-
-		if(typeof node === 'object') {
-			const { type, props } = node;
-
-			return <node.type {...props} {...{ app }}>
-				{React.Children.map(props.children, child => this.assignProps(child) )}
-			</node.type>
+		if(key.match(/.\./)) {
+			const [nextKey, ...child] = key.split('.');
+			const group: any = object[nextKey];
+			return this.find(child.join('.'), group);
 		}
 
-		return node;
+		const value = object[key];
+		if(!value || typeof value === 'object')
+			return undefined;
+
+		return value.toString();
 	}
 
-	render() {
-		const rendered = this.template();
-		const { children, app } = this.props;
+	format(key: string, ...params: string[]): string {
 
-		return this.assignProps(rendered);
+		key = key.toString();
+		const translation = this.find(key, this.state.lang) || this.find(key, fallback) || key;
+		const parsed = translation.replace(/\$([0-9])+/, (_, i) => params[parseInt(i) - 1]);
+		return parsed;
+
 	}
 
+    open(popup?: string) {
+        this.setState({ popup });
+    }
+
+    isOpen(popup: string): boolean {
+        return this.state.popup === popup;
+    }
+
+}
+
+export type params = {[key: string]: any};
+export interface AppProps {
+	action: (url: string, params?: params) => void,
+	format: (key: string, ...params: string[]) => string,
+	setLang(key: string): Promise<boolean>,
+	isOpen: (popup: string) => boolean,
+	open: (popup?: string) => void,
+	getLang: () => string;
 }
 
 export default App;

@@ -57,9 +57,9 @@ class BootStrap {
         }
 
         if(Item.count() == 0) Item.withTransaction {
-            new Item(id: 'health_potion', type: ItemType.findById('potion')).save(failOnError: true),
-            new Item(id: 'sleep_potion', type: ItemType.findById('potion')).save(),
-            new Item(id: 'poison_potion', type: ItemType.findById('potion')).save(),
+            new Item(id: 'health_potion', type: ItemType.findById('potion')).save(failOnError: true)
+            new Item(id: 'sleep_potion', type: ItemType.findById('potion')).save()
+            new Item(id: 'poison_potion', type: ItemType.findById('potion')).save()
         }
 
         if(Slot.count() == 0) Slot.withTransaction {

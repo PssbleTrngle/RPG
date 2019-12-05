@@ -1,12 +1,69 @@
 .popup {
+
+  z-index: 2001;
+
   position: fixed;
   left: 50%;
   top: 200%;
   transform: translate(-50%, -50%);
   background-color: $alternate-bg-darker;
+  padding: 10px;
+  text-align: center;
+
+  width: 700px;
+  max-width: 90vw;
+
   transition: top 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  .show {
+  &.show {
+  color: $bg;
       top: 50%;
   }
+
+  &.lang {
+
+    display: flex;
+    flex-direction: row;
+
+    .lang {
+
+        color: $bg;
+        border: 2px solid $highlight-dark;
+        width: 50px;
+        padding: 10px;
+        margin: 5px;
+
+        text-transform: uppercase;
+
+        &:hover {
+          color: $highlight;
+        }
+
+        &.active {
+          background-color: $highlight;
+          border-color: $highlight;
+          color: #000;
+        }
+
+    }
+
+  }
+
+}
+
+.blocked {
+
+  z-index: 2000;
+
+  @include fixed;
+  background: #000;
+  opacity: 0.5;
+
+  transition: opacity;
+
+  &:not(.show) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
 }

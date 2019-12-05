@@ -14,31 +14,81 @@
 		"luck": "Glück"
 	},
 	"class": {
-		"apprentice": "Lehrling",
-		"warrior": "Krieger",
-		"rogue": "Dieb",
-		"wild": "Wildling",
-		"knight": "Ritter",
-		"shaman": "Schamane",
-		"ranger": "Waldläufer",
-		"mage": "Magier",
-		"alchemist": "Alchemist",
-		"tamer": "Zähmer",
-		"berserk": "Berserker",
-		"assassin": "Assassine",
-		"traveller": "Wanderer",
-		"fighter": "Kämpfer",
-		"reaper": "Sensenmann",
-		"swift": "Wind",
-		"focused": "Fokusierter",
-		"guardian": "Wächter",
-		"fallen": "Gefallener",
-		"kamikaze": "Kamikaze",
-		"hunter": "Jäger",
-		"beast": "Biest",
-		"infused": "Infusionierter",
-		"elementalist": "Elementar",
-		"sage": "Weiser"
+		"apprentice": {
+			"name": "Lehrling"
+		},
+		"warrior": {
+			"name": "Krieger"
+		},
+		"rogue": {
+			"name": "Dieb"
+		},
+		"wild": {
+			"name": "Wildling"
+		},
+		"knight": {
+			"name": "Ritter"
+		},
+		"shaman": {
+			"name": "Schamane"
+		},
+		"ranger": {
+			"name": "Waldläufer"
+		},
+		"mage": {
+			"name": "Magier"
+		},
+		"alchemist": {
+			"name": "Alchemist"
+		},
+		"tamer": {
+			"name": "Zähmer"
+		},
+		"berserk": {
+			"name": "Berserker"
+		},
+		"assassin": {
+			"name": "Assassine"
+		},
+		"traveller": {
+			"name": "Wanderer"
+		},
+		"fighter": {
+			"name": "Kämpfer"
+		},
+		"reaper": {
+			"name": "Sensenmann"
+		},
+		"swift": {
+			"name": "Wind"
+		},
+		"focused": {
+			"name": "Fokusierter"
+		},
+		"guardian": {
+			"name": "Wächter"
+		},
+		"fallen": {
+			"name": "Gefallener"
+		},
+		"kamikaze": {
+			"name": "Kamikaze"
+		},
+		"hunter": {
+			"name": "Jäger"
+		},
+		"beast": {
+			"name": "Biest"
+		},
+		"infused": {
+			"name": "Infusionierter"
+		},
+		"elementalist": {
+			"name": "Elementar"
+		},
+		"sage": {
+			"name": "Weiser"
+		}
 	},
 	"race": {
 		"human": "Menschlicher",

@@ -102,16 +102,19 @@ img.icon {
   }
 }
 
+@mixin fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
 .bg {
   $factor: 0.5;
 
-  top: 0;
-  left: 0;
+  @include fixed;
   z-index: -1;
-  position: fixed;
-  
-  height: 100vh;
-  width: 100vw;
 
   box-shadow: 0 -70vh 70vh #000A inset;
   background-image: url('../img/bg.png');

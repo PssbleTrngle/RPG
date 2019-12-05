@@ -46,6 +46,11 @@
 			@include hoverScale;
 		}
 
+		&.selected {
+			background-color: $highlight;
+			border-color: $highlight;
+		}
+
 	}
 
 }

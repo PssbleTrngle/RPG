@@ -1,7 +1,5 @@
-import React, { ReactNode } from 'react';
-import { any } from 'prop-types';
-import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from 'constants';
-import App, { Component } from './App';
+import { Component } from "./Component";
+import { SERVER_URL } from './config'
 
 export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,{result?: T} & STATE> {
 
@@ -14,22 +12,22 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,
 		return true;
 	}
 
-  constructor(props: any) {
+	constructor(props: any) {
 		super(props);
 		this.state = {...{result: undefined}, ...this.initialState()};
-  }
+	}
 
-  componentDidMount() {
+	componentDidMount() {
 		this.load(this.model(), this.id(), this.interval());
-  }
+	}
 
-	load(model = '', id = '', interval = true, retry = true) {
+	private load(model = '', id = '', interval = true, retry = true) {
 
-		const uri = `/${model}/${id || ''}`;
-		const load = async () => fetch(uri)
+		const uri = `${model || ''}/${id || ''}`;
+		const load = async () => fetch(SERVER_URL + uri)
 			.then(r => r.json())
 			.then(result => this.setState({ result }))
-			.catch(e => {
+			.catch(_ => {
 				console.error(`Error retrieving '${uri}'`)
 				if(retry && !interval) window.setTimeout(load, 1000)
 			});

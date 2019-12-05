@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Component } from './Component';
 
 export class Cell extends Component<{area?: any, className?: string},{}> {
 

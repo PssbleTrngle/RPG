@@ -3,7 +3,7 @@ import { LoadingComponent } from "./Connection";
 import { ITranslated } from './models';
 import { Icon } from './Grid';
 import { Link } from 'react-router-dom';
-import { Component } from './App';
+import { Component } from "./Component";
 
 type SeachProps<T> = {
     change?: (result: string) => any,
@@ -26,7 +26,7 @@ export class Searchbar<T> extends Component<SeachProps<T>,{value?: string}> {
     componentDidMount() {
         this.focus();
         window.addEventListener('keydown', e => {
-            if(e.keyCode === 70 && e.ctrlKey || e.keyCode == 114) {
+            if((e.keyCode === 70 && e.ctrlKey) || e.keyCode === 114) {
                 e.preventDefault();
                 this.focus();
             }

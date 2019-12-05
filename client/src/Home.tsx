@@ -1,11 +1,11 @@
 import React from 'react';
-import { Account, ICharacter, IClass, IArea, ISkill } from './models';
+import { IClass, ISkill } from './models';
 import { Link } from "react-router-dom";
 import { Cell, Buttons, Icon } from './Grid';
 import { WorldMap } from './Fields';
 import { Inventory } from './Inventory';
 import { Page, Collapseable, ToggleButton } from "./Page";
-import { Component } from './App';
+import { Component } from "./Component";
 
 class Evolve extends Component<{classes: IClass[]},{}> {
 
@@ -32,6 +32,7 @@ class Evolve extends Component<{classes: IClass[]},{}> {
 
 interface SkillProps {
     skill: ISkill;
+    cost: number;
 }
 class Skills extends Component<{page: Page, skills: SkillProps[]},{}> {
 
@@ -40,9 +41,14 @@ class Skills extends Component<{page: Page, skills: SkillProps[]},{}> {
 
         return (
             <Collapseable hidden={true} id='skills' {...{ page }}>
-                {skills.map(s => {
-                    return <p key={s.skill.id}>{s.skill.name}</p>
-                })}
+                <div className='learn'>
+                    {skills.map(s => 
+                        <div key={s.skill.id} className='skill'>
+                            <span>{ s.cost }</span>
+                            <span>{ s.skill.name }</span>
+                        </div>
+                    )}
+                </div>
             </Collapseable>
         )
     }
@@ -53,13 +59,13 @@ class Home extends Page {
 	
 	template() {
 		const { account } = this.props;
-        const { selected, characters } = account;
+        const { selected } = account;
 
         const skills = [
-            {skill: {id: 'test_1', name: 'Test 1'}},
-            {skill: {id: 'test_2', name: 'Test 2'}},
-            {skill: {id: 'test_3', name: 'Test 3'}},
-            {skill: {id: 'test_4', name: 'Test 4'}},
+            {skill: {id: 'test_1', name: 'Test 1'}, cost: 1},
+            {skill: {id: 'test_2', name: 'Test 2'}, cost: 3},
+            {skill: {id: 'test_3', name: 'Test 3'}, cost: 2},
+            {skill: {id: 'test_4', name: 'Test 4'}, cost: 1},
         ]
         
         if(!selected) return null;
@@ -73,7 +79,7 @@ class Home extends Page {
                     <WorldMap page={this} />
                 </Cell>
                 <Cell area='inventory'>
-                    <Inventory app={this.app()} stacks={selected.inventory} />
+                    <Inventory stacks={selected.inventory} />
                 </Cell>
                 <Cell area='skills'>
                     <Skills page={this} skills={skills} />

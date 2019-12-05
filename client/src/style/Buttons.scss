@@ -19,3 +19,47 @@
     }
 
 }
+
+.learn {
+
+    .skill {
+
+        $moveBy: 10%;
+
+        margin-left: $moveBy;
+        display: grid;
+        grid-template: "cost name" / 40px;
+        box-shadow: 4px 2px 4px 0 #0005 inset;
+            
+        transition: transform 0.3s cubic-bezier(0.67, 0.65, 0.17, 1.76);
+        cursor: pointer;
+
+        &:not(:last-child) {
+            margin-bottom: 5px;
+        }
+
+        &:hover {
+            transform: translate(-$moveBy, 0);
+            
+            span:first-child {
+                background-color: $highlight;
+            }
+        
+        }
+
+        span {
+            padding: 10px;
+        }
+
+        span:first-child {
+            text-align: center;
+            background-color: $highlight-dark;
+        }
+
+        span:nth-child(n + 2) {
+            background-color: $alternate-bg
+        }
+
+    }
+
+}

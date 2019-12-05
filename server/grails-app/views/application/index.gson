@@ -8,7 +8,7 @@ model {
 json {
     if (account) {
         id account.getId()
-        name account.getName()
+        username account.getName()
         if (account.getSelected()) selected g.render(template: 'char', model: [character: account.getSelected()])
         characters g.render(template: 'char', var: 'character', collection: account.getCharacters())
     }

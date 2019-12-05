@@ -1,21 +1,20 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import AnimateHeight from 'react-animate-height';
 import { Account } from './models';
 import { Icon } from './Grid';
-import App, { Component, AppProps } from './App';
+import { Component } from "./Component";
 
-type collapseable = string;
-export abstract class Page extends Component<{account: Account, app: AppProps}, {collapsed: Set<collapseable>}> {
+export abstract class Page extends Component<{account: Account}, {collapsed: Set<string>}> {
 
     constructor(props: any) {
         super(props);
-        this.state = {collapsed: new Set<collapseable>()};
+        this.state = {collapsed: new Set<string>()};
     }
 
-    toggle(id: collapseable) {
+    toggle(id: string) {
         const collapsed = new Set(this.state.collapsed);
         
-        if(this.collapsed(id))
+        if(this.isCollapsed(id))
             collapsed.delete(id);
         else
             collapsed.add(id);
@@ -23,7 +22,7 @@ export abstract class Page extends Component<{account: Account, app: AppProps}, 
         this.setState({ collapsed });
     }
 
-    collapsed(id: collapseable): boolean {
+    isCollapsed(id: string): boolean {
         return Array.from(this.state.collapsed.values()).includes(id);
     }
 
@@ -33,7 +32,7 @@ export class Collapseable extends Component<{hidden?: boolean, id: string, class
 
     template() {
         const { page, id, children, className, hidden } = this.props;
-        const toggled = page && page.collapsed(id) !== (hidden || false);
+        const toggled = page && page.isCollapsed(id) !== (hidden || false);
 
         return (   
             <AnimateHeight

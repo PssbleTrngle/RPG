@@ -1,10 +1,9 @@
 import React from 'react';
-import { IItem, IStack, ISlot, ID } from './models';
+import { IStack, ISlot, ID } from './models';
 import { Icon, Cell } from './Grid';
 import { LoadingComponent } from './Connection';
-import { JSXElement } from '@babel/types';
-import { Collapseable, Page } from './Page';
-import { IApp, Component } from './App';
+import { Collapseable } from './Page';
+import { Component } from "./Component";
 
 enum StackState {
     LOCKED = 'locked',
@@ -70,7 +69,7 @@ export class Bag extends Component<{stacks: IStack[], slot?: ISlot},{}> {
 
 }
 
-export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[], app: IApp},{}> {
+export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[]},{}> {
 
     initialState() { return {} };
     model() { return 'slot' }

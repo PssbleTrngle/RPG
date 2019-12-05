@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { IField, ISkill, Point, IArea, ID, ICharacter, IBattle } from './models'
+import React from 'react';
+import { IField, ISkill, Point, IArea, ID, ICharacter } from './models'
 import { Icon } from './Grid';
 import { LoadingComponent } from "./Connection";
 import { Collapseable, Page } from './Page';
+import { Component } from './Component';
 
 type FieldProps<T extends IField> = {
     onClick?: (f: T) => any,
@@ -38,7 +39,7 @@ class Field<T extends IField> extends Component<FieldProps<T> & { field: T, size
 
 }
 
-export class Fields<T extends IField> extends Component<{fields: T[]} & FieldProps<T>,{width: number, height: number}> {
+export class Fields<T extends IField> extends React.Component<{fields: T[]} & FieldProps<T>,{width: number, height: number}> {
 
     element: HTMLElement | null = null;
 
@@ -56,11 +57,12 @@ export class Fields<T extends IField> extends Component<{fields: T[]} & FieldPro
         if(this.element) {
             const height = this.element.offsetHeight;
             const width = this.element.offsetWidth;
+            console.log({ height, width });
             this.setState({ height, width });
         }
     }
 
-    template() {
+    render() {
         const { fields, onClick, render, onHover, className } = this.props;
         const { height, width } = this.state;
 
@@ -74,7 +76,7 @@ export class Fields<T extends IField> extends Component<{fields: T[]} & FieldPro
         const p = { size, onClick, onHover, render, className };
 
         return (
-            <div className='fields' ref={e => { this.element = e; } }>
+            <div className='fields' ref={e => this.element = e }>
                 {fields.map(field =>
                     <Field key={field.id || `${field.x} ${field.y}`} field={field} {...p} />
                 )}
@@ -168,8 +170,7 @@ class BattleField extends Component<{fields: IField[], aoe?: Point[]},{hover?: P
     }
 
     template() {
-        let { fields, aoe } = this.props;
-        const { hover } = this.state;
+        let { fields } = this.props;
 
         return (<div className='battlefield'>
             <Fields
