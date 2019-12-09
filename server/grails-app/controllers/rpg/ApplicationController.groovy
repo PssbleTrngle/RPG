@@ -46,7 +46,11 @@ class ApplicationController implements PluginManagerAware {
         }
 
         account.addToCharacters(character)
-        account.setSelected(character)
+
+        if(account.getCharacters().size() <= 1) {
+            account.setSelected(character)
+            Battle.create(character)
+        }
 
         character
     }

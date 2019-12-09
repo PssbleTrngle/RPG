@@ -35,6 +35,7 @@ export interface IField {
 	id: ID;
 	x: number;
 	y: number;
+	participant?: IParticipant;
 }
 
 export interface IPosition {
@@ -102,7 +103,6 @@ export interface IStack {
 
 export interface IBattle {
 	fields: IField[];
-	participant: IParticipant[];
 }
 
 export interface IProduct {

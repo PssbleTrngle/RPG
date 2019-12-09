@@ -1,13 +1,14 @@
 import React from 'react';
-import { IField, ISkill, Point, IArea, ID, ICharacter } from './models'
-import { Icon } from './Grid';
+import { IField, ISkill, Point, IArea, ID, ICharacter, ITranslated } from './models'
+import { Icon, Cell } from './Grid';
 import { LoadingComponent } from "./Connection";
 import { Collapseable, Page } from './Page';
 import { Component } from './Component';
+import { Inventory, Bag } from './Inventory';
 
 type FieldProps<T extends IField> = {
     onClick?: (f: T) => any,
-    render?: (f: T) => any,
+    render: (f: T) => any,
     onHover?: (f?: T) => any,
     className?: (f: T) => any,
 }
@@ -32,14 +33,14 @@ class Field<T extends IField> extends Component<FieldProps<T> & { field: T, size
                     width: size, height: size,
                     zIndex: y + 100,
                 }}>
-                {render ? render(field) : <div className='hex' />}
+                {render(field)}
             </div>
         );
     }
 
 }
 
-export class Fields<T extends IField> extends React.Component<{fields: T[]} & FieldProps<T>,{width: number, height: number}> {
+export class Fields<T extends IField> extends React.Component<{ fields: T[] } & FieldProps<T>, { width: number, height: number }> {
 
     element: HTMLElement | null = null;
 
@@ -54,10 +55,9 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
     }
 
     updateSize() {
-        if(this.element) {
+        if (this.element) {
             const height = this.element.offsetHeight;
             const width = this.element.offsetWidth;
-            console.log({ height, width });
             this.setState({ height, width });
         }
     }
@@ -76,7 +76,7 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
         const p = { size, onClick, onHover, render, className };
 
         return (
-            <div className='fields' ref={e => this.element = e }>
+            <div className='fields' ref={e => this.element = e}>
                 {fields.map(field =>
                     <Field key={field.id || `${field.x} ${field.y}`} field={field} {...p} />
                 )}
@@ -85,106 +85,7 @@ export class Fields<T extends IField> extends React.Component<{fields: T[]} & Fi
     }
 }
 
-class BattleWrapper extends Component<{character: ICharacter},{skill?: ISkill}> {
-
-    template() {
-        const { character } = this.props;
-        const { battle } = character;
-        if(!battle) return null;
-
-        const { fields} = battle;
-        const { skill } = this.state;
-
-        const skills: ISkill[] = [
-            { name: 'pulse', id: 'pulse', aoe: createHex(1) },
-            { name: 'heal', id: 'heal' },
-            { name: 'rumble', id: 'rumble', aoe: createHex(2) },
-        ]
-
-        const aoe = skill ? skill.aoe : undefined;
-
-        return (<div id='battle'>
-            <BattleField {...{ fields, aoe }} />
-            <Sidebar select={skill => this.setState({ skill })} skills={skills} />
-        </div>);
-    }
-
-}
-
-export class Battle extends Page {
-
-    template() {
-        const { account } = this.props;
-        const { selected } = account;
-        if(!selected) return null;
-        
-        return <BattleWrapper character={selected} />
-
-    }
-
-}
-
-class Sidebar extends Component<{skills: ISkill[], select: ((skill: ISkill) => any)}> {
-
-    template() {
-        const { skills, select } = this.props;
-
-        return (
-            <div className='sidebar'>
-                {skills.map(skill =>
-                    <p
-                        onClick={() => select(skill)}
-                        className='option'
-                        key={skill.id}>{skill.name}</p>
-                )}
-            </div>
-        )
-    }
-
-}
-
-class BattleField extends Component<{fields: IField[], aoe?: Point[]},{hover?: Point}> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = {};
-    }
-
-    select(field: IField) {
-    }
-
-    hover(field?: IField) {
-        this.setState({ hover: field });
-    }
-
-    inAOE(field: IField): boolean {
-        const aoe = this.props.aoe || createHex(0);
-        const { hover } = this.state;
-
-        if (hover)
-            for (let f of aoe)
-                if (field.x === f.x + hover.x && field.y === f.y + hover.y)
-                    return true;
-
-        return false;
-    }
-
-    template() {
-        let { fields } = this.props;
-
-        return (<div className='battlefield'>
-            <Fields
-                fields={fields}
-                onClick={a => this.select(a)}
-                onHover={a => this.hover(a)}
-                className={field => this.inAOE(field) ? 'hover' : null}
-            />
-        </div>);
-    }
-
-}
-
-export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: string, selected?: ID}> {
+export class WorldMap extends LoadingComponent<IArea[], { page: Page }, { message?: string, selected?: ID }> {
 
     model() { return 'area' }
     initialState() { return {} }
@@ -214,11 +115,11 @@ export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: 
 
     selectedAreas() {
         const { result: areas, selected } = this.state;
-        if(!areas) return [];
+        if (!areas) return [];
 
-        if(selected) {
+        if (selected) {
             const area = this.find(areas, selected);
-            if(area) return area.areas || [];
+            if (area) return area.areas || [];
         }
         return areas.filter(a => a.areas);
     }
@@ -247,15 +148,3 @@ export class WorldMap extends LoadingComponent<IArea[], {page: Page},{message?: 
     }
 
 }
-
-const createHex = (r: number): IField[] => {
-    const fields = [];
-    for (let x = -r; x <= r; x++)
-        for (let y = -r; y <= r; y++)
-            if (Math.abs(x + y) <= r)
-                fields.push({
-                    id: `${x}|${y}`,
-                    x, y,
-                });
-    return fields;
-};

@@ -16,6 +16,20 @@ $highlight-dark: #e2a126;
 $highlight: #f2b748;
 $highlight-light: #f2c56f;
 
+$mobile-width: 800px;
+
+@mixin mobile {
+  @media only screen and (max-width: #{$mobile-width}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media only screen and (min-width: #{$mobile-width + 1px}) {
+    @content;
+  }
+}
+
 @mixin hexagon {
   clip-path: polygon(50% 0, 0 25%, 0 75%, 50% 100%, 100% 75%, 100% 25%);
 }
@@ -165,7 +179,7 @@ img.icon {
 
 .mobile {
   display: none;
-  @media only screen and (max-width: 800px) {
+  @include mobile {
     display: initial;
   }
 }

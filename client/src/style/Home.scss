@@ -15,7 +15,7 @@
         text-align: center;
     }
     
-    @media only screen and (max-width: 800px) {
+    @include mobile {
         grid-template:
             "evolve"
             "buttons"

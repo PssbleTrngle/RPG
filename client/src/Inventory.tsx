@@ -83,7 +83,7 @@ export class Inventory extends LoadingComponent<ISlot[], {stacks: IStack[]},{}> 
                 return this.bagFor(slot);
             else {
                 console.warn(`Slot '${id} not found'`)
-                return null
+                return null;
             }
         }
     }

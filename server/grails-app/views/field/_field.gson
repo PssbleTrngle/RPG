@@ -1,0 +1,15 @@
+import rpg.Battle
+import rpg.Clazz
+import rpg.Field
+import rpg.Position
+
+model {
+	Field field
+}
+
+json {
+    id field.getId()
+    x field.getX()
+    y field.getY()
+    if (field.getParticipant()) participant g.render(field.getParticipant())
+}

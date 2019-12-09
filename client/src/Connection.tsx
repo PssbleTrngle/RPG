@@ -1,5 +1,5 @@
 import { Component } from "./Component";
-import { SERVER_URL } from './config'
+import { SERVER_URL, UPDATE_TIME } from './config'
 
 export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,{result?: T} & STATE> {
 
@@ -33,7 +33,7 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,
 			});
 	
 		load().then(() => {
-			if(interval) window.setInterval(load, 1000 * 6);
+			if(interval) window.setInterval(load, UPDATE_TIME);
 		});
 	}
 

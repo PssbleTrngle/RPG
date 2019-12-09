@@ -9,7 +9,7 @@ import Home from './Home';
 import './style/App.scss';
 import { List, View } from './View';
 import { LoadingComponent } from './Connection';
-import { Battle } from './Fields';
+import { Battle } from './Battle';
 import { PopupOpen } from './Popup';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {

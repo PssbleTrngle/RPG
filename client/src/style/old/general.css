@@ -19,34 +19,11 @@ a {
 
 .row {
 	display: table;
+	border: 1px solid red;
 }
 
 .row > * {
 	display: table-cell;
-}
-
-.row.collapse {
-	width: 100%;
-}
-
-@media only screen and (orientation: portrait) {
-	.row.collapse > * {
-		display: block;
-		width: 100%;
-	}
-
-	.row.collapse > *:not(:last-child) {
-		margin-bottom: 50px;
-	}
-
-	.decollapse {
-		border-collapse: separate;
-		border-spacing: 20px;
-	}
-
-	.decollapse > * {
-		display: table-cell;
-	}
 }
 
 .center { text-align: center; margin: auto; }

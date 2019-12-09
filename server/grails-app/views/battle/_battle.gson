@@ -1,0 +1,13 @@
+import rpg.Battle
+import rpg.Clazz
+import rpg.Field
+import rpg.Position
+
+model {
+	Battle battle
+}
+
+json {
+    position g.render(battle.getPosition())
+    fields g.render(template: '/field/field', var: 'field', collection: battle.getFields().sort({ it.id }))
+}
