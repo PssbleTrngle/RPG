@@ -10,6 +10,12 @@ class Stats {
 
     static constraints = {}
 
+    int total() {
+        Stat.values()
+            .collect({ this."${it.name().toLowerCase}" })
+            .sum()
+    }
+
     Stats plus(Stats other) {
         Stats stats = new Stats()
         Stat.values().each({
