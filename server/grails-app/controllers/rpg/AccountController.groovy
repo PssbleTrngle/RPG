@@ -10,12 +10,12 @@ class AccountController implements PluginManagerAware {
 
     def login() {
         def params = request.getJSON()
-        String username = params['username'];
-        String password = params['password'];
-        assert username != null : 'No username given';
-        assert password != null : 'No password given';
+        String username = params['username']
+        String password = params['password']
+        assert username != null : 'No username given'
+        assert password != null : 'No password given'
 
-        Account account = Account::findByName(username);
+        Account account = Account.findByName(username)
         assert account != null : 'No account with that username'
 
 
@@ -23,24 +23,24 @@ class AccountController implements PluginManagerAware {
 
     def register() {
         def params = request.getJSON()
-        String username = params['username'];
-        String password = params['password'];
-        assert username != null : 'No username given';
-        assert password != null : 'No password given';
+        String username = params['username']
+        String password = params['password']
+        assert username != null : 'No username given'
+        assert password != null : 'No password given'
 
-        Account existing = Account::findByName(username);
+        Account existing = Account.findByName(username)
         assert existing == null : 'This username is not available'
 
-        createAccount(username, password);
+        createAccount(username, password)
     }
 
-    Account getAccount() {
+    static Account getAccount() {
         Account existing = Account.first()
         if(existing) return existing
         createAccount('Dev', '1234')
     }
 
-    Account createAccount(String username, String password) {
+    static Account createAccount(String username, String password) {
         assert username != null : 'No username given'
         assert password != null : 'No password given'
 
@@ -59,7 +59,7 @@ class AccountController implements PluginManagerAware {
         account
     }
 
-    Character createCharacter(String name, Account account, Clazz clazz) {
+    static Character createCharacter(String name, Account account, Clazz clazz) {
         assert name != null : 'No name given'
         assert account != null : 'No account given'
         assert clazz != null : 'No class given'

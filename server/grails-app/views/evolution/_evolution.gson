@@ -1,0 +1,11 @@
+import rpg.Area
+import rpg.Evolution
+
+model {
+	Evolution evolution
+}
+
+json {
+    from g.render(evolution.getFrom())
+    to g.render(evolution.getTo())
+}

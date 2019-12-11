@@ -7,4 +7,5 @@ model {
 }
 
 json {
+	stage clazz.stage()
 }

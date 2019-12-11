@@ -11,6 +11,7 @@ class Enemy extends Participant {
     int maxHealth() {
         return npc.getMaxHealth()
     }
+
     static constraints = {
         suffix nullable: true, blank: false
     }

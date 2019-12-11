@@ -2,7 +2,7 @@ package rpg
 
 class Stack {
 
-    int amount
+    int amount = 1
 
     static belongsTo = [ item: Item, slot: Slot, enchantment: Enchantment ]
 

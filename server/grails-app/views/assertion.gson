@@ -1,0 +1,6 @@
+response.status 500
+
+json {    
+    message "Assertion Failed"
+    error 500
+}

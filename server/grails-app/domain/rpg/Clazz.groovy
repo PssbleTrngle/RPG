@@ -16,15 +16,14 @@ class Clazz implements Translated {
 
     Set<Clazz> evolvesFrom() {
         Evolution
-            .findAll({ it.getTo().getId() == this.getId() })
-            .collect({ it.getFrom() });
-    }
+            .findAllByTo(this)
+            .collect({ it.getFrom() })
     }
 
-    Set<Clazz> evolvesFrom() {
+    Set<Clazz> evolvesTo() {
         Evolution
-            .findAll({ it.getFrom().getId() == this.getId() })
-            .collect({ it.getTo() });
+            .findAllByFrom(this)
+            .collect({ it.getTo() })
     }
 
     int stage() {
@@ -34,14 +33,6 @@ class Clazz implements Translated {
             return 1;
 
         return 1 + from.first().stage();
-    }
-
-    void createEvolutions(int level, String... clazzes) {
-        Evolution.withTransaction {
-            clazzes.collect({ Clazz.get(it) }).filter({ it != null }).each({
-                new Evolution(from: this, to: it, level: level).save();
-            })
-        }
     }
 
 }

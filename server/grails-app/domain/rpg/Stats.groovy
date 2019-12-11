@@ -4,23 +4,31 @@ class Stats {
 
     enum Stat {
         wisdom, strength, agility, luck, resistance
+
+        @Override
+        String toString() {
+            this.name().toLowerCase()
+        }
     }
 
     int wisdom = 0, strength = 0, agility = 0, luck = 0, resistance = 0
 
     static constraints = {}
 
+    int get(Stat stat) {
+        return this."$stat"
+    }
+
     int total() {
-        Stat.values()
-            .collect({ this."${it.name().toLowerCase}" })
-            .sum()
+        (int) Stat.values()
+                .collect({ this.get(it) })
+                .sum()
     }
 
     Stats plus(Stats other) {
         Stats stats = new Stats()
         Stat.values().each({
-            String s = it.name().toLowerCase()
-            stats."$s" = this."$s" + other."$s"
+            stats."$it" = this.get(it) + other.get(it)
         })
         stats
     }
