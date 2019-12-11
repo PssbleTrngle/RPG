@@ -21,19 +21,23 @@ export abstract class LoadingComponent<T, PROPS, STATE> extends Component<PROPS,
 		this.load(this.model(), this.id(), this.interval());
 	}
 
-	private load(model = '', id = '', interval = true, retry = true) {
+	private load(model = '', id = '', interval = true, retry = false) {
 
 		const uri = `${model || ''}/${id || ''}`;
-		const load = async () => fetch(SERVER_URL + uri)
-			.then(r => r.json())
-			.then(result => this.setState({ result }))
-			.catch(_ => {
-				console.error(`Error retrieving '${uri}'`)
-				if(retry && !interval) window.setTimeout(load, 1000)
-			});
+		const load = async () => {
+			try {
+				const r = await fetch(SERVER_URL + uri)
+				const result = await r.json();
+				this.setState({ result });
+				return true;
+			} catch(_) {
+				console.error(`Error retrieving '${uri}'`);
+				return false;
+			}
+		}
 	
-		load().then(() => {
-			if(interval) window.setInterval(load, UPDATE_TIME);
+		load().then(success => {
+			if((success || retry) && interval) window.setInterval(load, UPDATE_TIME);
 		});
 	}
 

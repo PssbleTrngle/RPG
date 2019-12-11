@@ -43,7 +43,14 @@ export interface IPosition {
 	area: IArea;
 };
 
+export interface IEvolution {
+	from: IClass,
+	to: IClass,
+	level: number,
+}
+
 export interface IClass extends ITranslated {
+	stage: number;
 };
 
 export interface IParticipant {

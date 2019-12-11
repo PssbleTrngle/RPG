@@ -11,6 +11,7 @@ import { List, View } from './View';
 import { LoadingComponent } from './Connection';
 import { Battle } from './Battle';
 import { PopupOpen } from './Popup';
+import { Graphs } from './Graph';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
 
@@ -124,6 +125,9 @@ class App extends LoadingComponent<Account, {},{lang: Lang, popup?: string}> imp
 					{account ?
 
 					<Switch>
+						<Route path='/view/classes'>
+							<Graphs />	
+						</Route>
 						<Route path='/view/:model/:id?' render={p => this.apiView(p.match.params)} />
 
 						<Route path='/profile'>

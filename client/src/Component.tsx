@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { AppProps, params } from './App';
 
-export abstract class Component<P = {},S = {}, SS = {}> extends React.Component<{app?: AppProps} & P,S, SS> implements AppProps {
+export abstract class Component<P = {},S = {}, SS = {}> extends React.PureComponent<{app?: AppProps} & P,S, SS> implements AppProps {
 
 	action(url: string, params?: params) {
 		const { app } = this.props;

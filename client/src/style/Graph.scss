@@ -1,0 +1,21 @@
+.graphs {
+
+    display: grid;
+    grid-template: 
+        "big big"
+        "a a"
+        "a a"
+        / 1fr 1fr;
+
+    grid-gap: 10px;
+
+    & > * {
+        min-height: 400px;
+        background-color: #0003;
+    }
+
+    & > *:first-child {
+        grid-area: big;
+    }
+
+}
