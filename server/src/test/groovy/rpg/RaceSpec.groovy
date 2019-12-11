@@ -5,14 +5,8 @@ import spock.lang.Specification
 
 class RaceSpec extends Specification implements DomainUnitTest<Race> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }

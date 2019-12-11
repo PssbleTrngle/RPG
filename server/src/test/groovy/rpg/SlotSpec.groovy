@@ -5,14 +5,8 @@ import spock.lang.Specification
 
 class SlotSpec extends Specification implements DomainUnitTest<Slot> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }

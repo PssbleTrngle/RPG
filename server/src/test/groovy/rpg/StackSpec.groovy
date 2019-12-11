@@ -5,14 +5,12 @@ import spock.lang.Specification
 
 class StackSpec extends Specification implements DomainUnitTest<Stack> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "stackable amount"() {
+        expect:
+        domain.getAmount() == 1 || domain.getItem()?.getType()?.isStackable()
     }
 }

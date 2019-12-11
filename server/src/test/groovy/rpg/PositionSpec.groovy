@@ -5,14 +5,13 @@ import spock.lang.Specification
 
 class PositionSpec extends Specification implements DomainUnitTest<Position> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "floor only in dungeon"() {
+        boolean inDungeon = domain.getDungeon() != null
+        expect:
+        inDungeon || (domain.getFloor() == 1 && domain.getAttempts() == 0 && !domain.isFoundStairs())
     }
 }

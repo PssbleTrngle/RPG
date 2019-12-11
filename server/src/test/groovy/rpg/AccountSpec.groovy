@@ -5,14 +5,22 @@ import spock.lang.Specification
 
 class AccountSpec extends Specification implements DomainUnitTest<Account> {
 
-    def setup() {
+    def setup() {}
+
+    def cleanup() {}
+
+    void "has selected"() {
+        expect:
+        domain.getSelected() != null || domain.getCharacters().isEmpty()
     }
 
-    def cleanup() {
+    void "valid selected"() {
+        expect:
+        domain.getSelected() == null || domain.getCharacters().find({ it.getId() == domain.getSelected().getId() })
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "no future dates"() {
+        expect:
+        domain.getDateCreated() < new Date()
     }
 }

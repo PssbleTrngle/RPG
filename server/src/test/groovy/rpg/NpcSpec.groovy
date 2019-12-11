@@ -5,14 +5,12 @@ import spock.lang.Specification
 
 class NpcSpec extends Specification implements DomainUnitTest<Npc> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "max health"() {
+        expect:
+        domain.getMaxHealth() > 0
     }
 }

@@ -5,14 +5,8 @@ import spock.lang.Specification
 
 class ChargingSkillSpec extends Specification implements DomainUnitTest<ChargingSkill> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }

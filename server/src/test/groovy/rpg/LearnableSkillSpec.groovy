@@ -5,14 +5,8 @@ import spock.lang.Specification
 
 class LearnableSkillSpec extends Specification implements DomainUnitTest<LearnableSkill> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }

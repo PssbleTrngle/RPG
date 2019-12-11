@@ -5,14 +5,21 @@ import spock.lang.Specification
 
 class ItemTypeSpec extends Specification implements DomainUnitTest<ItemType> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "no loops"() {
+        def findLoop
+        findLoop = { ItemType it ->
+            if(it.getId() == this.getId())
+                return true;
+            for(ItemType type : it.evolvesFrom())
+                if(findLoop(type)) return true
+            return false
+        }
+
+        expect:
+        !findLoop(domain)
     }
 }

@@ -5,14 +5,18 @@ import spock.lang.Specification
 
 class CharacterSpec extends Specification implements DomainUnitTest<Character> {
 
-    def setup() {
+    def setup() {}
+
+    def cleanup() {}
+
+    void "no future dates"() {
+        expect:
+        domain.getDateCreated() < new Date()
     }
 
-    def cleanup() {
+    void "has class"() {
+        expect:
+        !domain.getClazzes().isEmpty()
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }

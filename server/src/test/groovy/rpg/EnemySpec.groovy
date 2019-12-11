@@ -5,14 +5,12 @@ import spock.lang.Specification
 
 class EnemySpec extends Specification implements DomainUnitTest<Enemy> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "in battle"() {
+        expect:
+        domain.getBattle() != null
     }
 }

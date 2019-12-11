@@ -5,14 +5,12 @@ import spock.lang.Specification
 
 class RaritySpec extends Specification implements DomainUnitTest<Rarity> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "correct color"() {
+        expect:
+        domain.getColor() == null || domain.getColor().matches(/#[0-9A-F]{6}/)
     }
 }

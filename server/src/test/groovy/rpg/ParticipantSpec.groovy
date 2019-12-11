@@ -5,14 +5,22 @@ import spock.lang.Specification
 
 class ParticipantSpec extends Specification implements DomainUnitTest<Participant> {
 
-    def setup() {
+    def setup() {}
+
+    def cleanup() {}
+
+    void "correct health"() {
+        expect: (domain.getHealth() > 0 || domain.getBattle() != null) && domain.getHealth() <= domain.maxHealth()
     }
 
-    def cleanup() {
+    void "correct max health"() {
+        expect:
+        domain.maxHealth() > 0
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "on side"() {
+        expect:
+        domain.getSide() > 0 || domain.getBattle() == null
     }
+
 }

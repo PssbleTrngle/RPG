@@ -5,14 +5,21 @@ import spock.lang.Specification
 
 class AreaSpec extends Specification implements DomainUnitTest<Area> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "no loops"() {
+        def findLoop
+        findLoop = { Area it ->
+            if(it.getId() == domain.getId())
+                return true;
+            for(Area child : it.getChildren())
+                if(findLoop(child)) return true
+            return false
+        }
+
+        expect:
+        !findLoop(domain)
     }
 }

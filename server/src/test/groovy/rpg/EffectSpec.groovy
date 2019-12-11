@@ -5,14 +5,12 @@ import spock.lang.Specification
 
 class EffectSpec extends Specification implements DomainUnitTest<Effect> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "correct fade span"() {
+        expect:
+        domain.getFadeMin() <= domain.getFadeMax()
     }
 }

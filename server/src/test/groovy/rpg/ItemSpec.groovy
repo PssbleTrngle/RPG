@@ -5,14 +5,13 @@ import spock.lang.Specification
 
 class ItemSpec extends Specification implements DomainUnitTest<Item> {
 
-    def setup() {
-    }
+    def setup() {}
 
-    def cleanup() {
-    }
+    def cleanup() {}
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void "useful stats"() {
+        Stats stats = domain.getStats()
+        expect:
+        stats == null || stats.total() > 0
     }
 }
