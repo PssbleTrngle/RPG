@@ -12,7 +12,7 @@ class Color {
 
         const a: any[] = [...colors];
         const [r, g, b] = ['r', 'g', 'b'].map(key =>
-            a.reduce((t, c) => t + c[key], 0)
+            a.reduce((t, c) => t + c[key] / colors.length, 0)
         );
         return new Color(r, g, b);
     }
@@ -27,20 +27,14 @@ class Color {
         return new Color(r, g, b);
     }
 
-    static convert(s: string): number {
-        const h = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-        return s.split('')
-            .map((c, t) => h.indexOf(c.toUpperCase()) * Math.pow(16, s.length - t - 1))
-            .reduce((t, i) => t + i, 0);
-    }
-
     static from(hex: string): Color {
         if (hex.startsWith('#')) return Color.from(hex.slice(1));
-        if (hex.length === 3) return Color.from(hex + hex);
+        if (hex.length === 3) return Color.from(hex.split('').map(c => c+c).join(''));
+        if(hex.length !== 6) throw new Error(`Invalid color: ${hex}`);
 
-        const r = Color.convert(hex.slice(0, 2));
-        const g = Color.convert(hex.slice(2, 4));
-        const b = Color.convert(hex.slice(4, 6));
+        const r = Number.parseInt(hex.slice(0, 2), 16);
+        const g = Number.parseInt(hex.slice(2, 4), 16);
+        const b = Number.parseInt(hex.slice(4, 6), 16);
 
         return new Color(r, g, b);
     }
