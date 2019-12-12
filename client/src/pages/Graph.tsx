@@ -86,6 +86,8 @@ export class Graphs extends Component<{}, {evolutions: IEvolution[], classes: IC
     template() {
         const { evolutions, classes, selected } = this.state;
 
+        if(!evolutions.length || !classes.length) return <p>Loading...</p>;
+
         const starters = classes.filter(c => c.stage === 1);
         const props = {...{ evolutions, selected, select: (n: ReactText) => this.select(n) }}
 
@@ -228,8 +230,6 @@ class ClassGraph extends Component<GraphProps, {nodes: (Node & {stage: number, d
         const { select, options } = this.props;
         const { edges, nodes } = this.state;
         const { physics } = options;
-
-        if(nodes.length === 0 || edges.length === 0) return <h1>Loading...</h1>;
 
         return (
             <Graph
