@@ -1,9 +1,9 @@
 import React from 'react';
-import { LoadingComponent } from "./Connection";
-import { ITranslated } from './models';
-import { Icon } from './Grid';
+import { LoadingComponent } from "../components/LoadingComponent";
+import { ITranslated } from '../models';
+import { Icon } from '../components/Icon';
 import { Link } from 'react-router-dom';
-import { Component } from "./Component";
+import { Component } from "../components/Component";
 
 type SeachProps<T> = {
     change?: (result: string) => any,

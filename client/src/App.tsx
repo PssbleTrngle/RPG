@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Account, Point, ICharacter } from './models';
 import { SERVER_URL } from './config'
 
-import Profile from './Profile';
-import Home from './Home';
+import Profile from './pages/Profile';
+import Home from './pages/Home';
 
 import './style/App.scss';
-import { List, View } from './View';
-import { LoadingComponent } from './Connection';
-import { Battle } from './Battle';
-import { PopupOpen } from './Popup';
-import { Graphs } from './Graph';
+import { List, View } from './pages/View';
+import { LoadingComponent } from './components/LoadingComponent';
+import { Battle } from './components/Battle';
+import { PopupOpen } from './components/Popup';
+import { Graphs } from './pages/Graph';
 
 class BG extends React.Component<{},{current: Point, initial: Point}> {
 

@@ -1,10 +1,9 @@
 import React from 'react';
-import { IField, ISkill, Point, IArea, ID, ICharacter, ITranslated } from './models'
-import { Icon, Cell } from './Grid';
-import { LoadingComponent } from "./Connection";
-import { Collapseable, Page } from './Page';
+import { IField, IArea, ID } from '../models'
+import { Icon } from './Icon';
+import { LoadingComponent } from "./LoadingComponent";
+import { Collapseable, Page } from '../pages/Page';
 import { Component } from './Component';
-import { Inventory, Bag } from './Inventory';
 
 type FieldProps<T extends IField> = {
     onClick?: (f: T) => any,

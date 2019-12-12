@@ -1,31 +1,6 @@
 import React from 'react';
 import { Component } from './Component';
 
-export class Cell extends Component<{area?: any, className?: string},{}> {
-
-	template() {
-		const { area, children, className } = this.props;
-
-		return (
-			<div className={className} style={area ? { gridArea: area } : {}}>{children}</div>
-		)
-	}
-}
-
-export class Buttons extends Component<{},{}> {
-
-	template() {
-        const { children } = this.props;
-
-		return (
-			<Cell className='buttons' area='buttons'>
-				{children}
-			</Cell>
-		)
-	}
-
-}
-
 export class Icon extends Component<{src: string, reverse?: boolean, className?: string},{}> {
 
 	template() {

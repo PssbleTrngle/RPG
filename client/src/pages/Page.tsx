@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import AnimateHeight from 'react-animate-height';
-import { Account } from './models';
-import { Icon } from './Grid';
-import { Component } from "./Component";
+import { Account } from '../models';
+import { Icon } from '../components/Icon';
+import { Component } from "../components/Component";
 
 export abstract class Page extends Component<{account: Account}, {collapsed: Set<string>}> {
 

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { AppProps, params } from './App';
+import { AppProps, params } from '../App';
 
 export abstract class Component<P = {},S = {}, SS = {}> extends React.PureComponent<{app?: AppProps} & P,S, SS> implements AppProps {
 

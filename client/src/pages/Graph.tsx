@@ -1,8 +1,9 @@
 import React, { ReactText } from 'react';
-import { Component } from "./Component";
-import { IEvolution, IClass } from "./models";
+import { Component } from "../components/Component";
+import { IEvolution, IClass } from "../models";
 import Graph, { Edge, Node } from 'vis-react'
-import { SERVER_URL } from './config';
+import { SERVER_URL } from '../config';
+import { number } from 'prop-types';
 
 class Color {
 
@@ -108,7 +109,7 @@ interface GraphProps {
     select: ((n: ReactText) => any);
     selected?: ReactText;
 }
-class ClassGraph extends Component<GraphProps, {}> {
+class ClassGraph extends Component<GraphProps, {nodes: (Node & {stage: number, deg: number})[], edges: Edge[]}> {
 
     static starter_colors: { [key: string]: Color } = {
         apprentice: Color.from('#FF0000'),
@@ -120,6 +121,28 @@ class ClassGraph extends Component<GraphProps, {}> {
     static fade = Color.from('#666');
 
     static max = 4;
+
+    constructor(props: GraphProps) {
+        super(props);
+
+        const { evolutions, classes } = props;
+
+        const count: {[key: number]: number} = {};
+        const starts: {[key: number]: number} = {};
+        let start = 0;
+        for(let i = 1; i <= ClassGraph.max; i++) {
+            count[i] = classes.filter(n => n.stage === i).length;
+            starts[i] = count[i] + start;
+            start += count[i];
+        }
+        
+        const nodes = classes.map(c => ({ id: c.id, label: c.name, color: this.color(c).toString(), stage: c.stage, deg: this.deg(c) }))
+                            .sort(c => c.stage * 1000 + c.deg)
+                            .map((c, i) => ({...c, ...{ deg: (i - starts[c.stage]) / count[c.stage] }}))
+        const edges = evolutions.map(e => ({ from: e.from.id, to: e.to.id }));
+
+        this.state = { nodes, edges };
+    }
 
     options() {
         const { physics } = this.props.options;
@@ -202,25 +225,11 @@ class ClassGraph extends Component<GraphProps, {}> {
     }
 
     template() {
-        const { evolutions, classes, select, options } = this.props;
+        const { select, options } = this.props;
+        const { edges, nodes } = this.state;
         const { physics } = options;
 
-        if(evolutions.length === 0 || classes.length === 0) return <h1>Loading...</h1>;
-
-        const count: {[key: number]: number} = {};
-        const starts: {[key: number]: number} = {};
-        let start = 0;
-        for(let i = 1; i <= ClassGraph.max; i++) {
-            count[i] = classes.filter(n => n.stage === i).length;
-            starts[i] = count[i] + start;
-            start += count[i];
-        }
-        
-
-        const nodes = classes.map(c => ({ id: c.id, label: c.name, color: this.color(c).toString(), stage: c.stage, deg: this.deg(c) }))
-                            .sort(c => c.stage * 1000 + c.deg)
-                            .map((c, i) => ({...c, ...{ deg: (i - starts[c.stage]) / count[c.stage] }}))
-        const edges = evolutions.map(e => ({ from: e.from.id, to: e.to.id }));
+        if(nodes.length === 0 || edges.length === 0) return <h1>Loading...</h1>;
 
         return (
             <Graph

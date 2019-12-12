@@ -1,9 +1,9 @@
 import React from 'react';
 import { Component } from './Component';
 import { Fields } from './Fields';
-import { IField, Point, ISkill, IStack, ITranslated, ICharacter } from './models';
-import { Page } from './Page';
-import { Cell } from './Grid';
+import { IField, Point, ISkill, IStack, ITranslated, ICharacter } from '../models';
+import { Page } from '../pages/Page';
+import { Cell } from './Cell';
 import { Bag } from './Inventory';
 
 class BattleWrapper extends Component<{ character: ICharacter }, { skill?: ISkill }> {
