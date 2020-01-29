@@ -1,7 +1,6 @@
 import React, { ReactText, useState, useMemo } from 'react';
 import { IEvolution, IClass } from "../Models";
 import Graph, { Edge, Node } from 'vis-react'
-import { SERVER_URL } from '../Config';
 import { useSubscribe } from '../Api';
 import { number } from 'prop-types';
 
