@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { IAccount, ICharacter, IClass, IStack, ISlot, IPosition, ISkill, IStats, IItemType, IArea } from './Models';
+import { useSubscribe } from './Api';
 
 const ri = (m: number) => Math.floor(Math.random() * m);
 const c = 'abcdefghijklmonpqrtsufvwxyzABCDEFGHIJKLMNOPQRSTUVW'.split('');
@@ -122,14 +123,18 @@ export function fakeAccount(): IAccount {
   }
 }
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+jest.mock('./Api', () => ({
+  useAccount: fakeAccount
+}));
 
-it('has a server connection', () => {
+describe('fetch account', () => {
 
+  it('renders without crashing', () => {
 
+    const div = document.createElement('div');
+    ReactDOM.render(<App />, div);
+    ReactDOM.unmountComponentAtNode(div);
 
-});
+  });
+
+})
