@@ -80,7 +80,7 @@ export interface ICharacter extends IParticipant {
 	inventory: IStack[];
 }
 
-export interface Account {
+export interface IAccount {
 	id: number;
 	username: string;
 	selected?: ICharacter;

@@ -1,54 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
-import { Account, Point, ICharacter } from './models';
-import { SERVER_URL } from './config'
+import React, { useContext, useState, ReactNode } from 'react';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { IAccount, Point } from './Models';
 
 import Profile from './pages/Profile';
 import Home from './pages/Home';
 
 import './style/App.scss';
-import { List, View } from './pages/View';
-import { Battle } from './components/Battle';
+import View from './pages/View';
+import Battle from './components/Battle';
 import { PopupOpen, PopupContext } from './components/Popup';
 import { Graphs } from './pages/Graph';
-import { LangContext, fallback, load, useLang } from './Localization';
-
-const AccountContext = React.createContext<Account | null>(null);
-
-export function useAccount() {
-	const account = useContext(AccountContext);
-	if (account) return account;
-	throw new Error('Account not in context');
-}
-
-export function useSubscribe<M>(endpoint: string) {
-	const [result, setResult] = useState<M | undefined>();
-	if (result) return result;
-	fetch(`/${endpoint}`)
-		.then(r => r.json())
-		.then(r => setResult(r))
-		.catch(() => console.warn(`Could not load ${endpoint}`);
-}
-
-export async function action(action: string, params: any = {}) {
-	try {
-		const response = await fetch(SERVER_URL + action, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(params)
-		}
-		);
-
-		const json = await response.json();
-		return json.success;
-
-	} catch (_) {
-		return false;
-	}
-}
+import { LangContext, load, useLang } from './Localization';
+import { CollapsedContext } from './components/Collapseable';
+import { AccountContext, useSubscribe } from './Api';
 
 class BG extends React.Component<{}, { current: Point, initial: Point }> {
 
@@ -82,59 +46,64 @@ class BG extends React.Component<{}, { current: Point, initial: Point }> {
 
 }
 
-function ApiView() {
-	const { id, model } = useParams();
-	if (model) {
-		if (id) return <View {...{ model, id }} />
-		return <List {...{ model }} />;
-	}
-	return null;
-}
-
-function App() {
-	const account = useSubscribe<Account | undefined>('account');
+function Providers(props: { children?: ReactNode, account: IAccount }) {
+	const { account, children } = props;
 	const [popup, setPopup] = useState<string | undefined>();
 	const [collapsed, setCollapsed] = useState(new Set<string>());
 	const [loadLang, key, json] = useLang();
 
-	if (!account) return <h1 className='center'>Server not Found</h1>;
-
 	return (
+
 		<LangContext.Provider value={{ json, loadLang, key }}>
 			<AccountContext.Provider value={account}>
-				<PopupContext.Provider value={{ collapsed, setCollapsed }}>
+				<CollapsedContext.Provider value={{ collapsed, setCollapsed }}>
 					<PopupContext.Provider value={{ popup, setPopup }}>
-						<Router>
 
-							<BG />
-							<PopupOpen />
+						{children}
 
-							<div className='container'>
-								<Switch>
-									<Route path='/view/classes'>
-										<Graphs />
-									</Route>
-									<Route path='/view/:model/:id?'>
-										<ApiView />
-									</Route>
-
-									<Route path='/profile'>
-										<Profile />
-									</Route>
-
-									<Route path='/'>
-										{account.selected?.battle ?
-											<Battle /> : <Home />
-										}
-									</Route>
-								</Switch>
-							</div>
-
-						</Router>
 					</PopupContext.Provider>
 				</CollapsedContext.Provider>
 			</AccountContext.Provider>
 		</LangContext.Provider>
+	)
+
+}
+
+function App() {
+	const account = useSubscribe<IAccount | undefined>('account');
+
+	if (!account) return <h1 className='center'>Server not Found</h1>;
+
+	return (
+		<Providers {...{ account }}>
+			<Router>
+
+				<BG />
+				<PopupOpen />
+
+				<div className='container'>
+					<Switch>
+						<Route path='/view/classes'>
+							<Graphs />
+						</Route>
+						<Route path='/view/:model/:id?'>
+							<View />
+						</Route>
+
+						<Route path='/profile'>
+							<Profile />
+						</Route>
+
+						<Route path='/'>
+							{account.selected?.battle ?
+								<Battle /> : <Home />
+							}
+						</Route>
+					</Switch>
+				</div>
+
+			</Router>
+		</Providers>
 	);
 
 }

@@ -1,9 +1,13 @@
 import React, { useContext, useState } from 'react';
 
 const fallback = { json: require(`./lang/en.json`), key: '???' };
-export const LangContext = React.createContext({
+export const LangContext = React.createContext<{
+    json: any,
+    key: string,
+    loadLang: (key: string) => unknown,
+}>({
     ...fallback,
-    loadLang: (s: string) => { }
+    loadLang: () => { }
 });
 
 export function useLang() {
@@ -20,7 +24,7 @@ export function useLang() {
         }
     }
 
-    return [ load, key, json ];
+    return [load, key, json];
 }
 
 export function useLocalization() {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { IStack, ISlot } from '../models';
+import { IStack, ISlot } from '../Models';
 import { Icon } from './Icon';
 import { Cell } from './Cell';
-import { useSubscribe } from '../App';
+import { useSubscribe } from '../Api';
 import { Collapseable } from '../components/Collapseable';
 
 enum StackState {

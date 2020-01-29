@@ -1,8 +1,8 @@
 import React from 'react';
-import { ICharacter } from '../models';
+import { ICharacter } from '../Models';
 import { Link } from "react-router-dom";
 import { Icon } from '../components/Icon';
-import { action, useAccount } from '../App';
+import { action, useAccount } from '../Api';
 import { useLocalization } from '../Localization';
 import { Cell } from '../components/Cell';
 import { Popup, usePopup } from '../components/Popup';

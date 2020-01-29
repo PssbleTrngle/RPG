@@ -1,8 +1,6 @@
 import React, { ReactNode, useState, useContext } from 'react';
 import AnimateHeight from 'react-animate-height';
-import { Account } from '../models';
 import { Icon } from './Icon';
-import { useCollapse } from '../App';
 
 export function Collapseable(props: { hidden?: boolean, id: string, className?: string, children?: ReactNode }) {
     const { id, children, className, hidden: h } = props;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IClass, ISkill } from '../models';
+import { IClass, ISkill } from '../Models';
 import { Link, Redirect } from "react-router-dom";
 import { WorldMap } from '../components/Fields';
 import { Inventory } from '../components/Inventory';
@@ -7,7 +7,7 @@ import { Collapseable, ToggleButton } from "../components/Collapseable";
 import { Cell } from '../components/Cell';
 import { useLocalization } from '../Localization';
 import { Icon } from '../components/Icon';
-import { useAccount } from '../App';
+import { useAccount } from '../Api';
 
 function Evolve(props: { classes: IClass[] }) {
     const { classes } = props;
@@ -86,7 +86,7 @@ function Home() {
 
                 <ToggleButton id='skills' />
                 <ToggleButton id='inventory' src='chest' />
-                <ToggleButton id='map' mobileOnly={true} />
+                <ToggleButton id='map' mobileOnly />
 
             </Cell>
         </div>

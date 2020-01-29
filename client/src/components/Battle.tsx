@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { Fields } from './Fields';
-import { IField, Point, ISkill, IStack, ITranslated, ICharacter } from '../models';
+import { IField, Point, ISkill, IStack, ITranslated, ICharacter } from '../Models';
 import { Cell } from './Cell';
 import { Bag } from './Inventory';
-import { useAccount } from '../App';
+import { useAccount } from '../Api';
 
-function BattleWrapper(props: { character: ICharacter }) {
+function Battle() {
     const [active, select] = useState<ISkill | undefined>();
-    const { character } = props;
-    const { battle } = character;
-    if (!battle) return null;
+    const { selected } = useAccount();
+    if (!selected?.battle) return null;
 
-    const { fields } = battle;
+    const { fields } = selected.battle;
 
     const skills: ISkill[] = [
         { name: 'pulse', id: 'pulse', aoe: createHex(1) },
@@ -23,7 +22,7 @@ function BattleWrapper(props: { character: ICharacter }) {
         <Battlefield aoe={active?.aoe} {...{ fields }} />
         <Sidebar {...{ select, skills, active }} />
         <Cell area='items'>
-            <Bag stacks={character.inventory.filter((s: IStack) => s.slot.id === 'bag')} />
+            <Bag stacks={selected.inventory.filter((s: IStack) => s.slot.id === 'bag')} />
         </Cell>
         <Cell area='info' className='center info'>
             {active && <Info {...active} />}
@@ -38,14 +37,6 @@ function Info(props: ITranslated) {
     return (
         <h3>{name}</h3>
     );
-
-}
-
-export function Battle() {
-    const { selected } = useAccount();
-    if (!selected) return null;
-
-    return <BattleWrapper character={selected} />
 
 }
 
@@ -92,22 +83,25 @@ function Battlefield(props: { fields: IField[], aoe?: Point[] }) {
         <Fields
             render={f => renderField(f)}
             fields={fields}
-            onClick={() => { })}
+            onClick={() => { }}
             onHover={hover}
-        className={field => inAOE(field) ? 'hover' : null}
+            className={field => inAOE(field) ? 'hover' : null}
         />
     </div>);
 
 }
 
 const createHex = (r: number): IField[] => {
-    const fields = [];
+    const fields: IField[] = [];
+    let i = 0;
     for (let x = -r; x <= r; x++)
         for (let y = -r; y <= r; y++)
             if (Math.abs(x + y) <= r)
                 fields.push({
-                    id: `${x}|${y}`,
+                    id: i++,
                     x, y,
                 });
     return fields;
 };
+
+export default Battle;

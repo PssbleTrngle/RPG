@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IField, IArea } from '../models'
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import { IField, IArea } from '../Models'
 import { Icon } from './Icon';
 import { Collapseable } from '../components/Collapseable';
-import { useSubscribe } from '../App';
+import { useSubscribe } from '../Api';
 
-type FieldProps<T extends IField> = {
-    onClick?: (f: T) => any,
-    render: (f: T) => any,
-    onHover?: (f?: T) => any,
-    className?: (f: T) => any,
+interface F {
+    x: number;
+    y: number;
+    id: number | string;
 }
-function Field<T extends IField>(props: FieldProps<T> & { field: T, size: number }) {
+
+interface FieldProps<T extends F> {
+    onClick?: (f: T) => unknown;
+    render: (f: T) => ReactNode;
+    onHover?: (f?: T) => unknown;
+    className?: (f: T) => string | null;
+}
+function Field<T extends F>(props: FieldProps<T> & { field: T, size: number }) {
     const { field, size, onClick, render, onHover, className } = props;
     const { x, y } = field;
     const left = (x + y / 2) * 110;
@@ -34,8 +40,7 @@ function Field<T extends IField>(props: FieldProps<T> & { field: T, size: number
     );
 
 }
-
-export function Fields<T extends IField>(props: { fields: T[] } & FieldProps<T>) {
+export function Fields<T extends F>(props: { fields: T[] } & FieldProps<T>) {
     const { fields, onClick, render, onHover, className } = props;
     const [{ width, height }, resize] = useState({ width: 0, height: 0 });
 
@@ -76,13 +81,13 @@ export function WorldMap() {
     const select = (area?: IArea) => {
         if (!area || area.areas) {
             setMessage(undefined);
-            setSelected(area ?.id);
+            setSelected(area?.id);
         }
     }
 
     const hover = (area?: IArea) => {
         if (!area) setMessage(undefined);
-        setMessage(area.areas ? `View ${area.name}` : `Travel to ${area.name}`);
+        else setMessage(area.areas ? `View ${area.name}` : `Travel to ${area.name}`);
     }
 
     const find = (areas: IArea[], id: IArea['id']): IArea | undefined => {

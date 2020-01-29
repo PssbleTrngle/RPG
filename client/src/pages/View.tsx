@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ITranslated } from '../models';
+import { ITranslated } from '../Models';
 import { Icon } from '../components/Icon';
-import { Link } from 'react-router-dom';
-import { useSubscribe } from '../App';
+import { Link, useParams } from 'react-router-dom';
+import { useSubscribe } from '../Api';
 
 type SeachProps<T> = {
     updateValue?: (result: string) => unknown,
@@ -68,7 +68,7 @@ export function List<T extends ITranslated>(props: { model: string }) {
 
 }
 
-export function View<T extends ITranslated>(props: { model: string, id: string }) {
+export function Single<T extends ITranslated>(props: { model: string, id: string }) {
     const { model, id } = props;
     const result = useSubscribe<T>(`${model}/${id}`)
 
@@ -82,3 +82,14 @@ export function View<T extends ITranslated>(props: { model: string, id: string }
     </>);
 
 }
+
+function View() {
+	const { id, model } = useParams();
+	if (model) {
+		if (id) return <Single {...{ model, id }} />
+		return <List {...{ model }} />;
+	}
+	return null;
+}
+
+export default View;

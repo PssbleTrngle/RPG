@@ -120,8 +120,8 @@ img.icon {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 
 .bg {
@@ -130,7 +130,7 @@ img.icon {
   @include fixed;
   z-index: -1;
 
-  box-shadow: 0 -70vh 70vh #000A inset;
+  box-shadow: 0 -70% 70% #000A inset;
   background-image: url('../img/bg.png');
   background-repeat: repeat;
   background-size: 1462px * $factor 1520px * $factor;
