@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { IField, IArea, ID } from '../models'
 import { Icon } from './Icon';
 import { LoadingComponent } from "./LoadingComponent";
-import { Collapseable } from '../pages/Page';
+import { Collapseable } from '../components/Collapseable';
 import { useSubscribe } from '../App';
 
 type FieldProps<T extends IField> = {

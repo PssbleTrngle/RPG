@@ -73,11 +73,7 @@ function Battlefield(props: { fields: IField[], aoe?: Point[] }) {
 
     const inAOE = (field: IField) => {
         const aoe = props.aoe ?? createHex(0);
-
-        if (hovered)
-            return !!aoe.find(f => field.x === f.x + hover.x && field.y === f.y + hover.y);
-
-        return false;
+        return hovered && !!aoe.find(f => field.x === f.x + hovered.x && field.y === f.y + hovered.y);
     }
 
     const renderField = (f: IField) => {

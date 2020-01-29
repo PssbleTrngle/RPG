@@ -3,7 +3,7 @@ import { IStack, ISlot, ID } from '../models';
 import { Icon } from './Icon';
 import { Cell } from './Cell';
 import { useSubscribe } from '../App';
-import { Collapseable } from '../pages/Page';
+import { Collapseable } from '../components/Collapseable';
 
 enum StackState {
     LOCKED = 'locked',

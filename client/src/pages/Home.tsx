@@ -3,12 +3,11 @@ import { IClass, ISkill } from '../models';
 import { Link, Redirect } from "react-router-dom";
 import { WorldMap } from '../components/Fields';
 import { Inventory } from '../components/Inventory';
-import { Collapseable, ToggleButton } from "./Page";
+import { Collapseable, ToggleButton } from "./Collapseable";
 import { Cell } from '../components/Cell';
 import { useLocalization } from '../Localization';
 import { Icon } from '../components/Icon';
 import { useAccount } from '../App';
-import { Buttons } from '../components/Buttons';
 
 function Evolve(props: { classes: IClass[] }) {
     const { classes } = props;
@@ -80,14 +79,14 @@ function Home() {
                 <Skills skills={skills} />
             </Cell>
 
-            <Buttons>
+            <Cell area='buttons'>
                 <Link to='/profile'><Icon src={`class/${selected.classes[selected.classes.length - 1].id}`} /></Link>
 
                 <ToggleButton id='skills' />
                 <ToggleButton id='inventory' src='chest' />
                 <ToggleButton id='map' mobileOnly={true} />
 
-            </Buttons>
+            </Cell>
         </div>
     );
 }

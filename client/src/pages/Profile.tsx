@@ -5,7 +5,6 @@ import { Icon } from '../components/Icon';
 import { action, useAccount, usePopup } from '../App';
 import { useLocalization } from '../Localization';
 import { Cell } from '../components/Cell';
-import { Buttons } from '../components/Buttons';
 import { Popup } from '../components/Popup';
 
 function CharacterRow(props: { characters: ICharacter[], selected?: ICharacter }) {
@@ -122,7 +121,7 @@ function Profile() {
 					{characters.length === 0 && <Greeter icon={'class/death'} message={format('message.new_account')} />}
 				</Cell>
 
-				<Buttons>
+				<Cell area='buttons'>
 					{selected ?
 						<Link to='/'><Icon src={'position/dungeon/moss'} /></Link>
 						:
@@ -132,7 +131,7 @@ function Profile() {
 					<button onClick={openOptions}><Icon src={'icon/options'} /></button>
 
 					<Link to='/profile/create'><Icon src={'icon/create'} /></Link>
-				</Buttons>
+				</Cell>
 
 				<Cell area='info'>
 					{selected && <SelectedInfo selected={selected} />}

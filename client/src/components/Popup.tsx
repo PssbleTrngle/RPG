@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Component } from "./Component";
 import { Page } from './Page';
-import { usePopup } from '../pages/Page';
+import { usePopup } from '../components/Collapseable';
 
 export function Popup(props: { id: string, children?: ReactNode }) {
 	const { children, id } = props;
