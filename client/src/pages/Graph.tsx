@@ -1,5 +1,5 @@
 import React, { ReactText, useState, useMemo } from 'react';
-import { IEvolution, IClass, ID } from "../models";
+import { IEvolution, IClass } from "../models";
 import Graph, { Edge, Node } from 'vis-react'
 import { SERVER_URL } from '../config';
 import { useSubscribe } from '../App';
@@ -50,7 +50,7 @@ class Color {
 export function Graphs() {
     const evolutions = useSubscribe<IEvolution[]>('evolution');
     const classes = useSubscribe<IClass[]>('class');
-    const [selected, select] = useState<ID | undefined>();
+    const [selected, select] = useState<string | undefined>();
 
     if (!evolutions || !classes) return <p>Loading...</p>;
 
@@ -60,7 +60,7 @@ export function Graphs() {
         return evolutions
             .filter(e => e.to.id === clazz.id)
             .map(e => origin(e.from))
-            .flat();
+            .reduce((t, a) => [...t, ...a], []);
     }
 
     const starters = classes.filter(c => c.stage === 1);
@@ -82,13 +82,11 @@ interface GraphProps {
     evolutions: IEvolution[];
     classes: IClass[];
     physics: boolean;
-    select: ((n: ReactText) => any);
+    select: ((node: string) => unknown);
     selected?: ReactText;
 }
 function ClassGraph(props: GraphProps) {
     const { evolutions, classes, physics, select } = props;
-
-    //{ nodes: (Node & { stage: number, deg: number })[], edges: Edge[] }
 
     const options = {
         physics,
@@ -171,7 +169,7 @@ function ClassGraph(props: GraphProps) {
 
     const deg = (clazz: IClass): number => {
         const starters = Object.keys(starter_colors);
-        if (clazz.stage === 1) return starters.indexOf(clazz.id.toString()) / starters.length;
+        if (clazz.stage === 1) return starters.indexOf(clazz.id) / starters.length;
 
         const degrees = evolutions
             .filter(e => e.to.id === clazz.id)

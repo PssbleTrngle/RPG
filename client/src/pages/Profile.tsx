@@ -2,10 +2,10 @@ import React from 'react';
 import { ICharacter } from '../models';
 import { Link } from "react-router-dom";
 import { Icon } from '../components/Icon';
-import { action, useAccount, usePopup } from '../App';
+import { action, useAccount } from '../App';
 import { useLocalization } from '../Localization';
 import { Cell } from '../components/Cell';
-import { Popup } from '../components/Popup';
+import { Popup, usePopup } from '../components/Popup';
 
 function CharacterRow(props: { characters: ICharacter[], selected?: ICharacter }) {
 	const { characters, selected } = props;
@@ -90,7 +90,7 @@ function SelectedInfo(props: { selected: ICharacter }) {
 
 function Journey(props: { character: ICharacter }) {
 	const { character } = props;
-	const { format } = useLocalization()
+	const { format } = useLocalization();
 
 	return (
 		<div className='journey'>
@@ -106,10 +106,9 @@ function Journey(props: { character: ICharacter }) {
 
 function Profile() {
 	const { selected, characters, username } = useAccount();
-	const { format, key: currentLang, loadLang } = useLocalization();
-	const { close } = usePopup();
-	const { open: openLang } = usePopup('lang');
-	const { open: openOptions } = usePopup('options');
+	const { format } = useLocalization();
+	const lang = usePopup('lang');
+	const options = usePopup('options');
 
 	return (
 		<>
@@ -127,8 +126,8 @@ function Profile() {
 						:
 						<Link to='create'><Icon src={'icon/create'} /></Link>
 					}
-					<button onClick={openLang}><Icon src={'icon/lang'} /></button>
-					<button onClick={openOptions}><Icon src={'icon/options'} /></button>
+					<button onClick={lang.open}><Icon src={'icon/lang'} /></button>
+					<button onClick={options.open}><Icon src={'icon/options'} /></button>
 
 					<Link to='/profile/create'><Icon src={'icon/create'} /></Link>
 				</Cell>
@@ -141,27 +140,42 @@ function Profile() {
 					{selected && <Journey character={selected} />}
 				</Cell>
 
-				<Popup id='lang'>
-					{['en', 'de', 'cyber'].map(lang =>
-						<div
-							key={lang}
-							className={`lang ${currentLang === lang ? 'active' : ''}`}
-							onClick={() => {
-								loadLang(lang);
-								close()
-							}}>
-							{lang.toLowerCase()}
-						</div>
-					)}
-				</Popup>
+				<LangPopup />
+				<OptionsPopup />
 
-				<Popup id='options'>
-					<h1>Options</h1>
-				</Popup>
 			</div>
 		</>
 	);
 
+}
+
+function OptionsPopup() {
+	return (
+		<Popup id='options'>
+			<h1>Options</h1>
+		</Popup>
+	);
+}
+
+function LangPopup() {
+	const { key: currentLang, loadLang } = useLocalization();
+	const { close } = usePopup();
+
+	return (
+		<Popup id='lang'>
+			{['en', 'de', 'cyber'].map(lang =>
+				<div
+					key={lang}
+					className={`lang ${currentLang === lang ? 'active' : ''}`}
+					onClick={() => {
+						loadLang(lang);
+						close()
+					}}>
+					{lang.toLowerCase()}
+				</div>
+			)}
+		</Popup>
+	);
 }
 
 export default Profile;

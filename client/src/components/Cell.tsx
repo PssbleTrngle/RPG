@@ -1,8 +1,9 @@
-import React, { ReactNodeArray, ReactElement } from 'react';
+import React, { ReactNodeArray, ReactElement, Children } from 'react';
 
-export function Cell(props: { area: string, className?: string, children?: ReactNodeArray | ReactElement }) {
+export function Cell(props: { area?: string, className?: string, children?: ReactNodeArray | ReactElement }) {
 	const { area: gridArea, children: content, className } = props;
 	if (!content) return null;
+	if (!gridArea) return <>content</>
 
 	function isArray(c: ReactNodeArray | ReactElement): c is ReactNodeArray {
 		return Array.isArray(c);

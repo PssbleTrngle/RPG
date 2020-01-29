@@ -9,7 +9,7 @@ import Home from './pages/Home';
 import './style/App.scss';
 import { List, View } from './pages/View';
 import { Battle } from './components/Battle';
-import { PopupOpen } from './components/Popup';
+import { PopupOpen, PopupContext } from './components/Popup';
 import { Graphs } from './pages/Graph';
 import { LangContext, fallback, load, useLang } from './Localization';
 
@@ -102,8 +102,8 @@ function App() {
 	return (
 		<LangContext.Provider value={{ json, loadLang, key }}>
 			<AccountContext.Provider value={account}>
-				<Collapsed.Provider value={{ collapsed, setCollapsed }}>
-					<Popup.Provider value={{ popup, setPopup }}>
+				<PopupContext.Provider value={{ collapsed, setCollapsed }}>
+					<PopupContext.Provider value={{ popup, setPopup }}>
 						<Router>
 
 							<BG />
@@ -131,47 +131,12 @@ function App() {
 							</div>
 
 						</Router>
-					</Popup.Provider>
-				</Collapsed.Provider>
+					</PopupContext.Provider>
+				</CollapsedContext.Provider>
 			</AccountContext.Provider>
 		</LangContext.Provider>
 	);
 
-}
-
-const Collapsed = React.createContext<{
-	collapsed: Set<string>,
-	setCollapsed(set: Set<string>): void,
-}>({
-	collapsed: new Set(),
-	setCollapsed: () => { }
-});
-export function useCollapse(id: string) {
-	const { collapsed, setCollapsed } = useContext(Collapsed);
-	const toggle = (id: string) => {
-		const set = new Set(collapsed);
-		set.delete(id)
-		setCollapsed(set);
-	}
-
-	return [
-		collapsed.has(id),
-		() => toggle(id),
-	] as [boolean, () => void];
-
-}
-
-const Popup = React.createContext<{
-	popup: string | undefined,
-	setPopup(id?: string): void,
-}>({ popup: undefined, setPopup: () => { } });
-export function usePopup(id?: string) {
-	const { popup, setPopup } = useContext(Popup);
-	return {
-		isOpen: popup === id,
-		open: id ? () => setPopup(id) : () => { },
-		close: () => setPopup()
-	}
 }
 
 export default App;

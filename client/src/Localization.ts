@@ -28,7 +28,6 @@ export function useLocalization() {
 
     const format = (key: string, ...params: string[]): string => {
 
-        key = key.toString();
         const translation = find(key, json) || find(key, fallback) || key;
         const parsed = translation.replace(/\$([0-9])+/, (_, i) => params[parseInt(i) - 1]);
         return parsed as string;

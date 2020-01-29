@@ -1,5 +1,5 @@
 import React from 'react';
-import { IStack, ISlot, ID } from '../models';
+import { IStack, ISlot } from '../models';
 import { Icon } from './Icon';
 import { Cell } from './Cell';
 import { useSubscribe } from '../App';
@@ -44,7 +44,7 @@ export function Bag(props: { stacks: IStack[], slot?: ISlot }) {
     if (!singleton && stacks.length === 0) return null;
 
     return (
-        <Cell area={slot ? slot.id : undefined}>
+        <Cell area={slot?.id}>
             {slot && !singleton && <h3 className='center'>{slot.name}</h3>}
             <div className='bag'>
                 {stacks.map(stack =>
@@ -62,7 +62,7 @@ export function Bag(props: { stacks: IStack[], slot?: ISlot }) {
 export function Inventory(props: { stacks: IStack[] }) {
     const slots: ISlot[] = useSubscribe('slot') ?? [];
 
-    const bagFor = (id: ID) => {
+    const bagFor = (id: ISlot['id']) => {
         const slot = slots.find(s => s.id === id);
         if(!slot) return null;
         const stacks = Object.values(props.stacks).filter(s => id === s.slot.id);

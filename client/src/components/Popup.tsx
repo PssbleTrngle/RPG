@@ -1,7 +1,4 @@
-import React, { ReactNode } from 'react';
-import { Component } from "./Component";
-import { Page } from './Page';
-import { usePopup } from '../components/Collapseable';
+import React, { ReactNode, useContext } from 'react';
 
 export function Popup(props: { id: string, children?: ReactNode }) {
 	const { children, id } = props;
@@ -17,4 +14,18 @@ export function Popup(props: { id: string, children?: ReactNode }) {
 export function PopupOpen() {
 	const { close } = usePopup();
 	return <div onClick={close} className='blocked show' />
+}
+
+export const PopupContext = React.createContext<{
+	popup: string | undefined,
+	setPopup(id?: string): void,
+}>({ popup: undefined, setPopup: () => { } });
+
+export function usePopup(id?: string) {
+	const { popup, setPopup } = useContext(PopupContext);
+	return {
+		isOpen: popup === id,
+		open: id ? () => setPopup(id) : () => { },
+		close: () => setPopup()
+	}
 }

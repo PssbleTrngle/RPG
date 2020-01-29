@@ -3,7 +3,7 @@ import { IClass, ISkill } from '../models';
 import { Link, Redirect } from "react-router-dom";
 import { WorldMap } from '../components/Fields';
 import { Inventory } from '../components/Inventory';
-import { Collapseable, ToggleButton } from "./Collapseable";
+import { Collapseable, ToggleButton } from "../components/Collapseable";
 import { Cell } from '../components/Cell';
 import { useLocalization } from '../Localization';
 import { Icon } from '../components/Icon';
@@ -31,20 +31,20 @@ function Evolve(props: { classes: IClass[] }) {
 
 }
 
-interface SkillProps {
+interface LearnProp {
     skill: ISkill;
     cost: number;
 }
-function Skills(props: { skills: SkillProps[] }) {
+function LearnSkills(props: { skills: LearnProp[] }) {
     const { skills } = props;
 
     return (
         <Collapseable hidden={true} id='skills'>
             <div className='learn'>
-                {skills.map(s =>
-                    <div key={s.skill.id} className='skill'>
-                        <span>{s.cost}</span>
-                        <span>{s.skill.name}</span>
+                {skills.map(({ skill, cost }) =>
+                    <div key={skill.id} className='skill'>
+                        <span>{cost}</span>
+                        <span>{skill.name}</span>
                     </div>
                 )}
             </div>
@@ -55,6 +55,10 @@ function Skills(props: { skills: SkillProps[] }) {
 function Home() {
     const { selected } = useAccount();
 
+    if (!selected) return <Redirect to='/profile' />;
+    const { classes, inventory, evolutions } = selected;
+    const last = classes[classes.length - 1];
+
     const skills = [
         { skill: { id: 'test_1', name: 'Test 1' }, cost: 1 },
         { skill: { id: 'test_2', name: 'Test 2' }, cost: 3 },
@@ -62,25 +66,23 @@ function Home() {
         { skill: { id: 'test_4', name: 'Test 4' }, cost: 1 },
     ]
 
-    if (!selected) return <Redirect to='/profile' />;
-
     return (
         <div id='home'>
-            {selected.evolutions.length > 0 &&
-                <Evolve classes={selected.evolutions} />
+            {evolutions.length > 0 &&
+                <Evolve classes={evolutions} />
             }
             <Cell area='position'>
                 <WorldMap />
             </Cell>
             <Cell area='inventory'>
-                <Inventory stacks={selected.inventory} />
+                <Inventory stacks={inventory} />
             </Cell>
             <Cell area='skills'>
-                <Skills skills={skills} />
+                <LearnSkills {...{ skills }} />
             </Cell>
 
             <Cell area='buttons'>
-                <Link to='/profile'><Icon src={`class/${selected.classes[selected.classes.length - 1].id}`} /></Link>
+                <Link to='/profile'><Icon src={`class/${last.id}`} /></Link>
 
                 <ToggleButton id='skills' />
                 <ToggleButton id='inventory' src='chest' />

@@ -29,3 +29,26 @@ export function ToggleButton(props: { id: string, src?: string, mobileOnly?: boo
         </button>
     );
 }
+
+export const CollapsedContext = React.createContext<{
+	collapsed: Set<string>,
+	setCollapsed(set: Set<string>): void,
+}>({
+	collapsed: new Set(),
+	setCollapsed: () => { }
+});
+
+export function useCollapse(id: string) {
+	const { collapsed, setCollapsed } = useContext(CollapsedContext);
+	const toggle = (id: string) => {
+		const set = new Set(collapsed);
+		set.delete(id)
+		setCollapsed(set);
+	}
+
+	return [
+		collapsed.has(id),
+		() => toggle(id),
+	] as [boolean, () => void];
+
+}

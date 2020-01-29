@@ -5,10 +5,9 @@
  */
 
 export type time = string;
-export type ID = string | number;
 
 export interface ITranslated {
-	id: ID;
+	id: string;
 	name: string;
 }
 
@@ -32,7 +31,7 @@ export interface ISkill extends ITranslated {
 }
 
 export interface IField {
-	id: ID;
+	id: number;
 	x: number;
 	y: number;
 	participant?: IParticipant;
@@ -54,7 +53,7 @@ export interface IClass extends ITranslated {
 };
 
 export interface IParticipant {
-	id: ID;
+	id: number;
 	name: string;
 	health: number;
 	maxHealth: number;
@@ -82,7 +81,7 @@ export interface ICharacter extends IParticipant {
 }
 
 export interface Account {
-	id: ID;
+	id: number;
 	username: string;
 	selected?: ICharacter;
 	characters: ICharacter[];
@@ -102,7 +101,7 @@ export interface IItem extends ITranslated {
 }
 
 export interface IStack {
-	id: ID;
+	id: number;
 	item: IItem;
 	amount: number;
 	slot: ISlot;
@@ -113,14 +112,14 @@ export interface IBattle {
 }
 
 export interface IProduct {
-	id: ID;
+	id: number;
 	stack: IStack;
 	price?: number;
 	trade?: IStack;
 }
 
 export interface IShop {
-	id: ID;
+	id: number;
 	name: string;
 	products: IProduct[];
 	owner?: INPC;

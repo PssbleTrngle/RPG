@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IField, IArea, ID } from '../models'
+import { IField, IArea } from '../models'
 import { Icon } from './Icon';
-import { LoadingComponent } from "./LoadingComponent";
 import { Collapseable } from '../components/Collapseable';
 import { useSubscribe } from '../App';
 
@@ -86,7 +85,7 @@ export function WorldMap() {
         setMessage(area.areas ? `View ${area.name}` : `Travel to ${area.name}`);
     }
 
-    const find = (areas: IArea[], id: ID): IArea | undefined => {
+    const find = (areas: IArea[], id: IArea['id']): IArea | undefined => {
         for (let a of areas) {
             if (a.id === id) return a;
             else if (a.areas) {
