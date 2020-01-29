@@ -4,11 +4,10 @@
  * 	by the server
  */
 
-export type time = string;
+export type time = Date | string;
 
 export interface ITranslated {
 	id: string;
-	name: string;
 }
 
 export interface Point {

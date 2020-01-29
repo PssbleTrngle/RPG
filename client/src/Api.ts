@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { IAccount } from './Models';
 
 export const AccountContext = React.createContext<IAccount | null>(null);
@@ -17,11 +17,13 @@ async function get<M>(endpoint: string) {
 export function useSubscribe<M>(endpoint: string) {
     const [result, setResult] = useState<M | undefined>();
 
-    get<M>(endpoint)
-        .then(setResult)
-        .catch(() => console.warn(`Could not load ${endpoint}`));
+    useEffect(() => {
+        get<M>(endpoint)
+            .then(setResult)
+            .catch(() => console.warn(`Could not load ${endpoint}`));
+    }, [endpoint]);
 
-    if (result) return result;
+    return result;
 }
 
 type PostResponse = {

@@ -4,6 +4,7 @@ import { Icon } from './Icon';
 import { Cell } from './Cell';
 import { useSubscribe } from '../Api';
 import { Collapseable } from '../components/Collapseable';
+import { format } from 'util';
 
 enum StackState {
     LOCKED = 'locked',
@@ -30,7 +31,7 @@ export function Stack(stack: IStack) {
     return (
         <div className='stack'>
             <Icon src={`item/${defining ? defining.id : ''}/${item.id}`} />
-            <p>{item.name} x{amount}</p>
+            <p>{format(`item/${item.id}`)} x{amount}</p>
         </div>
     )
 
@@ -45,7 +46,7 @@ export function Bag(props: { stacks: IStack[], slot?: ISlot }) {
 
     return (
         <Cell area={slot?.id}>
-            {slot && !singleton && <h3 className='center'>{slot.name}</h3>}
+            {slot && !singleton && <h3 className='center'>{format(`slot/${slot.id}`)}</h3>}
             <div className='bag'>
                 {stacks.map(stack =>
                     <Stack key={stack.id} {...stack} />

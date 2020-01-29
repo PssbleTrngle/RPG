@@ -4,7 +4,7 @@ import { Icon } from '../components/Icon';
 import { Link, useParams } from 'react-router-dom';
 import { useSubscribe } from '../Api';
 
-type SeachProps<T> = {
+interface SeachProps<T> {
     updateValue?: (result: string) => unknown,
     filter: (t: T) => string,
     values: T[],
@@ -88,8 +88,10 @@ function View() {
 	if (model) {
 		if (id) return <Single {...{ model, id }} />
 		return <List {...{ model }} />;
-	}
-	return null;
+    }
+    
+    // TODO model selection
+	return <h1>What do you want to look at?</h1>;
 }
 
 export default View;

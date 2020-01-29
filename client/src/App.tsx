@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactNode } from 'react';
+import React, { useContext, useState, ReactNode, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { IAccount, Point } from './Models';
 
@@ -14,35 +14,29 @@ import { LangContext, load, useLang } from './Localization';
 import { CollapsedContext } from './components/Collapseable';
 import { AccountContext, useSubscribe } from './Api';
 
-class BG extends React.Component<{}, { current: Point, initial: Point }> {
+function BG() {
+	const initial = { x: 0, y: 0 };
+	const [current, setCurrent] = useState(initial)
 
-	constructor(props: any) {
-		super(props);
-		const initial = { x: 0, y: 0 }
-		this.state = { current: initial, initial };
-	}
-
-	componentDidMount() {
-		window.addEventListener('mousemove', e => {
+	useEffect(() => {
+		const move = (e: MouseEvent) => {
 			const factor = 0.01;
 			const x = e.clientX * -1 * factor;
 			const y = e.clientY * -1 * factor;
-			const current = { x, y };
-			this.setState({ current });
-		});
-	}
+			setCurrent({ x, y });
+		}
+		window.addEventListener('mousemove', move);
+		return () => window.removeEventListener('mouseover', move);
+	});
 
-	render() {
-		const { current, initial } = this.state;
-		const x = current.x - initial.x;
-		const y = current.y - initial.y;
+	const x = current.x - initial.x;
+	const y = current.y - initial.y;
 
-		return (
-			<div className='bg' style={{
-				backgroundPosition: `${x}px ${y}px`
-			}} />
-		)
-	}
+	return (
+		<div className='bg' style={{
+			backgroundPosition: `${x}px ${y}px`
+		}} />
+	);
 
 }
 
