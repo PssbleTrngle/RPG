@@ -124,7 +124,8 @@ export function fakeAccount(): IAccount {
 }
 
 jest.mock('./Api', () => ({
-  useAccount: fakeAccount
+  ...jest.requireActual('./Api'),
+  useAccount: jest.fn().mockReturnValue(fakeAccount())
 }));
 
 describe('fetch account', () => {
