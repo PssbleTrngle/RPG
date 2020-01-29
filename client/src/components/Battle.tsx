@@ -1,121 +1,86 @@
-import React from 'react';
-import { Component } from './Component';
+import React, { useState } from 'react';
 import { Fields } from './Fields';
 import { IField, Point, ISkill, IStack, ITranslated, ICharacter } from '../models';
-import { Page } from '../pages/Page';
 import { Cell } from './Cell';
 import { Bag } from './Inventory';
+import { useAccount } from '../App';
 
-class BattleWrapper extends Component<{ character: ICharacter }, { skill?: ISkill }> {
+function BattleWrapper(props: { character: ICharacter }) {
+    const [active, select] = useState<ISkill | undefined>();
+    const { character } = props;
+    const { battle } = character;
+    if (!battle) return null;
 
-    constructor(props: any) {
-        super(props);
-        this.state = {};
-    }
+    const { fields } = battle;
 
-    template() {
-        const { character } = this.props;
-        const { battle } = character;
-        if (!battle) return null;
+    const skills: ISkill[] = [
+        { name: 'pulse', id: 'pulse', aoe: createHex(1) },
+        { name: 'heal', id: 'heal' },
+        { name: 'rumble', id: 'rumble', aoe: createHex(2) },
+    ]
 
-        const { fields } = battle;
-        const { skill } = this.state;
-
-        const skills: ISkill[] = [
-            { name: 'pulse', id: 'pulse', aoe: createHex(1) },
-            { name: 'heal', id: 'heal' },
-            { name: 'rumble', id: 'rumble', aoe: createHex(2) },
-        ]
-
-        const aoe = skill ? skill.aoe : undefined;
-
-        return (<div id='battle'>
-            <BattleField {...{ fields, aoe }} />
-            <Sidebar select={skill => this.setState({ skill })} skills={skills} active={skill} />
-            <Cell area='items'>
-                <Bag stacks={character.inventory.filter((s: IStack) => s.slot.id === 'bag')} />
-            </Cell>
-            <Cell area='info' className='center info'>
-                {skill && <Info {...skill} />}
-            </Cell>
-        </div>);
-    }
+    return (<div id='battle'>
+        <Battlefield aoe={active?.aoe} {...{ fields }} />
+        <Sidebar {...{ select, skills, active }} />
+        <Cell area='items'>
+            <Bag stacks={character.inventory.filter((s: IStack) => s.slot.id === 'bag')} />
+        </Cell>
+        <Cell area='info' className='center info'>
+            {active && <Info {...active} />}
+        </Cell>
+    </div>);
 
 }
 
-class Info extends Component<ITranslated> {
+function Info(props: ITranslated) {
+    const { name } = props;
 
-    template() {
-        const { name } = this.props;
-
-        return (
-            <>
-                <h3>{name}</h3>
-            </>
-        );
-    }
+    return (
+        <h3>{name}</h3>
+    );
 
 }
 
-export class Battle extends Page {
+export function Battle() {
+    const { selected } = useAccount();
+    if (!selected) return null;
 
-    template() {
-        const { account } = this.props;
-        const { selected } = account;
-        if (!selected) return null;
-
-        return <BattleWrapper character={selected} />
-
-    }
+    return <BattleWrapper character={selected} />
 
 }
 
-class Sidebar extends Component<{ skills: ISkill[], active?: ISkill, select: ((skill: ISkill) => any) }> {
+function Sidebar(props: { skills: ISkill[], active?: ISkill, select: ((skill: ISkill) => any) }) {
+    const { skills, active, select } = props;
 
-    template() {
-        const { skills, active, select } = this.props;
-
-        return (
-            <div className='sidebar'>
-                {skills.map(skill =>
-                    <p
-                        onClick={() => select(skill)}
-                        className={`option ${active && active.id === skill.id ? 'active' : ''}`}
-                        key={skill.id}>
-                        {skill.name}
-                    </p>
-                )}
-            </div>
-        )
-    }
+    return (
+        <div className='sidebar'>
+            {skills.map(skill =>
+                <p
+                    onClick={() => select(skill)}
+                    className={`option ${active && active.id === skill.id ? 'active' : ''}`}
+                    key={skill.id}>
+                    {skill.name}
+                </p>
+            )}
+        </div>
+    )
 
 }
 
-class BattleField extends Component<{ fields: IField[], aoe?: Point[] }, { hover?: Point }> {
+function Battlefield(props: { fields: IField[], aoe?: Point[] }) {
+    const [hovered, hover] = useState<IField | undefined>();
+    const { fields } = props;
 
-    constructor(props: any) {
-        super(props);
-        this.state = {};
-    }
+    const inAOE = (field: IField) => {
+        const aoe = props.aoe ?? createHex(0);
 
-    select(field: IField) {
-    }
-
-    hover(field?: IField) {
-        this.setState({ hover: field });
-    }
-
-    inAOE(field: IField): boolean {
-        const aoe = this.props.aoe || createHex(0);
-        const { hover } = this.state;
-
-        if (hover)
+        if (hovered)
             return !!aoe.find(f => field.x === f.x + hover.x && field.y === f.y + hover.y);
 
         return false;
     }
 
-    renderField(f: IField) {
+    const renderField = (f: IField) => {
         const { participant } = f;
 
         return (
@@ -127,19 +92,15 @@ class BattleField extends Component<{ fields: IField[], aoe?: Point[] }, { hover
         );
     }
 
-    template() {
-        let { fields } = this.props;
-
-        return (<div className='battlefield'>
-            <Fields
-                render={f => this.renderField(f)}
-                fields={fields}
-                onClick={a => this.select(a)}
-                onHover={a => this.hover(a)}
-                className={field => this.inAOE(field) ? 'hover' : null}
-            />
-        </div>);
-    }
+    return (<div className='battlefield'>
+        <Fields
+            render={f => renderField(f)}
+            fields={fields}
+            onClick={() => { })}
+            onHover={hover}
+        className={field => inAOE(field) ? 'hover' : null}
+        />
+    </div>);
 
 }
 

@@ -1,17 +1,10 @@
-import React from 'react';
-import { Component } from './Component';
+import React, { ReactNode } from 'react';
 import { Cell } from './Cell';
 
-export class Buttons extends Component<{},{}> {
-
-	template() {
-        const { children } = this.props;
-
-		return (
-			<Cell className='buttons' area='buttons'>
-				{children}
-			</Cell>
-		)
-	}
-
+export function Buttons(props: { children?: ReactNode }) {
+	return (
+		<Cell className='buttons' area='buttons'>
+			{props.children}
+		</Cell>
+	)
 }

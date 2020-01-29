@@ -1,8 +1,8 @@
-import React, { ReactText } from 'react';
-import { Component } from "../components/Component";
-import { IEvolution, IClass } from "../models";
+import React, { ReactText, useState, useMemo } from 'react';
+import { IEvolution, IClass, ID } from "../models";
 import Graph, { Edge, Node } from 'vis-react'
 import { SERVER_URL } from '../config';
+import { useSubscribe } from '../App';
 import { number } from 'prop-types';
 
 class Color {
@@ -11,9 +11,9 @@ class Color {
 
     static mix(...colors: Color[]): Color {
 
-        const a: any[] = [...colors];
+        const a = colors;
         const [r, g, b] = ['r', 'g', 'b'].map(key =>
-            a.reduce((t, c) => t + c[key] / colors.length, 0)
+            a.reduce((t, c: any) => t + c[key] / colors.length, 0)
         );
         return new Color(r, g, b);
     }
@@ -30,8 +30,8 @@ class Color {
 
     static from(hex: string): Color {
         if (hex.startsWith('#')) return Color.from(hex.slice(1));
-        if (hex.length === 3) return Color.from(hex.split('').map(c => c+c).join(''));
-        if(hex.length !== 6) throw new Error(`Invalid color: ${hex}`);
+        if (hex.length === 3) return Color.from(hex.split('').map(c => c + c).join(''));
+        if (hex.length !== 6) throw new Error(`Invalid color: ${hex}`);
 
         const r = Number.parseInt(hex.slice(0, 2), 16);
         const g = Number.parseInt(hex.slice(2, 4), 16);
@@ -47,177 +47,148 @@ class Color {
 
 }
 
-export class Graphs extends Component<{}, {evolutions: IEvolution[], classes: IClass[], selected?: ReactText}> {
+export function Graphs() {
+    const evolutions = useSubscribe<IEvolution[]>('evolution');
+    const classes = useSubscribe<IClass[]>('class');
+    const [selected, select] = useState<ID | undefined>();
 
-    constructor(props: any) {
-        super(props);
-        this.state = { evolutions: [], classes: [] };
-    }
+    if (!evolutions || !classes) return <p>Loading...</p>;
 
-    load(resource: string, callback: (result: any) => any) {
-        fetch(`${SERVER_URL}/${resource}?max=100`)
-            .then(r => r.json())
-            .then(callback)
-            .catch(e => window.setTimeout(() => this.load(resource, callback), 1000));
-    }
-
-    componentDidMount() {
-        this.load('evolution', evolutions => this.setState({ evolutions }))
-        this.load('class', classes => this.setState({ classes }))
-    }
-
-    origin(clazz: IClass): IClass[] {
-        const { evolutions } = this.state;
+    const origin = (clazz: IClass): IClass[] => {
         if (clazz.stage === 1) return [clazz];
 
-        const origins = evolutions
+        return evolutions
             .filter(e => e.to.id === clazz.id)
-            .map(e => this.origin(e.from));
-
-
-        return origins.reduce((array, o) => [...array, ...o], []);
+            .map(e => origin(e.from))
+            .flat();
     }
 
-    select(node?: ReactText) {
-        console.log(`Selected ${node}`)
-        this.setState({ selected: node });
-    }
+    const starters = classes.filter(c => c.stage === 1);
+    const props = { ...{ evolutions, selected, select } }
 
-    template() {
-        const { evolutions, classes, selected } = this.state;
-
-        if(!evolutions.length || !classes.length) return <p>Loading...</p>;
-
-        const starters = classes.filter(c => c.stage === 1);
-        const props = {...{ evolutions, selected, select: (n: ReactText) => this.select(n) }}
-
-        return (
-            <div className='graphs'>
-                <ClassGraph key='total' options={{ physics: false }} {...{ classes }} {...props} />
-                {starters.map(starter => {
-                    const classesFor = classes.filter(c => !!this.origin(c).find(o => o.id === starter.id))
-                    return <ClassGraph key={starter.id} options={{ physics: true }} classes={classesFor} {...props} />
-                })}
-            </div>
-        )
-    }
+    return (
+        <div className='graphs'>
+            <ClassGraph key='total' physics={false} {...{ classes }} {...props} />
+            {starters.map(starter => {
+                const classesFor = classes.filter(c => !!origin(c).find(o => o.id === starter.id))
+                return <ClassGraph key={starter.id} physics={true} classes={classesFor} {...props} />
+            })}
+        </div>
+    )
 
 }
 
 interface GraphProps {
     evolutions: IEvolution[];
     classes: IClass[];
-    options: { physics: boolean };
+    physics: boolean;
     select: ((n: ReactText) => any);
     selected?: ReactText;
 }
-class ClassGraph extends Component<GraphProps, {nodes: (Node & {stage: number, deg: number})[], edges: Edge[]}> {
+function ClassGraph(props: GraphProps) {
+    const { evolutions, classes, physics, select } = props;
 
-    static starter_colors: { [key: string]: Color } = {
+    //{ nodes: (Node & { stage: number, deg: number })[], edges: Edge[] }
+
+    const options = {
+        physics,
+        autoResize: true,
+        locale: 'en',
+        clickToUse: false,
+        interaction: {
+            keyboard: false,
+            dragNodes: true
+        },
+        nodes: {
+            brokenImage: require('./img/missing.png'),
+            font: {
+                color: '#000',
+                size: 20
+            },
+            color: {
+                highlight: {
+                    background: '#FFF',
+                    border: '#FFF',
+                }
+            },
+        },
+        edges: {
+            smooth: physics,
+            arrows: 'to',
+            color: {
+                inherit: 'both',
+            },
+        },
+        layout: {
+            hierarchical: {
+                enabled: false,
+                direction: 'UD',
+            }
+        }
+    }
+
+    const starter_colors: { [key: string]: Color } = {
         apprentice: Color.from('#FF0000'),
         traveller: Color.from('#00FF00'),
         wild: Color.from('#0061ff'),
         fighter: Color.from('#FFFF00'),
         psychic: Color.from('#FF8000'),
     };
-    static fade = Color.from('#666');
+    const fade = Color.from('#666');
+    const max = 4;
 
-    static max = 4;
+    /**
+     * Only recalculate if data changes
+     */
+    const [nodes, edges] = useMemo(() => {
 
-    constructor(props: GraphProps) {
-        super(props);
-
-        const { evolutions, classes } = props;
-
-        const count: {[key: number]: number} = {};
-        const starts: {[key: number]: number} = {};
+        const count: { [key: number]: number } = {};
+        const starts: { [key: number]: number } = {};
         let start = 0;
-        for(let i = 1; i <= ClassGraph.max; i++) {
+        for (let i = 1; i <= max; i++) {
             count[i] = classes.filter(n => n.stage === i).length;
             starts[i] = count[i] + start;
             start += count[i];
         }
-        
-        const nodes = classes.map(c => ({ id: c.id, label: c.name, color: this.color(c).toString(), stage: c.stage, deg: this.deg(c) }))
-                            .sort(c => c.stage * 1000 + c.deg)
-                            .map((c, i) => ({...c, ...{ deg: (i - starts[c.stage]) / count[c.stage] }}))
+
+        const nodes = classes.map(c => ({ id: c.id, label: c.name, color: color(c).toString(), stage: c.stage, deg: deg(c) }))
+            .sort(c => c.stage * 1000 + c.deg)
+            .map((c, i) => ({ ...c, ...{ deg: (i - starts[c.stage]) / count[c.stage] } }))
         const edges = evolutions.map(e => ({ from: e.from.id, to: e.to.id }));
+        return [nodes, edges];
 
-        this.state = { nodes, edges };
-    }
+    }, [evolutions, classes].map(a => a.length));
 
-    options() {
-        const { physics } = this.props.options;
-        return {
-            autoResize: true,
-            physics,
-            locale: 'en',
-            clickToUse: false,
-            interaction: {
-                keyboard: false,
-                dragNodes: true
-            },
-            nodes: {
-                brokenImage: require('./img/missing.png'),
-                font: {
-                    color: '#000',
-                    size: 20
-                },
-                color: {
-                    highlight: {
-                        background: '#FFF',
-                        border: '#FFF',
-                    }
-                },
-            },
-            edges: {
-                smooth: physics,
-                arrows: 'to',
-                color: {
-                    inherit: 'both',
-                },
-            },
-            layout: {
-                hierarchical: {
-                    enabled: false,
-                    direction: 'UD',
-                }
-            }
-        }
-    }
-
-    color(clazz: IClass): Color {
-        if (clazz.stage === 1) return ClassGraph.starter_colors[clazz.id];
-        const { evolutions } = this.props;
+    const color = (clazz: IClass): Color => {
+        if (clazz.stage === 1) return starter_colors[clazz.id];
 
         const colors = evolutions
             .filter(e => e.to.id === clazz.id)
-            .map(e => this.color(e.from));
+            .map(e => color(e.from));
 
-        return Color.mix(...colors).mix(ClassGraph.fade, 0.1);
+        return Color.mix(...colors).mix(fade, 0.1);
     }
 
-    deg(clazz: IClass): number {
-        const starters = Object.keys(ClassGraph.starter_colors);
+    const deg = (clazz: IClass): number => {
+        const starters = Object.keys(starter_colors);
         if (clazz.stage === 1) return starters.indexOf(clazz.id.toString()) / starters.length;
-        const { evolutions } = this.props;
 
         const degrees = evolutions
             .filter(e => e.to.id === clazz.id)
-            .map(e => this.deg(e.from));
+            .map(e => deg(e.from));
 
-        if(degrees.length === 1) return degrees[0];
+        if (degrees.length === 1) return degrees[0];
 
-        const [ d1, d2 ] = degrees;
+        const [d1, d2] = degrees;
         const d3 = d1 + 1;
         const dist1 = d2 - d1;
         const dist2 = d3 - d2;
-        
-    	return (dist1 < dist2) ? (d2 - dist1 / 2) : (d3 - dist2 / 2);
+
+        return (dist1 < dist2) ? (d2 - dist1 / 2) : (d3 - dist2 / 2);
     }
 
-    drawCircles(context: any) {
-        for(let level = 1; level <= ClassGraph.max; level++) {
+    const drawCircles = (context: any) => {
+        for (let level = 1; level <= max; level++) {
             const radius = 200 * (level + 1);
             context.beginPath();
             context.arc(0, 0, radius, 0, 2 * Math.PI, false);
@@ -226,38 +197,32 @@ class ClassGraph extends Component<GraphProps, {nodes: (Node & {stage: number, d
         }
     }
 
-    template() {
-        const { select, options } = this.props;
-        const { edges, nodes } = this.state;
-        const { physics } = options;
+    return (
+        <Graph
+            options={options}
+            graph={{ nodes: [...nodes], edges: [...edges] }}
+            events={{
+                click: e => select(e.nodes[0]),
+                beforeDrawing: ctx => physics ? null : drawCircles(ctx),
+            }}
+            getNetwork={net => {
+                if (!physics) net.once('initRedraw', () => {
 
-        return (
-            <Graph
-                options={this.options()}
-                graph={{ nodes: [...nodes], edges: [...edges] }}
-                events={{
-                    click: e => select(e.nodes[0]),
-                    beforeDrawing: ctx => physics ? null : this.drawCircles(ctx),
-                }}
-                getNetwork={net => {
-                    if(!physics) net.once('initRedraw', () => {
-        
-                        nodes.forEach(node => {
-        
-                            let radius = 200 * (ClassGraph.max - node.stage + 1) + 100;
-                            let deg = 2 * Math.PI * node.deg;
-        
-                            var x = radius * Math.cos(deg);
-                            var y = radius * Math.sin(deg);
+                    nodes.forEach(node => {
 
-                            if(!isNaN(deg))
-                                net.moveNode(node.id, x, y);
-                        });
-        
+                        let radius = 200 * (max - node.stage + 1) + 100;
+                        let deg = 2 * Math.PI * node.deg;
+
+                        var x = radius * Math.cos(deg);
+                        var y = radius * Math.sin(deg);
+
+                        if (!isNaN(deg))
+                            net.moveNode(node.id, x, y);
                     });
-                }}
-            />
-        )
-    }
+
+                });
+            }}
+        />
+    )
 
 }

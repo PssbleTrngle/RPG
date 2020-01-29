@@ -1,13 +1,16 @@
-import React from 'react';
-import { Component } from './Component';
+import React, { ReactNodeArray, ReactElement } from 'react';
 
-export class Cell extends Component<{area?: any, className?: string},{}> {
+export function Cell(props: { area: string, className?: string, children?: ReactNodeArray | ReactElement }) {
+	const { area: gridArea, children: content, className } = props;
+	if (!content) return null;
 
-	template() {
-		const { area, children, className } = this.props;
-
-		return (
-			<div className={className} style={area ? { gridArea: area } : {}}>{children}</div>
-		)
+	function isArray(c: ReactNodeArray | ReactElement): c is ReactNodeArray {
+		return Array.isArray(c);
 	}
+
+	if (isArray(content))
+		return <div style={{ gridArea }} {...{ className }}>{content}</div>
+
+	else return <content.type style={{ gridArea }} {...content.props}>{content.props.children}</content.type>
+
 }

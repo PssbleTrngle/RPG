@@ -1,115 +1,84 @@
-import React from 'react';
-import { LoadingComponent } from "../components/LoadingComponent";
+import React, { useState, useRef, useEffect } from 'react';
 import { ITranslated } from '../models';
 import { Icon } from '../components/Icon';
 import { Link } from 'react-router-dom';
-import { Component } from "../components/Component";
+import { useSubscribe } from '../App';
 
 type SeachProps<T> = {
-    change?: (result: string) => any,
-    filter: (t: T, search: string) => boolean,
-    parent: React.Component<any,{filtered?: T[], result?: T[]}>
+    updateValue?: (result: string) => unknown,
+    filter: (t: T) => string,
+    values: T[],
+    setFiltered: React.Dispatch<React.SetStateAction<T[]>>
 };
-export class Searchbar<T> extends Component<SeachProps<T>,{value?: string}> {
+export function Searchbar<T>(props: SeachProps<T>) {
+    const { updateValue, filter, values, setFiltered } = props;
+    const [value, changeValue] = useState('');
+    const element = useRef<HTMLInputElement>(null);
 
-    element: HTMLElement | null = null;
-
-    constructor(props: any) {
-        super(props);
-        this.state = {};
-    }
-
-    focus() {
-        if(this.element) this.element.focus();
-    }
-
-    componentDidMount() {
-        this.focus();
+    useEffect(() => {
+        element.current?.focus();
         window.addEventListener('keydown', e => {
-            if((e.keyCode === 70 && e.ctrlKey) || e.keyCode === 114) {
+            if ((e.keyCode === 70 && e.ctrlKey) || e.keyCode === 114) {
                 e.preventDefault();
-                this.focus();
+                element.current?.focus();
             }
         })
+    });
+
+    const change = (value: string) => {
+        if (updateValue) updateValue(value);
+        changeValue(value);
+        const s = value.toLowerCase();
+        const filtered = values.filter(t => filter(t).toLowerCase().includes(s))
+        setFiltered(filtered);
     }
 
-    change(value: string) {
-        const { change, filter, parent } = this.props;
-        const { result } = parent.state;
-        
-        if(change) change(value);
-        if(result) {
-            const filtered = value ? result.filter(t => filter(t, value.toLowerCase())) : undefined;
-            parent.setState({ filtered });
-        }
-
-        this.setState({ value })
-    }
-
-    template() {
-        const { value } = this.state;
-
-        return <input
-            ref={e => { this.element = e }}
-            type='text'
-            placeholder='Search'
-            className='search'
-            value={value || ''}
-            onChange={e => this.change(e.target.value)}
-        />
-    }
+    return <input
+        ref={element}
+        type='text'
+        placeholder='Search'
+        className='search'
+        value={value}
+        onChange={e => change(e.target.value)}
+    />
 
 }
 
-export class List<T extends ITranslated> extends LoadingComponent<T[], {model: string},{filtered?: T[]}> {
+export function List<T extends ITranslated>(props: { model: string }) {
+    const { model } = props;
+    const values: T[] = useSubscribe(model) ?? [];
+    const [filtered, setFiltered] = useState(values);
 
-    interval() { return false }
-    model() { return this.props.model }
-    initialState() { return {} }
+    const name = model.charAt(0).toLowerCase() + model.slice(1);
 
-    template() {
-        const { model } = this.props;
-        const { result, filtered } = this.state;
-        const models = filtered || result;
-
-        const name = model.charAt(0).toLowerCase() + model.slice(1);
-
-        return (<>
-            <h1>{models && models.length} Entrys for <span className='highlight'>{name}</span></h1>
-            <Searchbar parent={this} filter={(v, s) => v.name.toLowerCase().includes(s) } />
-            <div className='view-list'>
-                { models && models.map(m =>
-                    <Link key={m.id} to={`${model}/${m.id}`}>
-                        <div>
-                            <Icon src={`${model}/${m.id}`} />
-                            <p>{m.name}</p>    
-                        </div>
-                    </Link>
-                )}
-            </div>
-        </>);
-    }
+    return (<>
+        <h1>{filtered} Entrys for <span className='highlight'>{name}</span></h1>
+        <Searchbar filter={v => v.name} {...{ setFiltered, values }} />
+        <div className='view-list'>
+            {filtered.map(m =>
+                <Link key={m.id} to={`${model}/${m.id}`}>
+                    <div>
+                        <Icon src={`${model}/${m.id}`} />
+                        <p>{m.name}</p>
+                    </div>
+                </Link>
+            )}
+        </div>
+    </>);
 
 }
 
-export class View<T extends ITranslated> extends LoadingComponent<T, {model: string, id: string},{}> {
+export function View<T extends ITranslated>(props: { model: string, id: string }) {
+    const { model, id } = props;
+    const result = useSubscribe<T>(`${model}/${id}`)
 
-    id() { return this.props.id }
-    model() { return this.props.model }
-    initialState() { return {} }
+    const name = model.charAt(0).toLowerCase() + model.slice(1);
 
-    template() {
-        const { model } = this.props;
-        const { result } = this.state;
-
-        if(!result) return null;
-
-        const name = model.charAt(0).toLowerCase() + model.slice(1);
-
-        return (<>
-            <Link to={`/view/${model}`} className='back'>{'<'}{name}</Link>
+    return (<>
+        <Link to={`/view/${model}`} className='back'>{'<'}{name}</Link>
+        {result &&
             <h1>{result.name}</h1>
-        </>);
-    }
+        }
+    </>);
 
 }

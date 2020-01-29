@@ -1,49 +1,46 @@
 import React from 'react';
-import { ICharacter } from './models';
+import { ICharacter } from '../models';
 import { Link } from "react-router-dom";
-import { Cell, Buttons, Icon } from './Grid';
-import { Page } from './Page';
-import { Component } from "./Component";
-import { Popup } from './Popup';
+import { Icon } from '../components/Icon';
+import { action, useAccount, usePopup } from '../App';
+import { useLocalization } from '../Localization';
+import { Cell } from '../components/Cell';
+import { Buttons } from '../components/Buttons';
+import { Popup } from '../components/Popup';
 
-class CharacterRow extends Component<{characters: ICharacter[], selected?: ICharacter},{}> {
+function CharacterRow(props: { characters: ICharacter[], selected?: ICharacter }) {
+	const { characters, selected } = props;
+	const { format } = useLocalization();
 
-	template() {
-		const { characters, selected } = this.props;
-
-		return (
-			<div className='character-row'>
-				{characters.map(character => {
-					const last = character.classes[character.classes.length-1];
-					return (
-						<div 
-							key={character.id}
-							className={`character-panel ${selected && selected.id === character.id && 'selected'}`}
-							onClick={() => this.action('account/select', { character: character.id })}>
-							<h4>{ character.name }</h4>
-							<small>
-								<p>{ this.format(`class.${last.id}.name`) }</p>
-								<p>Level { character.level }</p>
-								<p>{ character.birth }</p>
-							</small>
-							<Icon src={`class/${last.id}`} />
-						</div>
-					);
-				})}
-			</div>
-		);
-	}
-
+	return (
+		<div className='character-row'>
+			{characters.map(character => {
+				const last = character.classes[character.classes.length - 1];
+				return (
+					<div
+						key={character.id}
+						className={`character-panel ${selected && selected.id === character.id && 'selected'}`}
+						onClick={() => action('account/select', { character: character.id })}>
+						<h4>{character.name}</h4>
+						<small>
+							<p>{format(`function.${last.id}.name`)}</p>
+							<p>Level {character.level}</p>
+							<p>{character.birth}</p>
+						</small>
+						<Icon src={`class/${last.id}`} />
+					</div>
+				);
+			})}
+		</div>
+	);
 }
 
-class Greeter extends Component<{icon: string, message: string},{}> {
+function Greeter(props: { icon: string, message: string }) {
+	const { icon, message } = props;
 
-	template() {
-		const { icon, message } = this.props;
-
-		return (
-			<div className='w-33 pl-2'>
-				<table>
+	return (
+		<div className='w-33 pl-2'>
+			<table>
 				<tbody>
 					<tr>
 						<td colSpan={2}><h2 className='speech'>{message}</h2></td>
@@ -53,100 +50,90 @@ class Greeter extends Component<{icon: string, message: string},{}> {
 						<td className='greeter'><Icon src={icon} /></td>
 					</tr>
 				</tbody>
-				</table>
-			</div>
-		);
-	}
-
+			</table>
+		</div>
+	);
 }
 
-class Bar extends Component<{amount: number, type?: string},{}> {
+function Bar(props: { amount: number, type?: string }) {
+	const { type, amount } = props;
+	const width = 100 * amount + '%';
 
-	template() {
-		const { type, amount } = this.props;
-
-		const width = 100 * amount + '%';
-
-		return (
-			<div className={`bar ${type || ''}`} >
-				<div style={{ width }} />
-			</div>
-		)
-	}
+	return (
+		<div className={`bar ${type || ''}`} >
+			<div style={{ width }} />
+		</div>
+	)
 }
 
-class SelectedInfo extends Component<{selected: ICharacter},{}> {
+function SelectedInfo(props: { selected: ICharacter }) {
+	const { selected } = props;
+	const { format } = useLocalization()
 
-	template() {
-		const { selected } = this.props;
-
-		return (
-			<>
+	return (
+		<>
 			<Bar type='health' amount={selected.health / selected.maxHealth}></Bar>
 			<div className='mt-1'></div>
 			<Bar type='xp' amount={selected.xp / selected.requiredXp}></Bar>
-			
+
 			<table className='stats mt-2 w-100'><tbody>
 				{Object.keys(selected.stats).map(stat =>
 					<tr key={stat}>
-						<td className='stat'>{this.format(`stat.${stat}`)}:</td>
+						<td className='stat'>{format(`stat.${stat}`)}:</td>
 						<td className='stat highlight'>{selected.stats[stat]}</td>
 					</tr>
 				)}
 			</tbody></table>
-			</>
-		)
-	}
+		</>
+	)
 
 }
 
-class Journey extends Component<{character: ICharacter},{}> {
+function Journey(props: { character: ICharacter }) {
+	const { character } = props;
+	const { format } = useLocalization()
 
-	template() {
-		const { character } = this.props;
-
-		return (
-			<div className='journey'>
-				<h2>Your Journey</h2>
-				<p>{ this.format('journey.start')}</p>
-				{character.classes.map(clazz => 
-					<p key={clazz.id}>{this.format(`class.${clazz.id}.name`)}</p>
-				)}
-				<p>{ this.format('journey.end')}</p>
-			</div>
-		)
-	}
-
+	return (
+		<div className='journey'>
+			<h2>Your Journey</h2>
+			<p>{format('journey.start')}</p>
+			{character.classes.map(({ id }) =>
+				<p key={id}>{format(`class.${id}.name`)}</p>
+			)}
+			<p>{format('journey.end')}</p>
+		</div>
+	)
 }
 
-class Profile extends Page {
-	
-	template() {
-		const { account } = this.props;
-		const { selected, characters } = account;
+function Profile() {
+	const { selected, characters, username } = useAccount();
+	const { format, key: currentLang, loadLang } = useLocalization();
+	const { close } = usePopup();
+	const { open: openLang } = usePopup('lang');
+	const { open: openOptions } = usePopup('options');
 
-		return (
-			<>
-			<h1 className='banner highlight'>{ this.format('message.welcome', account.username)}</h1>
+	return (
+		<>
+			<h1 className='banner highlight'>{format('message.welcome', username)}</h1>
 			<div id='profile'>
 
 				<Cell area='chars'>
 					<CharacterRow {...{ selected, characters }} />
-					{characters.length === 0 && <Greeter icon={'class/death'} message={this.format('message.new_account')} />}
+					{characters.length === 0 && <Greeter icon={'class/death'} message={format('message.new_account')} />}
 				</Cell>
 
 				<Buttons>
-					{ selected ?
+					{selected ?
 						<Link to='/'><Icon src={'position/dungeon/moss'} /></Link>
-					:
+						:
 						<Link to='create'><Icon src={'icon/create'} /></Link>
 					}
-					<button onClick={() => this.open('lang')}><Icon src={'icon/lang'} /></button>
-					<button onClick={() => this.open('options')}><Icon src={'icon/options'} /></button>
-					
+					<button onClick={openLang}><Icon src={'icon/lang'} /></button>
+					<button onClick={openOptions}><Icon src={'icon/options'} /></button>
+
 					<Link to='/profile/create'><Icon src={'icon/create'} /></Link>
 				</Buttons>
-				
+
 				<Cell area='info'>
 					{selected && <SelectedInfo selected={selected} />}
 				</Cell>
@@ -159,10 +146,10 @@ class Profile extends Page {
 					{['en', 'de', 'cyber'].map(lang =>
 						<div
 							key={lang}
-							className={`lang ${this.getLang() === lang ? 'active' : ''}`}
+							className={`lang ${currentLang === lang ? 'active' : ''}`}
 							onClick={() => {
-								this.setLang(lang);
-								this.open()
+								loadLang(lang);
+								close()
 							}}>
 							{lang.toLowerCase()}
 						</div>
@@ -173,9 +160,8 @@ class Profile extends Page {
 					<h1>Options</h1>
 				</Popup>
 			</div>
-			</>
-		);
-	}
+		</>
+	);
 
 }
 

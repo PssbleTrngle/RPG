@@ -1,27 +1,20 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Component } from "./Component";
 import { Page } from './Page';
+import { usePopup } from '../pages/Page';
 
-export class Popup extends Component<{id: string},{}> {
+export function Popup(props: { id: string, children?: ReactNode }) {
+	const { children, id } = props;
+	const { isOpen } = usePopup(id);
 
-	template() {
-        const { children, id } = this.props;
-
-		return (
-			<div className={`popup ${id} ${this.isOpen(id) ? 'show' : ''}`}>
-				{children}
-			</div>
-		);
-	}
-
+	return (
+		<div className={`popup ${id} ${isOpen ? 'show' : ''}`}>
+			{children}
+		</div>
+	);
 }
 
-export class PopupOpen extends Component<{blocking: boolean}> {
-
-    template() {
-        const { blocking } = this.props;
-
-        return <div onClick={() => this.open()} className={`blocked ${blocking ? 'show' : ''}`} />
-    }
-
+export function PopupOpen() {
+	const { close } = usePopup();
+	return <div onClick={close} className='blocked show' />
 }

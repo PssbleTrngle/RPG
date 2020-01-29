@@ -1,61 +1,31 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useContext } from 'react';
 import AnimateHeight from 'react-animate-height';
 import { Account } from '../models';
 import { Icon } from '../components/Icon';
-import { Component } from "../components/Component";
+import { useCollapse } from '../App';
 
-export abstract class Page extends Component<{account: Account}, {collapsed: Set<string>}> {
+export function Collapseable(props: { hidden?: boolean, id: string, className?: string, children?: ReactNode }) {
+    const { id, children, className, hidden: h } = props;
+    const [hidden] = useCollapse(id)
 
-    constructor(props: any) {
-        super(props);
-        this.state = {collapsed: new Set<string>()};
-    }
-
-    toggle(id: string) {
-        const collapsed = new Set(this.state.collapsed);
-        
-        if(this.isCollapsed(id))
-            collapsed.delete(id);
-        else
-            collapsed.add(id);
-
-        this.setState({ collapsed });
-    }
-
-    isCollapsed(id: string): boolean {
-        return Array.from(this.state.collapsed.values()).includes(id);
-    }
+    return (
+        <AnimateHeight
+            duration={300}
+            height={hidden ? 0 : 'auto'}
+            contentClassName={`collapseable ${className || id} ${hidden ? 'hidden' : ''}`} >
+            {children}
+        </AnimateHeight >
+    );
 
 }
 
-export class Collapseable extends Component<{hidden?: boolean, id: string, className?: string, page?: Page},{}> {
+export function ToggleButton(props: { id: string, src?: string, mobileOnly?: boolean }) {
+    const { id, mobileOnly, src } = props;
+    const [_, toggle] = useCollapse(id);
 
-    template() {
-        const { page, id, children, className, hidden } = this.props;
-        const toggled = page && page.isCollapsed(id) !== (hidden || false);
-
-        return (   
-            <AnimateHeight
-                duration={300}
-                height={toggled ? 0 : 'auto'}
-                contentClassName={`collapseable ${className || id} ${toggled ? 'hidden' : ''}`}>
-                {children}
-            </AnimateHeight>
-        );
-    }
-
-}
-
-export class ToggleButton extends Component<{page:Page, id: string, src?: string, mobileOnly?: boolean},{}> {
-
-    template() {
-        const { id, mobileOnly, src, page } = this.props;
-
-        return (
-            <button className={mobileOnly ? 'mobile' : ''} onClick={() => page.toggle(id)}>
-                <Icon src={`icon/${src || id}`} />
-            </button>
-        );
-    }
-
+    return (
+        <button className={mobileOnly ? 'mobile' : ''} onClick={toggle}>
+            <Icon src={`icon/${src || id}`} />
+        </button>
+    );
 }
