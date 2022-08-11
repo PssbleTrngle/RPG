@@ -473,4 +473,7 @@ composer.lock
 *.sass.map
 *.scss.map
 
+*/config.php
+config.php
+
 *.hxl

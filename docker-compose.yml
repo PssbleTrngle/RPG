@@ -1,0 +1,15 @@
+services:
+  app:
+    container_name: rpg
+    build: .
+    ports: [3000:80]
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_HOST: db
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
