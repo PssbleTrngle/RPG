@@ -10,7 +10,7 @@ services:
     depends_on: [db]
 
   db:
-    image: mysql
+    image: mariadb:10.1.41
     container_name: rpg_database
     environment:
       #MYSQL_RANDOM_ROOT_PASSWORD: yes
