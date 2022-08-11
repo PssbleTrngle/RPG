@@ -33,9 +33,9 @@
 		
 		$class = $args['class'];
 		$objects = is_subclass_of($class, 'BaseModel') ? $class::all() : [];
-		$this->view->render($response, 'editor/list.twig', ['objects' => $objects, 'class' => $class]);
+		$this->get('view')->render($response, 'editor/list.twig', ['objects' => $objects, 'class' => $class]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 	
 	$app->get('/view/{class}/{id}', function (Request $request, Response $response, array $args) {
 		
@@ -50,7 +50,7 @@
 			$previous = $class::where('id', '<', $id)->orderBy('id', 'desc')->first();
 		}
 
-		$this->view->render($response, 'editor/edit.twig', [
+		$this->get('view')->render($response, 'editor/edit.twig', [
 			'object' => $object,
 			'manys' => $manys,
 			'class' => $class,
@@ -58,7 +58,7 @@
 			'previous' => $previous
 		]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 
 	function manysFor($class) {
 
@@ -74,5 +74,3 @@
 		return [];
 
 	}
-
-?>

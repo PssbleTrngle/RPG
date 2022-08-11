@@ -1,4 +1,12 @@
 <?php
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+	use DI\Container;
+	use Slim\Factory\AppFactory;
+	use Slim\Views\TwigMiddleware;
+    use Slim\Views\Twig;
+    use \Twig\TwigFunction;
+    use \Twig\TwigFilter;
 
 	require 'vendor/autoload.php';
 
@@ -10,34 +18,25 @@
 
 	session_start();
 
-	/**  Used for Routing */
-	use \Psr\Http\Message\ServerRequestInterface as Request;
-	use \Psr\Http\Message\ResponseInterface as Response;
+	$container = new Container();
 
-	$configuration = ['settings' => [ 'displayErrorDetails' => true ]];
-	$container = new \Slim\Container($configuration);
-	$app = new \Slim\App($container);
+	$container->set('view', function () {
+		$twig = Twig::create('templates');
 
-	/* Twig Template engine */
-	$loader = new \Twig\Loader\FilesystemLoader('templates');
-	$twig = new \Twig\Environment($loader, [ 'debug' => true]);
-	$twig->addExtension(new \Twig\Extension\DebugExtension());
+	    //$basePath = rtrim(str_ireplace('index.php', '', $container->get('request')->getUri()->getBasePath()), '/');
+	    //$view->addExtension(new Slim\Views\TwigExtension($container->get('router'), $basePath));
 
-	$container['view'] = function ($container) {
+        $environment = $twig->getEnvironment();
 
-    	$view = new \Slim\Views\Twig('templates');
-	    $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
-	    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
-
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('langs', function () {
+	    $environment->addFunction(new TwigFunction ('langs', function () {
 	        return ['en', 'de', 'fr', 'it', 'cyber'];
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('uri', function () {
+	    $environment->addFunction(new TwigFunction ('uri', function () {
 	        return $_SERVER['REQUEST_URI'];
 	    }));
 
-		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('roman', function ($number) {
+		$environment->addFilter(new TwigFilter('roman', function ($number) {
 			if(is_numeric($number)) {
 				if(getLang() == 'cyber') return '0x'.str_pad(decbin($number), 4, '0', STR_PAD_LEFT);
 				return toRoman($number);
@@ -46,25 +45,25 @@
 	    }));
 
 
-		$view->getEnvironment()->addFilter(new Twig_SimpleFilter('removeCamel', function ($camel) {
+		$environment->addFilter(new TwigFilter('removeCamel', function ($camel) {
 			$camel = preg_replace('/([A-Z])/', ' $1', $camel);
 			$camel = preg_replace('/_([a-zA-Z])/', ' $1', $camel);
 			return ucfirst($camel);
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('format', function ($key, $vars = []) {
+	    $environment->addFunction(new TwigFunction ('format', function ($key, $vars = []) {
 	    	if(is_string($vars)) $vars = [ $vars ];
 			return format($key, $vars);
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('styles', function () {
+	    $environment->addFunction(new TwigFunction ('styles', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/css/*.css");
 	    	$lang = $lang ? glob("assets/css/$lang/*.css") : [];
 			return array_merge($general, $lang);
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('scripts', function () {
+	    $environment->addFunction(new TwigFunction ('scripts', function () {
 	    	$lang = getLang();
 	    	$general = glob("assets/scripts/*.js");
 	    	$lang = $lang ? glob("assets/scripts/$lang/*.js") : [];
@@ -75,11 +74,11 @@
 		    Used in templates to access a certain icon (for example of a class or an item)
 		    or return the 'missing.png' image 
 	    */
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('icon', function ($path, $color = null, $srcOnly = false) {
+	    $environment->addFunction(new TwigFunction ('icon', function ($path, $color = null, $srcOnly = false) {
 			return createIcon($path, $color, $srcOnly);
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('icon', function ($object, $srcOnly = false) {
+	    $environment->addFilter(new TwigFilter('icon', function ($object, $srcOnly = false) {
 
 	    	if(method_exists($object, 'icon')) {
 	    		if(method_exists($object, 'color')) {
@@ -93,36 +92,40 @@
 
 	    }));
 
-	    $view->getEnvironment()->addFunction(new Twig_SimpleFunction('account', function () {
+	    $environment->addFunction(new TwigFunction ('account', function () {
 	        return getAccount();
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('all', function ($class) {
+	    $environment->addFilter(new TwigFilter('all', function ($class) {
 	        if(is_subclass_of($class, 'BaseModel')) return $class::all();
 	        return collect([]);
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('call', function ($class, $method) {
+	    $environment->addFilter(new TwigFilter('call', function ($class, $method) {
 	        return $class->$method();
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('class', function ($object) {
+	    $environment->addFilter(new TwigFilter('class', function ($object) {
 	        return (new \ReflectionClass($object))->getShortName();
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('byName', function ($class, $name) {
+	    $environment->addFilter(new TwigFilter('byName', function ($class, $name) {
 	        if(is_subclass_of($class, 'BaseModel')) return $class::where('name', $name)->first();
 	        return null;
 	    }));
 
-	    $view->getEnvironment()->addFilter(new Twig_SimpleFilter('age', function ($time) {
+	    $environment->addFilter(new TwigFilter('age', function ($time) {
 	        $time = strtotime($time);
 	        $age = round(abs($time - time()) / 24 / 60 / 60);
 	        return format('time.'.($age > 1 ? 'days' : 'day'), [ $age ]);
 	    }));
 
-	    return $view;
-	};
+	    return $twig;
+	});
+	
+	AppFactory::setContainer($container);
+	$app = AppFactory::create();
+	$app->add(TwigMiddleware::createFromContainer($app));
 
 	/* The Home page, acting as the game screen */
 	$app->get('/', function(Request $request, Response $response, array $args) {
@@ -131,13 +134,13 @@
 
 		if($selected) {
 			if($selected->participant->battle) 
-				return $this->view->render($response, 'battle.twig', ['battle' => $selected->participant->battle]);
-			return $this->view->render($response, 'home.twig', []);
+				return $this->get('view')->render($response, 'battle.twig', ['battle' => $selected->participant->battle]);
+			return $this->get('view')->render($response, 'home.twig', []);
 		}
 
 		return $response->withRedirect('/profile');
 		
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+	})->add(new NeedsAuthentication($container->get('view'), 'user'));
 
 	/* Can be used by other websites to request icons */
 	$app->get('/icon/{icon:[a-zA-Z/]*}', function(Request $request, Response $response, array $args) {
@@ -164,17 +167,17 @@
 	$app->get('/map', function (Request $request, Response $response, array $args) {
 		
 		$expanded = $request->getParams()['area'] ?? null;
-		$this->view->render($response, 'map.twig', ['areas' => Area::all(), 'expanded' => $expanded]);
+		$this->get('view')->render($response, 'map.twig', ['areas' => Area::all(), 'expanded' => $expanded]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+	})->add(new NeedsAuthentication($container->get('view'), 'user'));
 
 	$app->get('/login', function (Request $request, Response $response, array $args) {
-		$this->view->render($response, 'login.twig', []);
+		$this->get('view')->render($response, 'login.twig', []);
 	});
 
 	$app->get('/profile', function (Request $request, Response $response, array $args) {
-		$this->view->render($response, 'profile.twig', []);
-	})->add(new NeedsAuthentication($container['view'], 'user'));
+		$this->get('view')->render($response, 'profile.twig', []);
+	})->add(new NeedsAuthentication($container->get('view'), 'user'));
 
 	$app->get('/profile/create', function (Request $request, Response $response, array $args) {
 
@@ -182,9 +185,9 @@
 			return !$clazz->evolvesFrom()->first();
 		});
 
-		$this->view->render($response, 'create.twig', [ 'starters' => $starters ]);
+		$this->get('view')->render($response, 'create.twig', [ 'starters' => $starters ]);
 	
-	})->add(new NeedsAuthentication($container['view'], 'create_chars'));
+	})->add(new NeedsAuthentication($container->get('view'), 'create_chars'));
 
 	/*
 		Used by 'actions.php' to register to user input actions.
@@ -196,22 +199,22 @@
 	include_once 'editor.php';
 	include_once 'account.php';
 
-	$container['notFoundHandler'] = function ($container) {
+	$container->set('notFoundHandler', function ($container) {
 	    return function (Request $request, Response $response) use ($container) {
 	        return $container->view->render($response->withStatus(404), 'handlers/404.twig');
 	    };
-	};
+	});
 
-    $container['errorHandler'] = function ($container) {
+    $container->set('errorHandler', function ($container) {
         return function (Request $request, Response $response, $exception) use ($container) {
-            return $container['view']->render($container['response']->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
+            return $container->get('view')->render($container->get('response')->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
         };
-    };
-    $container['phpErrorHandler'] = function ($container) {
+    });
+    
+    $container->set('phpErrorHandler', function ($container) {
         return function (Request $request, Response $response, $exception) use ($container) {
-            return $container['view']->render($container['response']->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
+            return $container->get('view')->render($container->get('response')->withStatus(500), 'handlers/500.twig', ['error' => $exception]);
         };
-    };
+    });
 
 	$app->run();
-?>

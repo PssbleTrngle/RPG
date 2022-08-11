@@ -1,8 +1,10 @@
 {
-    "require": {
-        "slim/slim": "3.12",
-        "twig/twig": "^2.7",
-        "slim/twig-view": "^2.5",
-        "illuminate/database": "^5.8"
-    }
+  "require": {
+    "slim/psr7": "^1.5",
+    "slim/slim": "^4.10",
+    "twig/twig": "^3.4",
+    "slim/twig-view": "^3.3",
+    "illuminate/database": "^9.24",
+    "php-di/php-di": "^6.4"
+  }
 }

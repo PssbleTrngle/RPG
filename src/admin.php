@@ -23,32 +23,30 @@
 
 		echo json_encode(Translation::all());
 		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 	
 	$app->get('/admin/validate', function (Request $request, Response $response, array $args) {
 		
 		$level = $request->getParams()['level'] ?? 0b11111111;
-		$this->view->render($response, 'admin/validate.twig', ['log' => validate($level)]);
+		$this->get('view')->render($response, 'admin/validate.twig', ['log' => validate($level)]);
 		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 
 	$app->get('/admin/post', function (Request $request, Response $response, array $args) {		
-		$this->view->render($response, 'admin/post.twig', []);		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+		$this->get('view')->render($response, 'admin/post.twig', []);		
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 
 	$app->get('/view/classes', function (Request $request, Response $response, array $args) {
 
 		$icons = $request->getParams()['icons'] === true ?? true;
 
-		return $this->view->render($response, 'admin/classes.twig', ['classes' => Clazz::all(), 'icons' => $icons]);		
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
+		return $this->get('view')->render($response, 'admin/classes.twig', ['classes' => Clazz::all(), 'icons' => $icons]);		
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));
 
 	$app->get('/test/battle', function (Request $request, Response $response, array $args) {
 
 		$battle = new Battlefield;
 
-		return $this->view->render($response, 'battle.twig', ['battle' => $battle]);		
+		return $this->get('view')->render($response, 'battle.twig', ['battle' => $battle]);		
 	
-	})->add(new NeedsAuthentication($container['view'], 'tester'));
-	
-?>
+	})->add(new NeedsAuthentication($container->get('view'), 'tester'));

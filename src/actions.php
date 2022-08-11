@@ -32,7 +32,7 @@
 			});
 
 			if(!is_null($status))
-				$action->add(new NeedsAuthentication($container['view'], $status, true));
+				$action->add(new NeedsAuthentication($container->get('view'), $status, true));
 
 		}
 

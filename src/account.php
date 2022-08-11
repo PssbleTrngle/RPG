@@ -80,7 +80,7 @@
 			$_SESSION['account'] = $account->id;
 			return $response->withRedirect($request->getParams()['next'] ?? '/');
 		} else {
-			return $this->view->render($response, 'login.twig', ['failed' => true]);
+			return $this->get('view')->render($response, 'login.twig', ['failed' => true]);
 		}
 		
 	});
@@ -96,7 +96,7 @@
 			$account = Account::where('username', $username)->first();
 			if($account) {
 				#$account->addPermission(Permission::where('name', 'user')->first());
-				return $this->view->render($response, 'login.twig', ['exists' => true]);
+				return $this->get('view')->render($response, 'login.twig', ['exists' => true]);
 			}
 
 			$account = new Account;
@@ -113,8 +113,6 @@
 			
 		}
 		
-		return $this->view->render($response, 'login.twig', ['failed' => true]);
+		return $this->get('view')->render($response, 'login.twig', ['failed' => true]);
 		
 	});
-
-?>
