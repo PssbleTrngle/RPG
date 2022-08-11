@@ -5,10 +5,11 @@
 		Defines the database name and user.
 	*/
 
-	$database_url = getenv('DB_HOST') || "localhost";
+	$database_url = getenv('DB_HOST') ?: "localhost";
 	$database_pw = getenv('DB_PASSWORD');
-	$database_name = getenv('DB_NAME') || "rpg";
-	$database_user = getenv('DB_USER') || $database_name;
+	$database_name = getenv('DB_NAME') ?: "rpg";
+	$database_user = getenv('DB_USER') ?: $database_name;
+	$database_driver = getenv('DB_DRIVER') ?: 'mysql';
 
 	/* If defined everybody will use this account instead of logging in */
 	$static_account = intval(getenv('RPG_STATIC_ACCOUNT'));

@@ -14,8 +14,9 @@
 
 	$capsule->setAsGlobal();
 	$capsule->bootEloquent();
+
 	$capsule->addConnection([
-		'driver'    => 'mysql',
+		'driver'    => $database_driver,
 		'host'      =>	$database_url,
 		'database'  =>  $database_name,
 		'username'  =>  $database_user,

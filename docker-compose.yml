@@ -4,12 +4,26 @@ services:
     build: .
     ports: [3000:80]
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: root
+      DB_DRIVER: mysql
+      DB_PASSWORD: rpg
       DB_HOST: db
+    depends_on: [db]
 
   db:
-    image: postgres
-    restart: always
+    image: mysql
+    container_name: rpg_database
     environment:
-      POSTGRES_PASSWORD: root
+      #MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rpg
+      MYSQL_USER: rpg
+      MYSQL_PASSWORD: rpg
+      expose: 3306
+    volumes:
+      - ./db_structure.sql:/docker-entrypoint-initdb.d/1-structure.sql
+      - ./db_data.sql:/docker-entrypoint-initdb.d/2-data.sql
+
+  adminer:
+    image: adminer
+    container_name: rpg_adminer
+    ports: [8080:8080]

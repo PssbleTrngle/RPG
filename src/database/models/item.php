@@ -220,7 +220,6 @@
 	
 		public static function registerAll() {
 
-			/*
 			$keys = ['wisdom', 'strength', 'agility', 'luck', 'resistance'];
 			$weapons = ['blade', 'bow', 'florett', 'maze', 'nunchuck', 'sceptre', 'wand', 'battlestaff', 'club', 'dagger', 'hammer'];
 
@@ -244,7 +243,6 @@
 					static::register(['id' => $id, 'stats_id' => $id, 'name' => $weapon, 'rarity_id' => $rarity->id, 'type_id' => $type->id, 'stackable' => 0]);
 					
 			}
-			*/
 
 			static::register(['id' => 1, 'name' => 'health_potion', 'type_id' => 2, 'stackable' => 1], ['use' => function(Item $item, Stack $stack, Participant $target) {
 				if($target->heal(20)) {
