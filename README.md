@@ -1,7 +1,7 @@
 <a href='http://rpg.somethingcatchy.net/'>![](http://rpg.somethingcatchy.net/assets/img/icon_github.png)</a>
 # RPG
-![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/users)
-![](https://img.shields.io/endpoint?url=https://www.rpg.somethingcatchy.net/stats/characters)
+![](https://img.shields.io/endpoint?url=https://rpg.somethingcatchy.net/stats/users)
+![](https://img.shields.io/endpoint?url=https://rpg.somethingcatchy.net/stats/characters)
 
 ---
 
