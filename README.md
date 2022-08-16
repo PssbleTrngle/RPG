@@ -1,9 +1,6 @@
-<a href='http://rpg.somethingcatchy.net/'>![](http://rpg.somethingcatchy.net/assets/img/icon_github.png)</a>
-# RPG
-![](https://img.shields.io/endpoint?url=https://rpg.somethingcatchy.net/stats/users)
+# RPG <img src="http://rpg.somethingcatchy.net/assets/img/icon.svg" align="right" height="100" />
+![](https://img.shields.io/enpoint?url=https://rpg.somethingcatchy.net/stats/users)
 ![](https://img.shields.io/endpoint?url=https://rpg.somethingcatchy.net/stats/characters)
-
----
 
 ### Requirements
 - [Composer](https://getcomposer.org/)
